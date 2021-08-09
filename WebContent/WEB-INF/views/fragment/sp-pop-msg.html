@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>login-health</title>
+</head>
+<body>
+    <th:block th:fragment="refuse-modal">
+        <div class="modal fade" id="refuseModal" tabindex="-1" role="dialog" aria-labelledby="refuseModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+                        <button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">您確定拒絕將個人資料提供給「<span th:text="${portalService.providerName}">玉山銀行</span> - <span th:text="${portalService.name}">線上開戶</span>」線上服務？</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btna theme-btn false" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btna theme-btn" onclick="javascript:iWantGiveUpApply(this);" th:data-src="${sp_return_url_205}">確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" th:inline="javascript">
+            function iWantGiveUpApply(obj){
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/service/refuse/' + psdId,
+                    loadSpin : true,
+                    success : function(resp) {
+                        if (typeof resp == 'undefined' || resp.code < 0) {
+                            if(resp.code == -5) {
+                                showSPTimeoutMessage(resp);
+                                return;
+                            }
+                        } else {
+                            var serviceUrl = $(obj).attr('data-src');
+                            $('#refuseModal').modal('hide');
+                            window.location.href = serviceUrl;
+                        }
+                    }
+                });
+            }
+        </script>
+    </th:block>
+
+    <th:block th:fragment="pid-pop-message">
+        <!-- Message -->
+        <div id="pid-pop-message" class="modal fade show" role="dialog" data-backdrop="static" data-keyboard="false"
+             aria-labelledby="refuseModalLabel" style="display: none;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pidPopMessage">MyData 提醒</h5>
+                        <button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div id="pid-message-text" class="modal-body">您於<th:block th:text="${portalService.name}"></th:block>網站輸入的身分證字號與在 MyData 頁面進行身分驗證的「身分證字號不符」，請確認是否使用本人資料進行身分驗證，並點選「確定」後重新開始服務流程，謝謝。</div>
+                    <div class="modal-footer">
+                        <button id="pid-pop-message-logout-btn" class="theme-btn"
+                                style="display: none;"
+                                th:data-src="@{/logout}" onclick="javascript:toSpLogout(this);">會員登出</button>
+                        <button id="pid-pop-message-login-btn" class="theme-btn"
+                                onclick="javascript:toSpForCode409();">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" th:inline="javascript">
+            function toSpLogout(obj){
+                clearInterval(loginWindowTimer);
+                if(loginWindow){
+                    loginWindow.close();
+                }
+                $('#pid-pop-message').modal('hide');
+                var popupWidth = 520;
+                var popupHeight = 635;
+                var xPosition = ($(window).width() - popupWidth) / 2;
+                var yPosition = ($(window).height() - popupHeight) / 2;
+                var loginUrl = $(obj).attr('data-src');
+                //alert(loginUrl);
+                //另開視窗
+                loginWindow = window.open(loginUrl, "LoginWindow",
+                    "location=no,scrollbars=yes,resizable=yes," + "width="
+                    + popupWidth + ",height=" + popupHeight + ","
+                    + "left=" + xPosition + ",top=" + yPosition);
+                loginWindowTimer = setInterval(onTimerCallbackToCheckSpLogoutWindowClosure, 500);
+            }
+
+            function onTimerCallbackToCheckSpLogoutWindowClosure() {
+                try {
+                    if (loginWindow && loginWindow.closed) {
+                        //var serviceUrl = $('#pid-pop-message-login-btn').attr('data-src');
+                        //window.location.href = serviceUrl;
+                        window.location.reload();
+                    }
+                } catch (ex) {
+                    clearInterval(loginWindowTimer);
+                }
+            }
+            function toSpForCode409(){
+                var serviceUrl = $('#pid-pop-message-login-btn').attr('data-src');
+                $('#pid-pop-message').modal('hide');
+                window.location.href = serviceUrl;
+            }
+        </script>
+    </th:block>
+    <th:block th:fragment="check-resource-ok">
+        <!-- 資料集異常 -->
+        <div class="modal fade" id="checkResourceOk" tabindex="-1" role="dialog" aria-labelledby="checkResourceOk" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+                    </div>
+                    <!-- 			<div class="modal-body">此線上申辦服務所需要的資料集暫時無法提供，因此無法進行申辦作業，系統將自動為您導回<span th:text="${portalService.providerName}">玉山銀行</span>網站。</div> -->
+                    <div class="modal-body">系統暫時無法提供服務，請稍後再試，謝謝！</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btna theme-btn" onclick="javascript:redirectToSP504(this);" th:data-src="${sp_return_url_504}">確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" th:inline="javascript">
+            function redirectToSP504(obj) {
+                var redirectUri = $(obj).attr('data-src');
+                window.location.href = redirectUri;
+            }
+        </script>
+    </th:block>
+    <th:block th:fragment="deactivate">
+        <!-- 資料集異常 -->
+        <div class="modal fade" id="isDeactivate" tabindex="-1" role="dialog" aria-labelledby="isDeactivate" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deactivateLabel">MyData 提醒</h5>
+                    </div>
+                    <!-- 			<div class="modal-body">此線上申辦服務所需要的資料集暫時無法提供，因此無法進行申辦作業，系統將自動為您導回<span th:text="${portalService.providerName}">玉山銀行</span>網站。</div> -->
+                    <div class="modal-body">目前您的服務已被MyData維運團隊停用，請洽MyData維運團隊，謝謝。</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btna theme-btn" onclick="javascript:redirectToSP423(this);" th:data-src="${sp_return_url_423}">確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" th:inline="javascript">
+            function redirectToSP423(obj) {
+                var redirectUri = $(obj).attr('data-src');
+                window.location.href = redirectUri;
+            }
+        </script>
+    </th:block>
+</body>
+</html>

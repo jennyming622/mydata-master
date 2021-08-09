@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.ClickLogMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.ClickLog">
+    <id column="sn" jdbcType="INTEGER" property="sn" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="cnt_type" jdbcType="VARCHAR" property="cntType" />
+    <result column="cnt_id" jdbcType="INTEGER" property="cntId" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sn, account, cnt_type, cnt_id, ctime, uid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from click_log
+    where sn = #{sn,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from click_log
+    where sn = #{sn,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.ClickLog">
+    insert into click_log (sn, account, cnt_type, 
+      cnt_id, ctime, uid
+      )
+    values (#{sn,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{cntType,jdbcType=VARCHAR}, 
+      #{cntId,jdbcType=INTEGER}, #{ctime,jdbcType=TIMESTAMP}, #{uid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.ClickLog">
+    insert into click_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sn != null">
+        sn,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="cntType != null">
+        cnt_type,
+      </if>
+      <if test="cntId != null">
+        cnt_id,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sn != null">
+        #{sn,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="cntType != null">
+        #{cntType,jdbcType=VARCHAR},
+      </if>
+      <if test="cntId != null">
+        #{cntId,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" resultType="java.lang.Long">
+    select count(*) from click_log
+    where 1=1
+      <if test="cntType != null">
+        and cnt_type = #{cntType,jdbcType=VARCHAR},
+      </if>
+      <if test="cntId != null">
+        and cnt_id = #{cntId,jdbcType=INTEGER},
+      </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.ClickLog">
+    update click_log
+    <set>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="cntType != null">
+        cnt_type = #{cntType,jdbcType=VARCHAR},
+      </if>
+      <if test="cntId != null">
+        cnt_id = #{cntId,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sn = #{sn,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.ClickLog">
+    update click_log
+    set account = #{account,jdbcType=VARCHAR},
+      cnt_type = #{cntType,jdbcType=VARCHAR},
+      cnt_id = #{cntId,jdbcType=INTEGER},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      uid = #{uid,jdbcType=VARCHAR}
+    where sn = #{sn,jdbcType=INTEGER}
+  </update>
+</mapper>

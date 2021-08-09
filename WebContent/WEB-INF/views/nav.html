@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>footer</title>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!-- 2018-8-16 new version-->
+	<nav id="navhead" class="whitebar navbar navbar_top hidden_mobile"
+		th:fragment="navbar_top">
+		<div class="container">
+			<a class="navbar-brand" href="#" th:href="@{/}"><img
+				src="image/amydatalogo.png" alt="LOGO"
+				th:src="@{/resources/dist/image/amydatalogo.png}"></a>
+			<div class="threetext">
+				<ul class="pull-right">
+					<li class="nav-item"><img src="image/sitemaps.png"
+						alt="網站導覽icon" th:src="@{/resources/dist/image/sitemaps.png}">
+						<a class="nav-link" href="#" th:href="@{/sp/sitemap}">網站導覽</a></li>
+					<li class="nav-item"><img src="image/envelope.png"
+						alt="聯絡我們icon" th:src="@{/resources/dist/image/envelope.png}">
+						<a class="nav-link" href="#footer" th:href="@{/sp/contactus}">聯絡我們</a>
+					</li>
+					<li class="nav-item"><img src="image/question.png"
+						style="width: 30px;" alt="常見問題icon"
+						th:src="@{/resources/dist/image/question.png}"> <a
+						class="problem nav-link" href="faq_html" th:href="@{/sp/faq}">常見問題</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+
+	<!-- for organ-->
+	<nav id="navhead" class="whitebar navbar navbar_top hidden_mobile"
+		th:fragment="navbar_top_organ">
+		<div class="container">
+			<a class="navbar-brand" href="#"><img
+				src="image/amydatalogo.png" alt="LOGO"
+				th:src="@{/resources/dist/image/amydatalogo.png}"></a>
+			<div class="threetext">
+				<ul class="pull-right">
+					<!-- <li class="nav-item"><img src="image/sitemaps.png"
+						alt="網站導覽icon" th:src="@{/resources/dist/image/sitemaps.png}">
+						<a class="nav-link" href="#" th:href="@{/sp/sitemap}">網站導覽</a></li> -->
+					<li class="nav-item"><img src="image/envelope.png"
+						alt="聯絡我們icon" th:src="@{/resources/dist/image/envelope.png}">
+						<a class="nav-link" href="#footer" th:href="@{/sp/contactus}">聯絡我們</a>
+					</li>
+					<li class="nav-item"><img src="image/question.png"
+						style="width: 30px;" alt="常見問題icon"
+						th:src="@{/resources/dist/image/question.png}"> <a
+						class="problem nav-link" href="faq_html" th:href="@{/sp/faq}">常見問題</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<nav
+		class="bluebar navbar navbar_menu navbar-expand-md navbar-light bg-light"
+		th:fragment="navbar_menu">
+		<div class="container">
+			<!-- <a class="navbar-brand hidden_desktop" href="#" th:href="@{/}"><img
+				class="mydatalogo" src="image/amydatalogo.png" alt="LOGO"
+				th:src="@{/resources/dist/image/amydatalogo.png}"></a> -->
+			<div class="mobile_nav">
+				<div class="mobilelogbox">
+					<!-- <button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbar_log_in"
+						aria-controls="navbarSupportedContent" aria-expanded="false"
+						aria-label="Toggle navigation"
+						onclick="$('#navbarSupportedContent').removeClass('show');">
+						<img class="slogin hidden_desktop" src="image/log_in.png"
+							alt="會員登入icon" th:src="@{/resources/dist/image/log_in.png}">
+					</button>
+					<button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarSupportedContent"
+						aria-controls="navbarSupportedContent" aria-expanded="false"
+						aria-label="Toggle navigation"
+						onclick="$('#navbar_log_in').removeClass('show');">
+						<img class="snavbar" src="image/navbar_toggler.png" alt="選單icon"
+							th:src="@{/resources/dist/image/navbar_toggler.png}">
+					</button> -->
+					<button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarSupportedContent"
+						aria-controls="navbarSupportedContent" aria-expanded="false"
+						aria-label="Toggle navigation"
+						onclick="$('#navbar_log_in').removeClass('show');">
+						<img class="snavbar" src="image/navbar_toggler.png" alt="選單icon"
+							th:src="@{/resources/dist/image/navbar_toggler.png}">
+					</button>
+					<a class="navbar-brand hidden_desktop" href="#"><img
+						class="mydatalogo" src="image/amydatalogo.png" alt="LOGO" th:src="@{/resources/dist/image/amydatalogo.png}"></a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbar_log_in"
+						aria-controls="navbarSupportedContent" aria-expanded="false"
+						aria-label="Toggle navigation"
+						onclick="$('#navbarSupportedContent').removeClass('show');">
+						<img class="slogin hidden_desktop" src="image/log_in.png"
+							alt="會員登入icon" th:src="@{/resources/dist/image/log_in.png}">
+					</button>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse w-100"
+				id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> 關於MyData </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="about_mydata.html"
+								th:href="@{/sp/about}">何謂MyData</a> <a class="dropdown-item"
+								href="member_service.html" th:href="@{/sp/about#accordionTitle}">MyData影片</a>
+							<a class="dropdown-item" href="faq.html" th:href="@{/sp/faq}">常見問題</a>
+						</div> <span class="divide_line">|</span></li>
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown2"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> MyData應用 </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+							<a class="dropdown-item"
+								href="download_html" th:href="@{/personal/list}">MyData 下載</a> 
+							<a class="dropdown-item" href="service.html"
+								th:href="@{/sp/service}">MyData 服務</a> 
+							<a class="dropdown-item" href="getmybox_html"
+								th:href="@{/sp/member/1}">取回MyBox雲端資料</a>
+						</div> <span class="divide_line">|</span></li>
+					<li class="nav-item dropdown"><a class="nav-link"
+						href="authorization.html" th:href="@{/authorization}"> 授權紀錄 </a></li>
+				</ul>
+				<a class="hidden_mobile loginbox nav-link" href="javascript:openLogin();"
+					th:if="${session.SignedInUser==null}"><img
+					src="image/profile.png" alt=""
+					th:src="@{/resources/dist/image/profile.png}"><span>登入</span></a>
+				<div class="hidden_mobile pull-right"
+					th:if="${session.SignedInUser}">
+					<div class="logindropdown" id="navbarDropdown6"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<img src="image/u2.png" alt="會員登入icon"
+							th:src="@{/resources/dist/image/u2.png}"> <span>您好!&nbsp;&nbsp;</span>
+						<span th:text="${session.SignedInUser.userName}">Gary</span>
+						<!-- <div class="dropdown-content">
+							<a href="#" th:href="${session.signOutUrl}">會員登出</a>
+						</div> -->
+						<div class="loginbcolor dropdown-menu"
+							aria-labelledby="navbarDropdown6">
+							<a class="dropdown-item" href="javascript:void(0);"
+								th:onclick="'window.open(\'https://www.cp.gov.tw/portal/cpuser/Update.aspx\',\'_blank\');'">修改會員資料</a>
+							<a class="dropdown-item" href="javascript:void(0);"
+								th:onclick="'window.location.href=\''+${session.signOutUrl}+'\';'">會員登出</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse" id="navbar_log_in">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item dropdown" style="padding-bottom: 16px;"><span
+						th:if="${session.SignedInUser}" class="nav-link hidden_desktop"
+						id="navbarDropdown" role="button" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"> 您好！ <span
+							th:text="${session.SignedInUser.userName}">Gary</span> <a
+							class="pull-right" href="javascript:void(0);"> <span
+								th:onclick="'window.location.href=\''+${session.signOutUrl}+'\''">&nbsp;&nbsp;登出&nbsp;&nbsp;</span>
+						</a> <a class="pull-right" href="javascript:void(0);"> <span
+								th:onclick="'window.open(\'https://www.cp.gov.tw/portal/cpuser/Update.aspx\',\'_blank\');'">&nbsp;&nbsp;修改會員資料&nbsp;&nbsp;</span>
+						</a>
+					</span> <span th:if="${session.SignedInUser==null}"
+						class="nav-link hidden_desktop" id="navbarDropdown" role="button"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-bottom: 0;">
+							<a class="pull-right" href="javascript:void(0);"><span style="color: #fff;"
+								th:onclick="'window.location.href=\''+${redirectUrl}+'\''">登入</span></a>
+					</span></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</body>
+</html>

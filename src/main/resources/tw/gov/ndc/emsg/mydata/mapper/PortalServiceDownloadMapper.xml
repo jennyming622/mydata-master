@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalServiceDownloadMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalServiceDownload">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ps_id" jdbcType="INTEGER" property="psId" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="permission_ticket" jdbcType="VARCHAR" property="permissionTicket" />
+    <result column="secret_key" jdbcType="VARCHAR" property="secretKey" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="verification_level" jdbcType="INTEGER" property="verificationLevel" />
+    <result column="download_sn_list" jdbcType="VARCHAR" property="downloadSnList" />
+    <result column="files" jdbcType="VARCHAR" property="files" />
+    <result column="wait_time" jdbcType="INTEGER" property="waitTime" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+    <result column="dtime" jdbcType="TIMESTAMP" property="dtime" />
+    <result column="stat" jdbcType="INTEGER" property="stat" />
+    <result column="tx_id" jdbcType="VARCHAR" property="txId" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="request_status" jdbcType="VARCHAR" property="requestStatus" />
+    <result column="model" jdbcType="VARCHAR" property="model" />
+    <result column="verification_type" jdbcType="VARCHAR" property="verificationType" />
+    <result column="file_finish_time" jdbcType="TIMESTAMP" property="fileFinishTime" />
+    <result column="download_time" jdbcType="TIMESTAMP" property="downloadTime" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, ps_id, client_id, permission_ticket, secret_key, uid, verification_level, download_sn_list, 
+    files, wait_time, ctime, etime, dtime, stat, tx_id, code, request_status, model, verification_type,
+    file_finish_time, download_time, is_show
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_service_download
+    where 1=1
+    <if test="permissionTicket != null">
+      and permission_ticket = #{permissionTicket,jdbcType=VARCHAR}
+    </if>
+    <if test="txId != null">
+      and tx_id = #{txId,jdbcType=VARCHAR}
+    </if>
+    <if test="sCtime != null">
+      and ctime <![CDATA[ >= ]]> #{sCtime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="ctimeDesc !=null">
+      order by ctime desc
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_service_download
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_service_download
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceDownload" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into portal_service_download (id, ps_id, client_id, 
+      permission_ticket, secret_key, uid, 
+      verification_level, download_sn_list, files, 
+      wait_time, ctime, etime, 
+      dtime, stat, tx_id, code,
+      request_status, model, verification_type,
+      file_finish_time, download_time, is_show
+      )
+    values (#{id,jdbcType=INTEGER}, #{psId,jdbcType=INTEGER}, #{clientId,jdbcType=VARCHAR}, 
+      #{permissionTicket,jdbcType=VARCHAR}, #{secretKey,jdbcType=VARCHAR}, #{uid,jdbcType=VARCHAR}, 
+      #{verificationLevel,jdbcType=INTEGER}, #{downloadSnList,jdbcType=VARCHAR}, #{files,jdbcType=VARCHAR}, 
+      #{waitTime,jdbcType=INTEGER}, #{ctime,jdbcType=TIMESTAMP}, #{etime,jdbcType=TIMESTAMP}, 
+      #{dtime,jdbcType=TIMESTAMP}, #{stat,jdbcType=INTEGER}, #{txId,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{requestStatus,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{verificationType,jdbcType=VARCHAR},
+      #{fileFinishTime,jdbcType=TIMESTAMP}, #{downloadTime,jdbcType=TIMESTAMP}, #{isShow,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceDownload" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into portal_service_download
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="psId != null">
+        ps_id,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="permissionTicket != null">
+        permission_ticket,
+      </if>
+      <if test="secretKey != null">
+        secret_key,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="verificationLevel != null">
+        verification_level,
+      </if>
+      <if test="downloadSnList != null">
+        download_sn_list,
+      </if>
+      <if test="files != null">
+        files,
+      </if>
+      <if test="waitTime != null">
+        wait_time,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+      <if test="dtime != null">
+        dtime,
+      </if>
+      <if test="stat != null">
+        stat,
+      </if>
+      <if test="txId != null">
+        tx_id,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="requestStatus != null">
+        request_status,
+      </if>
+      <if test="model != null">
+        model,
+      </if>
+      <if test="verificationType != null">
+        verification_type,
+      </if>
+      <if test="fileFinishTime != null">
+        file_finish_time,
+      </if>
+      <if test="downloadTime != null">
+        download_time,
+      </if>
+      <if test="isShow != null">
+        is_show
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="psId != null">
+        #{psId,jdbcType=INTEGER},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionTicket != null">
+        #{permissionTicket,jdbcType=VARCHAR},
+      </if>
+      <if test="secretKey != null">
+        #{secretKey,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationLevel != null">
+        #{verificationLevel,jdbcType=INTEGER},
+      </if>
+      <if test="downloadSnList != null">
+        #{downloadSnList,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null">
+        #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="waitTime != null">
+        #{waitTime,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dtime != null">
+        #{dtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        #{stat,jdbcType=INTEGER},
+      </if>
+      <if test="txId != null">
+        #{txId,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="requestStatus != null">
+        #{requestStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationType != null">
+        #{verificationType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileFinishTime != null">
+        #{fileFinishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadTime != null">
+        #{download_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceDownload">
+    update portal_service_download
+    <set>
+      <if test="psId != null">
+        ps_id = #{psId,jdbcType=INTEGER},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionTicket != null">
+        permission_ticket = #{permissionTicket,jdbcType=VARCHAR},
+      </if>
+      <if test="secretKey != null">
+        secret_key = #{secretKey,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationLevel != null">
+        verification_level = #{verificationLevel,jdbcType=INTEGER},
+      </if>
+      <if test="downloadSnList != null">
+        download_sn_list = #{downloadSnList,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null">
+        files = #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="waitTime != null">
+        wait_time = #{waitTime,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dtime != null">
+        dtime = #{dtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        stat = #{stat,jdbcType=INTEGER},
+      </if>
+      <if test="txId != null">
+        tx_id = #{txId,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="requestStatus != null">
+        request_status = #{requestStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationType != null">
+        verification_type = #{verificationType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileFinishTime != null">
+        file_finish_time = #{fileFinishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadTime != null">
+        download_time = #{downloadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceDownload">
+    update portal_service_download
+    set ps_id = #{psId,jdbcType=INTEGER},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      permission_ticket = #{permissionTicket,jdbcType=VARCHAR},
+      secret_key = #{secretKey,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR},
+      verification_level = #{verificationLevel,jdbcType=INTEGER},
+      download_sn_list = #{downloadSnList,jdbcType=VARCHAR},
+      files = #{files,jdbcType=VARCHAR},
+      wait_time = #{waitTime,jdbcType=INTEGER},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      etime = #{etime,jdbcType=TIMESTAMP},
+      dtime = #{dtime,jdbcType=TIMESTAMP},
+      stat = #{stat,jdbcType=INTEGER},
+      tx_id = #{txId,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      request_status = #{requestStatus,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      verification_type = #{verificationType,jdbcType=VARCHAR},
+      file_finish_time = #{fileFinishTime,jdbcType=TIMESTAMP},
+      download_time = #{downloadTime,jdbcType=TIMESTAMP},
+      is_show = #{isShow,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

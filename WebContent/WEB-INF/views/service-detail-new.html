@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<title th:text="'MyData | '+${portalServiceCategory.cateName}">MyData | 服務明細</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<script th:src="@{/resources/dist/js/font-awesone.min.js}" ></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<script src="js/moment.min.js" th:src="@{/resources/dist/js/moment.min.js}"></script>
+<script src="js/r_common.js" th:src="@{/resources/dist/js/r_common.js}"></script>
+<script src="js/certLogin.js" th:src="@{/resources/dist/js/certLogin.js}"></script>
+<script src="js/errorcode.js" th:src="@{/resources/dist/js/errorcode.js}"></script>
+<script src="js/qrcode.js" th:src="@{/resources/dist/js/qrcode.js}"></script>
+<!-- twca js-->
+<script th:src="@{/resources/dist/js/mydata.twca.ap.js}"></script>
+<script th:src="@{/resources/dist/js/tcw.api.js}"></script>
+<script th:src="@{/resources/dist/js/twcaCryptoLib.js}"></script>
+<style>
+.grecaptcha-badge{
+	visibility: hidden;
+}
+</style>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+	<!--  1 消費金融 -->
+	<th:block th:if="${portalServiceCategory.cateId==1}">
+		<div class="page-title padding flex-center bg-img bg-gray finance-page">
+			<img class="w-100" src="./images/finance-banner.png" th:src="@{/resources/dist/image/finance-banner.png}" alt="">
+			<h2 class="flex-middle absolute-center" th:text="${portalServiceCategory.cateName}">消費金融</h2>
+		</div>
+	</th:block>
+	<!--  2 教育學習 -->
+	<th:block th:if="${portalServiceCategory.cateId==2}">
+		<div class="page-title padding flex-center bg-img bg-gray education-learning-page">
+			<img class="w-100" src="./images/education-banner.png" th:src="@{/resources/dist/image/education-banner.png}" alt="">
+			<h2 class="flex-middle absolute-center" th:text="${portalServiceCategory.cateName}">社會福利</h2>
+		</div>
+	</th:block>
+	<!--  3 醫療照護 -->
+	<th:block th:if="${portalServiceCategory.cateId==3}">
+		<div class="page-title padding flex-center bg-img bg-gray medical-care-page">
+			<img class="w-100" src="./images/medical-banner.png" th:src="@{/resources/dist/image/medical-banner.png}" alt="">
+			<h2 class="flex-middle absolute-center" th:text="${portalServiceCategory.cateName}">醫療照護</h2>
+		</div>
+	</th:block>
+	<!--  4 商工登記 -->
+	<th:block th:if="${portalServiceCategory.cateId==4}">
+		<div class="page-title padding flex-center bg-img bg-gray commerce-page">
+			<img class="w-100" src="./images/commerce-banner.png" th:src="@{/resources/dist/image/commerce-banner.png}" alt="">
+			<h2 class="flex-middle absolute-center" th:text="${portalServiceCategory.cateName}">商工登記</h2>
+		</div>
+	</th:block>
+	<!--  5 綜合服務 -->
+	<th:block th:if="${portalServiceCategory.cateId==5}">
+		<div class="page-title padding flex-center bg-img bg-gray multi-service-page">
+			<img class="w-100" src="./images/commerce-banner.png" th:src="@{/resources/dist/image/multi-service-banner.png}" alt="">
+			<h2 class="flex-middle absolute-center" th:text="${portalServiceCategory.cateName}">綜合服務</h2>
+		</div>
+	</th:block>
+	<!-- 到申請的最後步驟時，在 Class 'content-wrap' 旁新增 'last-step'  -->
+	<div class="content-wrap application">
+		<h3>
+			<th:block th:text="${portalService.name}"></th:block>
+			<hr>
+		</h3>
+		<ul class="steps-wrap">
+			<!-- 2020/04 手機版下載資料 -->
+			<th:blcok th:replace="fragment/agree-policy::agree-policy(id = ${portalService.psId})"></th:blcok>
+			<li class="step step2" id="step2Div" >
+				<div></div>
+				<hr>
+				<h4 class="title">個人資訊</h4>
+				<h5 class="mt-2 mb-0 text-left subtitle">您於<span th:text="${portalService.providerName}">OO銀行</span>填寫的資料如下</h5>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="pt-1 text-left">
+							<label class="w-100 eyes-switch-loca" for="uid">
+								<span>身分證字號<small class="alert">(必填)</small><small class="alert">英文字母為大寫</small></span>
+								<input id="uid" class="form-control param" name="uid" th:value="${maskMember.uid}" th:data-value="${memberTemp.uid}" disabled="true"
+										onfocus="inputFocusinEvent_1(this)" 
+										oninput="inputTypingEvent(this, MaskType.uid)" 
+										onblur="inputFocusoutEvent_1(this, MaskType.uid)"
+									   autocomplete="off">
+								<i onclick="maskorUnMask_v2(this)" id="eye_uid" class="eyes-switch fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+							</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="pt-1 text-left">
+							<label class="w-100 eyes-switch-loca" for="birthdate">
+								<span>生日<small class="alert">(必填)</small><small class="alert">請輸入民國年月日</small></span>
+								<input id="birthdate" class="form-control" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate"
+									   th:value="${maskMember.birthdateForRE}"
+									   th:data-value="${memberTemp.birthdateStr}"
+									   th:disabled="${(memberTemp!=null&&memberTemp.birthdateStr!=null)?'true':'false'}"
+									   placeholder="例：0770101" maxLength="7"
+									   onfocus="inputFocusinEvent_1(this)" 
+									   oninput="inputTypingEvent(this, MaskType.birthdate)" 
+									   onblur="inputFocusoutEvent_1(this, MaskType.birthdate)" 
+									   autocomplete="off">
+								<i onclick="maskorUnMask_v2(this)" id="eye_birthdate" class="eyes-switch fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div id="param" th:id="'param' +${portalService.psId}" class="data-detail-cell-wrap" th:if="${not #lists.isEmpty(paramList)}">
+					<p class="description secondary bold text-left mb-0">請輸入您想調閱的資料明細</p>
+					<th:block th:each="prTmp,iterTmp : ${portalResourceExtList}" th:if="${not #lists.isEmpty(prTmp.paramList)}">
+						<th:blcok th:replace="fragment/identity-verify::param-verify(id = 999, paramList = ${prTmp.paramList}, showName = 'true')"></th:blcok>
+					</th:block>
+				</div>
+
+				<th:block th:if="${agree == false}">
+					<br>
+					<th:blcok th:replace="fragment/member-privacy::privacy(id = ${portalService.psId})"></th:blcok>
+				</th:block>
+
+
+				<div class="text-center w-100 mt-3">
+					<button id="apply" class="btn theme-btn-border g-recaptcha"
+						th:data-src="${psredirectUrl}" th:data-id="${portalService.psId}" th:verificationType="${memberTemp.verificationType}==null?'':${memberTemp.verificationType}" th:asId="${memberTemp.asId}==null?'':${memberTemp.asId}" title="下一步" onclick="javascript:iWantApply();">我要申請</button>
+				</div>
+			</li>
+			<th:blcok th:replace="fragment/identity-verify::identity-append-double-verify(id = ${portalService.psId})"></th:blcok>
+			<li class="firstUse step" style="display:none" >
+				<div class=""></div>
+				<hr>
+				<p class="description mb-3">這是您第一次使用個人化資料自主運用（MyData）平臺，請填寫下列個人資訊供系統識別與通知用。</p>
+				<h5 class="mt-2 mb-0 text-left subtitle">系統識別</h5>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="pt-1 text-left">
+							<input type="hidden" id="memberId">
+							<label class="w-100 eyes-switch-loca" for="name">
+								<span>姓名<small class="alert">(必填)</small></span>
+								<input id="name" class="form-control encparam" type="text" name="name"
+									placeholder="請輸入您的姓名(例：林小華)"
+									   th:value="${maskMember.name}"
+									   th:data-value="${memberTemp.name}"
+									   onfocus="inputFocusinEvent_1(this)"
+									   onblur="inputFocusoutEvent_1(this, MaskType.name)" autocomplete="off">
+								<i onclick="maskorUnMask_v2(this);" th:id="'eye_name'" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+							</label>
+						</div>
+					</div>
+				</div>
+				<h5 class="mt-2 mb-0 text-left subtitle">訊息通知</h5>
+				<div th:replace="fragment/fill-member::email-mobile(id = ${portalService.psId})"></div>
+				<div class="text-center w-100 mt-3">
+					<a class="btn theme-btn-border" title="下一步" onclick="emailOrMobileMessageCheck(this)" th:data-id="${portalService.psId}">下一步</a>
+				</div>
+			</li>
+			<li class="step step3" style="display:none">
+				<hr>
+				<h4 class="title">聯絡資料更新</h4> <!-- 預設勾「否」 -->
+				<span class="update_email" style="display:none">
+					<h5 class="mt-2 mb-0 text-left subtitle">電子信箱</h5>
+					<p class="description mb-3">您於<span th:text="${portalService.providerName}">OO銀行</span>填寫的電子信箱
+						<span class="tempEmail">your****@nat.gov.tw</span> 與您於 MyData 會員專區設定的電子信箱 <span class="memberEmail">my****@nat.gov.tw</span> 不同，
+						您是否同意將 <span class="tempEmail">your****@nat.gov.tw</span> 更新為 MyData 會員專區的電子信箱呢？
+					</p>
+					<div class="pt-1 text-left form-group multifactor radio notify">
+						<!-- 在 <label> 加上 .active 即表示該選項有被圈選 -->
+						<label class="flex-middle mt-1 mb-0 change_mail" for="change_mail_1">
+							<input id="change_mail_1" type="radio" name="change_mail" value="1">
+							<span class="mr-2 ml-1">是</span>
+						</label>
+						<label class="flex-middle mt-1 mb-0 change_mail active" for="change_mail_0">
+							<input id="change_mail_0" type="radio" name="change_mail" value="0" checked>
+							<span class="mr-2 ml-1">否</span>
+						</label>
+					</div>
+				</span>
+				<span class="update_mobile" style="display:none">
+					<h5 class="mt-2 mb-0 text-left subtitle">手機號碼</h5>
+					<p class="description mb-3">您於<span th:text="${portalService.providerName}">OO銀行</span>填寫的手機號碼
+						<span class="tempMobile">090100****</span> 與您於 MyData 會員專區設定的門號 <span class="memberMobile">090200****</span> 不同，
+						您是否同意將 <span class="tempMobile">090100****</span> 更新為 MyData 會員專區的聯絡門號呢？
+					</p>
+					<div class="pt-1 text-left form-group multifactor radio notify">
+						<!-- 在 <label> 加上 .active 即表示該選項有被圈選 -->
+						<label class="flex-middle mt-1 mb-0 change_mobile" for="change_mobile_1">
+							<input id="change_mobile_1" type="radio" name="change_mobile" value="1">
+							<span class="mr-2 ml-1">是</span>
+						</label>
+						<label class="flex-middle mt-1 mb-0 change_mobile active" for="change_mobile_0">
+							<input id="change_mobile_0" type="radio" name="change_mobile" value="0" checked>
+							<span class="mr-2 ml-1">否</span>
+						</label>
+					</div>
+				</span>
+				<div class="text-center w-100 mt-3">
+					<a class="btn theme-btn-border" title="下一步" onclick="updateInfo(this)">下一步</a>
+				</div>
+			</li>
+			<th:blcok th:replace="fragment/sp-same::sp-step4"></th:blcok>
+		</ul>
+	</div>
+
+	<!--======= modal =======-->
+	<th:block th:replace="fragment/sp-pop-msg::refuse-modal"></th:block>
+	<th:block th:replace="fragment/sp-pop-msg::pid-pop-message"></th:block>
+	<th:block th:replace="fragment/sp-pop-msg::check-resource-ok"></th:block>
+	<th:block th:replace="fragment/sp-pop-msg::deactivate"></th:block>
+	<!--======= end modal =======-->
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂"
+		data-toggle="tooltip" data-placement="left" style="display: inline;">
+		<img class="arrow-position" src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="">
+	</a>
+	<!--======= end footer =======-->
+
+	<!--======= health-card =======-->
+	<span th:replace="fragment/login-health::login-health"></span>
+	<div th:replace="fragment/pop_msg_refresh_modal::sp_pop_msg_refresh_modal"></div>
+	<!--======= end health-card =======-->
+
+	<!-- fragment-script -->
+	<th:block th:replace="fragment/agree-policy::agree-policy-script"></th:block>
+	<th:block th:replace="fragment/identity-verify::param-verify-script"></th:block>
+	<th:block th:replace="fragment/fill-member::email-mobile-script"></th:block>
+	<th:block th:replace="fragment/sp-same::sp-same-script"></th:block>
+	<th:block th:replace="fragment/member-privacy::privacy-script"></th:block>
+	<!-- end fragment-script -->
+
+	<!--線上預覽檔案提示-->
+	<div id="preview-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div id="preview-message-text" class="modal-body">此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。</div>
+				<div class="modal-footer">
+					<button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+					<button id="preview-btn" class="theme-btn" data-id="" data-src="" onclick="javascript:previewToCompanyConfirmYes(this);">確定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" th:inline="javascript">
+		var tfidos = [];
+		var tmpServiceName = /*[[${portalService.name}]]*/'';
+		var signedInUser = /*[[${session.SignedInUser}]]*/'';
+		var member = /*[[${member}]]*/'';
+		var memberTemp = /*[[${memberTemp}]]*/'';
+		var checkResourceOk = /*[[${checkResourceOk}]]*/'';
+		var isDeactivate = /*[[${isDeactivate}]]*/'';
+		var psdId;
+		var returnUrl = /*[[${returnUrl}]]*/'';
+		var tmpMember;
+		var publicKeyBase64;
+		var privatKeyBase64;
+		var agree = /*[[${agree}]]*/'';
+		var qrcodeIntervalObj;
+		var isDoubleVerify = false;
+		var typing = false;
+		$(function(){
+			$('#encuid').val(hideData(getUnmaskValue('#uid'), 6, $('#uid').val().length-1));
+
+			if(signedInUser != null && member != null
+					&& memberTemp != null && member.uid != memberTemp.uid) {
+				RiAPI.run({
+					type : 'GET',
+					url : '/logout',
+					loadSpin : true,
+					complete : function() {
+						window.location.reload();
+					}
+				});
+			}
+
+			if(checkResourceOk == false) {
+				$('#checkResourceOk').modal('show');
+			}
+
+			if(isDeactivate == true) {
+				$('#isDeactivate').modal('show');
+			}
+
+			if(typeof crypto.subtle!='undefined'){
+				createNewUserKey().then(function(key){
+					publicKeyBase64 = toPublicPem(key[0]);
+					privatKeyBase64 = toPrivatePem(key[1]);
+				});
+			}
+			
+//     		var typing = false;
+			$('input').each((idx, element)=>{
+				$(element).on('compositionstart',function(){
+				    typing = true;
+				});
+				$(element).on('compositionend',function(){
+				    typing = false;
+				});
+				var oninputAttr = $(element).attr('oninput');
+				if(typeof oninputAttr!='undefined'){
+					if(oninputAttr.indexOf('MaskType.phone')>-1){
+						$(element).on('input',function(){
+						    setTimeout(function() {
+						        if(!typing) {
+						        	inputTypingEvent($(element), MaskType.phone);
+						        }
+						    },0);
+						})	
+					}
+					if(oninputAttr.indexOf('MaskType.uid')>-1){
+						$(element).on('input',function(){
+						    setTimeout(function() {
+						        if(!typing) {
+						        	inputTypingEvent($(element), MaskType.uid);
+						        }
+						    },0);
+						})	
+					}
+					if(oninputAttr.indexOf('MaskType.email')>-1){
+						$(element).on('input',function(){
+						    setTimeout(function() {
+						        if(!typing) {
+						        	inputTypingEvent($(element), MaskType.email);
+						        }
+						    },0);
+						})	
+					}
+					if(oninputAttr.indexOf('MaskType.birthdate')>-1){
+						$(element).on('input',function(){
+						    setTimeout(function() {
+						        if(!typing) {
+						        	inputTypingEvent($(element), MaskType.birthdate);
+						        }
+						    },0);
+						})	
+					}
+					if(oninputAttr.indexOf('MaskType.NHI')>-1){
+						$(element).on('input',function(){
+						    setTimeout(function() {
+						        if(!typing) {
+						        	inputTypingEvent($(element), MaskType.NHI);
+						        }
+						    },0);
+						})	
+					}
+					if(oninputAttr.indexOf('MaskType.domicile')>-1){
+						$(element).on('input',function(){
+						    setTimeout(function() {
+						        if(!typing) {
+						        	inputTypingEvent($(element), MaskType.domicile);
+						        }
+						    },0);
+						})	
+					}
+				}			
+	    	});
+		});
+
+		function getUidById(id) {
+			return getUnmaskValue('#uid');
+		}
+
+		function getBirthDate(id) {
+			return transferBirthDateToAD(getUnmaskValue('#birthdate'));
+		}
+
+		function getVerificationLevel(id) {
+			return $('#apply'+id).parent().parent().find('input[name=verification-level]:checked').val();
+			//return $('#verification-level' + id).find('input[name=verification-level]:checked').val();
+		}
+
+		function checkUid(uid, id) {
+			const uidType = $('#uid'+id).attr('data-uidType');
+			if(uid == null || uid == ''){
+				showPopMessage(uidType == 1?'請輸入身分證字號 / 居留證號':'請輸入身分證字號', $('#uid'+id));
+				return false;
+			}else if(!verifyExpression(uid)){
+				showPopMessage(uidType == 1?'身分證字號 / 居留證號格式不正確':'身分證字號格式不正確', $('#uid'+id));
+				return false;
+			}
+			return true;
+		}
+
+		function checkBirthDate(birthdate, id) {
+			if(birthdate == null || birthdate == ''){
+				showPopMessage('請輸入生日', $('#birthdate'+id));
+				return false;
+			}else if(!verifyBirthDateExpression(birthdate)){
+				showPopMessage('生日格式不正確', $('#birthdate'+id));
+				return false;
+			}
+			return true;
+		}
+
+		function getScope(id) {
+			var prIdListStr = '';
+			$('#step4').find('div.card').each(function() {
+				var prId = $(this).attr('data-id');
+				if(prIdListStr==''){
+					prIdListStr = prId;
+				}else{
+					prIdListStr = prIdListStr+','+prId
+				}
+			});
+
+			return prIdListStr;
+		}
+
+		function addClassChecked(obj){
+			//div中包含input會造成二次觸發事件
+			if(event) event.preventDefault();
+			var dataId = $(obj).attr('data-id');
+			clearInterval(qrcodeIntervalObj);
+
+			// 申請按鈕
+			$('#apply'+dataId).removeAttr('disabled');
+			$('#apply'+dataId).show();
+			$('div.form-group').removeClass('checked');
+			$(obj).addClass('checked');
+			$(obj).find('input[name=verification-level]').prop('checked','checked');
+
+			$('div.verify').hide();
+			var type = $(obj).data('type');
+			if(type != null && type != ''){
+				$(obj).parent().parent().find('div.verify[data-type='+type+']').show();
+			}
+			if(type=='digital'||type=='business'){
+				checkHiCOSCardPlugin();
+			}
+			if(type=='health'){
+				checkNHICardPlugin();
+				refreshCaptchaImage(dataId);
+			}
+			if(type=='fic'){
+				checkTwcaLibIsAlive();
+			}
+			if(type=='fch'){
+				checkTwcaLibIsAlive();
+			}
+			if(type=='fcs'){
+				checkTwcaLibIsAlive();
+				$('#apply'+dataId).hide();
+			}
+		}
+
+		function getMidClause(){
+			RiAPI.run({
+				type : 'GET',
+				url : '/rest/user/midClause',
+				loadSpin : false,
+				success : function(resp) {
+					if (resp.code < 0) {
+						if(resp.code == -5) {
+							showTimeoutMessage(resp);
+							return;
+						}
+						$('#message-text').text(resp.text);
+						$('#pop-message').modal('show');
+					} else {
+						//成功
+						//clause_ver
+						$('div.double-verify-content').empty().append(resp.data.clause.html);
+						$('input[name=clauseVer]').val(resp.data.clause.clausever);
+						$('input[name=clauseVerTime]').val(resp.data.clause.rspTime);
+					}
+				}
+			});
+		}
+
+		function showNotDoubleVerifyModal(member, id, check) {
+			if(check == true){
+				if(member != null && (member.isOld ==null || member.isOld == false) && (member.isDoubleVerify == null || member.isDoubleVerify == false)) {
+					//更新條款
+					getMidClause();
+					$('#doubleVerifyAppend'+id).show();
+					$('#doubleVerifyAppend'+id).addClass('step3');
+					scrollToPos('#doubleVerifyAppend'+id);
+					return true;
+				}
+			}
+			return false;
+		}
+
+
+		function updataMemberInfo(id, member, check, verificationType) {
+
+			if(showNotDoubleVerifyModal(member, id, check)){
+				if(verificationType=='cer'){
+					$('#use-carddouble'+id).find('div[data-type=digital]').hide();
+					$('#no-carddouble'+id).find('div[data-type=t-fido]').hide();
+				}
+				if(verificationType=='fic'){
+					$('#use-carddouble'+id).find('div[data-type=fic]').hide();
+				}
+				if(verificationType=='fch'){
+					$('#use-carddouble'+id).find('div[data-type=fch]').hide();
+				}
+				if(verificationType=='tfido'){
+					$('#use-carddouble'+id).find('div[data-type=digital]').hide();
+					$('#no-carddouble'+id).find('div[data-type=t-fido]').hide();
+				}
+				if(verificationType=='nhi'){
+					$('#use-carddouble'+id).find('div[data-type=health]').hide();
+				}
+				if(verificationType=='fcs'){
+					$('#use-carddouble'+id).find('div[data-type=fcs]').hide();
+				}
+
+				return;
+			}
+
+			console.log(member);
+
+			if(member.informMethod!=null && member.informMethod!=''){
+				$('#mStep').find('#member').hide();
+				$('#mStep').find('#download p').removeClass('step4').addClass('step3');
+				//method不為空
+				$('.tempEmail').html(hideEmail(memberTemp.email));
+				if(memberTemp.mobile!=null && memberTemp.mobile!=''){
+					$('.tempMobile').html(hideData(memberTemp.mobile, 6, memberTemp.mobile.length-1));
+				}
+				$('.memberEmail').html(hideEmail(member.email));
+				if(member.mobile!=null && member.mobile!=''){
+					$('.memberMobile').html(hideData(member.mobile, 6, member.mobile.length-1));
+				}
+				var step3_isShow = false;
+				if(member.email != null && member.email !=''
+						&& memberTemp.email != null && memberTemp.email !=''
+						&& member.email != memberTemp.email){
+					$('.update_email').show();
+					step3_isShow = true;
+				}
+				if(member.mobile != null && member.mobile !=''
+						&& memberTemp.mobile != null && memberTemp.mobile !=''
+						&& member.mobile != memberTemp.mobile){
+					$('.update_mobile').show();
+					step3_isShow = true;
+				}
+				$('#step2Div div:first').addClass('disabled-mask');
+				if(step3_isShow == true){
+					$('.step3').show();
+				}else{
+					$('#mStep').find('#member').hide();
+					$('#mStep').find('#download p').removeClass('step4').addClass('step3');
+					$('.step3').remove();
+					//$('#step4').find('.name').html(hideName(member.name));
+					//$('#step4').find('.uid').html(hideData(member.uid, 6, member.uid.length-1));
+					$('.userName').empty().append(hideName(member.name));
+					$('.userUid').empty().append(hideData(member.uid, 6, member.uid.length-1));
+					if(typeof member.informMethod !='undefined'&& member.informMethod != null){
+						if(member.informMethod=='email'){
+							$('#step3InformWarming').empty().append('系統將自動發通知信至您的電子信箱 '+ maskEmailAddress(member.email) +'。如電子信箱有誤，或想變更電子信箱');
+						}else if(member.informMethod=='mobile'){
+							$('#step3InformWarming').empty().append('系統將自動發通知簡訊至您的手機號碼 '+ maskPhoneNumber(member.mobile) +'。如手機號碼有誤，或想變更手機號碼');
+						}
+					}
+					$('#step4').addClass('step3');
+					setTimeout(function() {
+						ckeckedApplyDirect("SP");
+					},500);
+				}
+			}else{
+				$('.firstUse').show();
+				if(isDoubleVerify) {
+					$('.firstUse').addClass('step4');
+				} else {
+					$('.firstUse').addClass('step3');
+				}
+
+			}
+		}
+
+		// 下載起始
+		function iWantApply() {
+			//console.log('---iWantApply----');
+			var obj = $('#apply');
+			var psId = $(obj).attr('data-id');
+			var verificationType = $(obj).attr('verificationType');
+			var asId = $(obj).attr('asId');
+			var checkboxCheck = isAgreePolicy(psId);
+			var checkboxCheckByPrivacy = isAgreePrivacy(psId);
+			var version = $('#agree-privacy'+psId).attr('data-version');
+
+			if(agree == false && checkboxCheckByPrivacy == false) {
+				showPopMessage('請務必閱讀完畢上述服務條款與隱私權保護政策內容，並勾選同意');
+				return;
+			}
+
+			if (checkboxCheck == true) {
+				var uid = getUnmaskValue('#uid');
+				var birthday = transferBirthDateToAD(getUnmaskValue('#birthdate'));
+				if(birthday==null || birthday.length==0){
+					showPopMessage("請輸入生日", $('#birthdate'))
+					return;
+				}
+				if(!verifyBirthDateExpression(birthday)){
+					showPopMessage("生日格式不正確", $('#birthdate'))
+					return;
+				}
+				if(checkInputParam(psId) == true){
+					var data = {
+						uid: uid,
+						birthday: birthday,
+						psId: psId,
+						verificationType: verificationType,
+						asId: asId,
+						agree: agree,
+						version: version,
+					};
+					RiAPI.run({
+			            type: 'POST',
+			            url: '/rest/service/loginBySp',
+			            data: data,
+			            loadSpin : true,
+			            success: function(resp) {
+			            		if (resp.code < 0) {
+									if(resp.code == -5) {
+										showSPTimeoutMessage(resp);
+										return;
+									} else {
+										showPopMessage('登入失敗，請重新操作。');
+									}
+			            		}else{
+									var member = resp.data;
+
+									if(showMultiMemberModal(member)) {
+										return;
+									}
+
+									$('#agree-privacy' + psId).attr('disabled', 'disabled');
+									$(obj).hide();
+			            			$('#mStep').find('#verify').addClass('pass');
+			            			if(typeof member.name!='undefined'&& member.name!=null){
+			            				$('body').addClass('after-login');
+			            			}
+									tmpMember = member;
+			            	 		$('#memberId').val(member.id);
+			            	 		$('#mStep').find('#verify').addClass('pass');
+			            	 		$('div.content-wrap').addClass('last-step');
+
+									updataMemberInfo(psId, member, true, verificationType);
+			            		}
+			            },
+						error : function() {
+							showPopMessage('登入失敗，請重新操作。');
+						}
+			        });
+				}
+			} else {
+				showPopMessage(' 請務必閱讀完畢上述資料下載及線上服務條款，並勾選同意');
+			}
+		}
+
+		function iWantApplyDoubleVerify(id){
+			isDoubleVerify = true;
+			var verificationlevel = getVerificationLevel(id);
+			if(verificationlevel==5 && !$('#double_verify' + id).prop('checked')){
+				showPopMessage('請務必閱讀完畢上述行動身分識別服務使用者約定條款及隱私權告知條款內容，並勾選同意', $('#double_verify' + id));
+				return;
+			}
+			forVerifyCheckAndRunNextDownload(id,verificationlevel,true);
+		}
+
+		//重新產生T-Fido QRcode
+		function refreshTFidoQRcode(dataId){
+			$('#tfido-overtime-message').modal('hide');
+			var uid = getUidById(dataId);
+			var data = {
+				uid: uid
+			};
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/notifyTFido',
+				data: data,
+				loadSpin : true,
+				success : function(resp) {
+					if (resp.code < 0) {
+						if(resp.code == -5) {
+							showTimeoutMessage(resp);
+							return;
+						}
+						$('#tfido-message-text').text(resp.text);
+						$('#tfido-message').modal('show');
+						$('div.verify').hide();
+						$('#apply'+dataId).hide();
+					}else{
+						var qc = tfidos.find(e => e.dataId == dataId);
+						//清除舊的計時器
+						clearInterval(qrcodeIntervalObj);
+						//產生新的QRcode
+						qc.qrcode.makeCode(resp.data.TFidoResp);
+						$('#qrid'+dataId).val(resp.data.qrid);
+						//產生新的計時器
+						qc.countId = countQRcodeSecond($('#tfido-second'+dataId));
+						$('#tfido-QRcode'+dataId).attr('title','請掃描 QRcode');
+						$('#apply'+dataId).attr('disabled','disabled');
+						autoCheckQRcode(dataId);
+					}
+				},
+				error : function() {
+					$('#message-text').text('TW FidO認證失敗。');
+					$('#pop-message').modal('show');
+				}
+			});
+		}
+
+		//製作T-Fido QRcode
+		function createTFidoQRcode(obj){
+			//div中包含input會造成二次觸發事件
+			if(event) event.preventDefault();
+
+			var dataId = $(obj).attr('data-id');
+
+			if(dataId.indexOf('double')>-1){
+				isDoubleVerify = true;
+			}
+			//若已有生成QRcode，則直接顯示
+			if($('#tfido-QRcode'+dataId).find('img').length > 0){
+				addClassChecked(obj);
+				return;
+			}
+
+			var uid = getUidById(dataId);
+			var birthdate = getBirthDate(dataId);
+			var checkData = true;
+			var checkboxCheck = isAgreePolicy(dataId);
+			var verificationlevel = getVerificationLevel(dataId);
+
+			console.log(uid, dataId);
+
+			if(!checkboxCheck) {
+				showPopMessage(' 請務必閱讀完畢上述資料下載及線上服務條款，並勾選同意', $('#agree-policy' + dataId));
+				checkData = false;
+			} else if(checkUid(uid, dataId) == false) {
+				checkData = false;
+			} else if(checkBirthDate(birthdate, dataId) == false) {
+				checkData = false;
+			} else if(checkInputParam(dataId) == false) {
+				checkData = false;
+			}
+
+			if(checkData == false){
+				$('div.verify').hide();
+				$('#apply'+dataId).hide();
+				return;
+			}
+
+			// WebService驗證身分
+			var p = {
+				"uid" : getUidById(dataId),
+				"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate'+dataId.replace('double',''))),
+				"prId" : dataId,
+				"verificationlevel" : verificationlevel
+			};
+
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/webservice/birthdate',
+				loadSpin : true,
+				data : p,
+				success : function(resp) {
+					if (resp.code < 0) {
+						//TODO WEDER
+						//$('li.step2').find('div').first().removeClass('disabled-mask');
+						$('#cardstep2-'+dataId+' li.step2').find('div').removeClass('disabled-mask');
+						$('#member-privacy-mask'+dataId).removeClass('disabled-mask');
+						$('#member-privacy'+dataId).hide();
+						$('#member-verify'+dataId).hide();
+						$('#member-verify'+dataId+' div.form-group').removeClass('checked');
+						$('#member-verify'+dataId+' div.form-group input').prop('checked', false);
+						$('#member-verify'+dataId+' div.verify').hide();
+						$('#agree-privacy'+dataId).removeClass('user-agree');
+						$('#agree-privacy'+dataId).prop('checked', false);
+						$('#digital-pin'+dataId).val('');
+						$('#fic-pin'+dataId).val('');
+						$('#fch-pin'+dataId).val('');
+						$('#health-pwd'+dataId).val('');
+						$('#captcha'+dataId).val('');
+						$('#mutifactor-hid1'+dataId).val('');
+						$('#houseHoldId'+dataId).val('');
+						$('div.privacy-content').scrollTop(0);
+						$('#agree-privacy' + dataId).prop('disabled', true);
+						const uidType = $('#uid'+dataId).attr('data-uidType');
+						if(resp.code == -5) {
+							showTimeoutMessage(resp);
+							return;
+						} else if (resp.code == -4) {
+							showPopMessage((uidType == 1?'目前移民署機關驗證身分服務異常，請稍後再試。':'目前戶政機關驗證身分服務異常，請稍後再試。'),$('#uid'+dataId));
+							return;
+						}
+						// WebService驗證失敗
+
+						showPopMessage((uidType == 1?'身分驗證失敗，請重新輸入。':'身分驗證失敗，請重新輸入。'),$('#uid'+dataId));
+
+					} else {
+						// WebService驗證通過
+						var data = {
+							uid: uid
+						};
+						RiAPI.run({
+							type : 'POST',
+							url : '/rest/user/notifyTFido',
+							data: data,
+							loadSpin : true,
+							success : function(resp) {
+								if (resp.code < 0) {
+									if(resp.code == -5) {
+										showTimeoutMessage(resp);
+										return;
+									}
+									$('#tfido-message-text').text(resp.text);
+									$('#tfido-message').modal('show');
+								}else{
+									//產生QRcode
+									var qc = new QRCode(document.getElementById('tfido-QRcode'+dataId), {
+										text: resp.data.TFidoResp,
+										width : 190,
+										height : 190
+									});
+									$('#qrid'+dataId).val(resp.data.qrid);
+									//計時一分鐘
+									var countId = countQRcodeSecond($('#tfido-second'+dataId));
+									// 將QRcode及計時器存入陣列，以便重新產生
+									tfidos.push({
+										dataId: dataId,
+										qrcode: qc,
+										countId: countId
+									});
+									addClassChecked(obj);
+									$('#uid'+dataId+', #birthdate'+dataId).attr('disabled','disabled');
+									$('#tfido-QRcode'+dataId).attr('title','請掃描 QRcode');
+									autoCheckQRcode(dataId);
+									$('#apply'+dataId).attr('disabled','disabled');
+									$('#tfido-overtime-btn').attr('onclick','javascript:refreshTFidoQRcode(\''+ dataId +'\');');
+								}
+							}
+						});
+					}
+				},
+				error : function() {
+					showPopMessage('戶政機關生日驗證失敗。',$('#uid'+dataId));
+				}
+			});
+
+		}
+
+		//120秒失敗，每5秒檢查
+		function autoCheckQRcode(id){
+			var prIdEncode = $('#apply0').attr('prid-list');
+			var countConfirmTFido = 0; // 120 sec / 5sec = 24 times
+			qrcodeIntervalObj = window.setInterval(function(){
+				//TW FidO
+				var checkFlag = true;
+				var qrid =  $('#qrid'+id).val();
+				var p = {
+					"uid" : getUidById(id),
+					"birthdate" : getBirthDate(id),
+					"prId" : getScope(id),
+					"qrid" : qrid,
+					"isDoubleVerify": isDoubleVerify
+				};
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/confirmTFido',
+					data: p,
+					loadSpin : false,
+					success : function(resp) {
+						if (resp.code < 0) {
+							countConfirmTFido = countConfirmTFido + 1;
+							if(countConfirmTFido>=24){
+								clearInterval(qrcodeIntervalObj);
+								$('#tfido-overtime-message-text').text('TW FidO認證已逾兩分鐘，請重新操作。');
+								$('#tfido-overtime-message').modal('show');
+							}
+						}else{
+							clearInterval(qrcodeIntervalObj);
+							if(isDoubleVerify){
+								$('#doubleVerifyAppend'+id.replace('double','')).find('div').first().addClass('disabled-mask');
+							}
+							updataMemberInfo(id.replace('double',''), resp, false, 'tfido');
+						}
+					}
+				});
+			},5000);
+		}
+
+		//倒數60秒
+		function countQRcodeSecond(obj){
+			var second = 59;
+			var countId;
+			return countId = window.setInterval(function(){
+				obj.html(second);
+				if (second == 0){
+					clearInterval(countId);
+				}
+				second--;
+			},1000);
+		}
+
+		function forVerifyCheckAndRunNextDownload(id,verificationlevel,isDoubleVerify){
+			if(verificationlevel==0){
+				//自然人憑證
+				var pin =  $('#digital-pin'+id).val();
+				if(pin == null || pin == ''){
+					showPopMessage('請輸入PIN碼', $('#digital-pin'+id));
+					return;
+				}
+				//在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+				makeSignature(pin, function(ret){
+					if(ret.ret_code!=0){
+						showPopMessage(ret.errorMsg);
+						return;
+					}
+					var pkcs7 = ret.signature;
+					var p = {
+						"uid" : getUidById(id),
+						"birthdate" : getBirthDate(id),
+						"prId" : getScope(id),
+						"pkcs7" : pkcs7,
+						"isDoubleVerify": isDoubleVerify
+					};
+
+					RiAPI.run({
+						type : 'POST',
+						url : '/rest/user/verifyCert',
+						loadSpin : true,
+						data : p,
+						success : function(resp) {
+							if (resp.code < 0) {
+								//登入失敗
+								showPopMessage('自然人憑證驗證失敗，請重新操作。');
+							} else {
+								//檢測成功直接申請
+								//disable apply btn
+								if(isDoubleVerify){
+									$('#doubleVerifyAppend'+id.replace('double','')).find('div').first().addClass('disabled-mask');
+								}
+								updataMemberInfo(id.replace('double',''), resp, false, 'cer');
+							}
+						},
+						error : function() {
+							showPopMessage('自然人憑證功能暫時無法使用，請改用其他驗證方式。');
+						}
+					});
+				});
+			}else if(verificationlevel==0.1){
+				//晶片金融卡
+				var pin =  $('#fic-pin'+id).val();
+				if(pin == null || pin == ''){
+					showPopMessage('請輸入密碼', $('#fic-pin'+id));
+					return;
+				}
+				//ATM Login
+				tmpId = id;
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/ficAtmLogin',
+					loadSpin : true,
+					data : {"uid" : getUidById(id)},
+					success : function(resp) {
+						if (resp.code < 0) {
+							//登入失敗
+							showPopMessage('晶片金融卡驗證失敗，請重新操作。');
+						} else {
+							mydataTWCALib.ATMVerifyInvoke(
+									pin,
+									resp.data.BusinessNo,
+									resp.data.ApiVersion,
+									resp.data.HashKeyNo,
+									resp.data.VerifyNo,
+									resp.data.Token,
+									resp.data.IdentifyNo,
+									resp.data.proxyURL,
+									ATMVerifyInvokeCallback);
+						}
+					},
+					error : function() {
+						showPopMessage('晶片金融卡功能暫時無法使用，請改用其他驗證方式。');
+					}
+				});
+			}else if(verificationlevel==0.2){
+				//硬體金融憑證
+				var pin =  $('#fch-pin'+id).val();
+				if(pin == null || pin == ''){
+					showPopMessage('請輸入PIN碼', $('#fch-pin'+id));
+					return;
+				}
+				tmpId = id;
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/fchInitParam',
+					loadSpin : true,
+					data : {"uid" : getUidById(id)},
+					success : function(resp) {
+						if (resp.code < 0) {
+							//登入失敗
+							showPopMessage('硬體金融憑證驗證失敗，請重新操作。');
+						} else {
+							mydataTWCALib.HWSignPKCS7(
+									resp.data.VerifyNo,
+									pin,
+									resp.data.proxyURL,
+									HWSignPKCS7Callback);
+						}
+					},
+					error : function() {
+						showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+					}
+				});
+			}else if(verificationlevel==0.5){
+				//工商憑證
+				var pin =  $('#business-pin'+id).val();
+				if(pin == null || pin == ''){
+					showPopMessage('請輸入PIN碼', $('#business-pin'+id));
+					return;
+				}
+				//在client端做工商憑證pkcs7, makeSignature function in certLogin.js
+				makeSignature(pin, function(ret){
+					if(ret.ret_code!=0){
+						showPopMessage(ret.errorMsg);
+						return;
+					}
+					var pkcs7 = ret.signature;
+					var p = {
+						"prId" : getScope(id),
+						"pkcs7" : pkcs7
+					};
+
+					RiAPI.run({
+						type : 'POST',
+						url : '/rest/user/verifyMOECA',
+						loadSpin : true,
+						data : p,
+						success : function(resp) {
+							if (resp.code < 0) {
+								showPopMessage('工商憑證驗證失敗，請重新操作。');
+							} else {
+								//檢測成功直接申請
+								//disable apply btn
+								updataMemberInfo(id, resp, false, 'moeaca');
+							}
+						},
+						error : function() {
+							showPopMessage('工商憑證功能暫時無法使用，請改用其他驗證方式。');
+						}
+					});
+				});
+			}else if(verificationlevel==1){
+				// 以獨立執行
+			}else if(verificationlevel==2){
+				//健保卡
+				var pwd =  $('#health-pwd'+id).val();
+				if(pwd == null || pwd == ''){
+					showPopMessage('請輸入註冊密碼', $('#health-pwd'+id));
+					return;
+				}
+
+				var captcha = $('#captcha'+id).val();
+				if(captcha == null || captcha.length == 0) {
+					showPopMessage('請輸入驗證碼', $('#captcha'+id));
+					return;
+				}
+
+				if(healthCardCanVerify){
+					// 檢驗健保卡，verifyHealth function in fragment/login-health
+					verifyHealth(pwd, function(ret){
+						var p = {
+							"uid" : getUidById(id),
+							"birthdate" : getBirthDate(id),
+							"prId" : getScope(id),
+							"captcha" : captcha.toUpperCase(),
+							"captchaKeyVal" : id,
+							"isDoubleVerify": isDoubleVerify
+						};
+						p.health = ret;
+						RiAPI.run({
+							type : 'POST',
+							url : '/rest/user/verifyNHICard',
+							loadSpin : true,
+							data : p,
+							success : function(resp) {
+								if (resp.code < 0) {
+									refreshCaptchaImage(id);
+									//登入失敗
+									showPopMessage(resp.text);
+								} else {
+									//檢測成功直接申請
+									//disable apply btn
+									if(isDoubleVerify){
+										$('#doubleVerifyAppend'+id.replace('double','')).find('div').first().addClass('disabled-mask');
+									}
+									updataMemberInfo(id.replace('double',''), resp, false, 'nhi');
+								}
+							},
+							error : function() {
+								showPopMessage('健保卡功能暫時無法使用，請改用其他驗證方式。');
+							}
+						});
+					});
+				}else{
+					showPopMessage('未安裝健保卡檢測元件，請重新確認或安裝');
+					return;
+				}
+			}else if(verificationlevel==2.1){
+				//軟體金融憑證
+//                     var pin =  $('#fcs-pin'+id).val();
+//                     if(pin == null || pin == ''){
+//                         showPopMessage('請輸入PIN碼', $('#fcs-pin'+id));
+//                         return;
+//                     }
+				var pin ='';
+				tmpId = id;
+				console.log('---軟體金融憑證 Init---');
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/fcsInitParam',
+					loadSpin : true,
+					data : {"uid" : getUidById(id)},
+					success : function(resp) {
+						if (resp.code < 0) {
+							//登入失敗
+							showPopMessage('軟體金融憑證驗證失敗，請重新操作。');
+						} else {
+							mydataTWCALib.SWSignPKCS7(
+									resp.data.VerifyNo,
+									pin,
+									resp.data.MemberNo,
+									SWSignPKCS7Callback);
+						}
+					},
+					error : function() {
+						showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+					}
+				});
+			}else if(verificationlevel==3){
+				//雙證件驗證
+				var checkFlag = true;
+				// 身分證發證日期+健保卡卡號 12
+				// 設籍戶口名簿戶號+健保卡卡號 10
+				var multifactorType = getMultifactorType(id)
+				//console.log('multifactorType -> ' + multifactorType);
+				var p = {
+					"uid" :getUidById(id),
+					"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate'+id.replace('double',''))),
+					"prId" : getScope(id)
+				};
+
+				var $inputMarkDate = $('#mutifactor-idMarkDate' + id).find('input[name=multifactor-type]');
+				var $inputhouseHoldId = $('#mutifactor-houseHoldId'+ id).find('input[name=multifactor-type]');
+				var $inputHid = $('#mutifactor-hid'+ id).find('input[name=multifactor-type]');
+				var markDate = $inputMarkDate.val();
+				var houseHoldId = getUnmaskValue($inputhouseHoldId);
+				var hid = getUnmaskValue($inputHid);
+
+				p.nhiCardNumber = hid;
+				if(multifactorType === '12'){
+					p.idMark = $('#idMark_selection' + id).val();
+					p.idMarkDate = addZeroPrefixForBirthdate($('#mutifactor-idMarkDate' + id).find('input[name=multifactor-type]').val());
+				}else{
+					p.houseHoldId = getUnmaskValue($inputhouseHoldId);
+				}
+
+				if(hid == null || hid == ''){
+					showPopMessage('請輸入健保卡卡號，共12碼', $inputHid)
+					return;
+				}
+
+				// 使用新的mydata驗證流程取代gsp
+				if(checkFlag){
+					RiAPI.run({
+						type : 'POST',
+						url : '/rest/user/piiVerifyUrl/mydata/' + multifactorType,
+						loadSpin : true,
+						data : p,
+						success : function(resp) {
+							if (resp.code < 0) {
+								//登入失敗
+								if(resp.text === '身分證發證日期或發證日期種類(領/補/換)錯誤'){
+									$('#idMark_selection' + id ).val('-1');
+									$inputMarkDate.val('');
+									focusBefore = $inputMarkDate;
+								}else if(resp.text === '戶口名簿戶號錯誤'){
+									$inputhouseHoldId.val('');
+									focusBefore = $inputhouseHoldId;
+								}else if(resp.text === '健保卡卡號錯誤'){
+									$inputHid.val('');
+									focusBefore = $inputHid;
+								}
+								showPopMessage(resp.text);
+							} else {
+								// 驗證通過
+								if (typeof resp.data.uuidcheck != 'undefined') {
+									var uuidcheck = resp.data.uuidcheck;
+									forPIIVerifyUrlCheckLoginWindowClosure(id,uuidcheck,multifactorType,isDoubleVerify);
+								}
+							}
+						}
+					});
+				}
+			}else if(verificationlevel==5){
+				// 手機號碼
+				var checkFlag = true;
+				var $inputMsisdn = $('#msisdn'+id);
+				var msisdn =  $('#msisdn'+id).val();
+				var clauseVer =  $('#clauseVer'+id).val();
+				var clauseVerTime =  $('#clauseVerTime'+id).val();
+				var p = {
+					"uid" :getUidById(id),
+					"birthdate" : getBirthDate(id),
+					"prId" : getScope(id),
+					"msisdn": msisdn,
+					"clauseVer": clauseVer,
+					"clauseVerTime": clauseVerTime,
+					"isDoubleVerify": isDoubleVerify
+				};
+
+				if(msisdn == null || msisdn == ''){
+					showPopMessage('請輸入手機號碼，共10碼', $inputMsisdn)
+					return;
+				}
+				if(checkFlag){
+					RiAPI.run({
+						type : 'POST',
+						url : '/rest/user/verifyMobileId',
+						loadSpin : true,
+						data : p,
+						success : function(resp) {
+							if (resp.code < 0) {
+								//登入失敗
+								$('#message-text').text('此手機號碼非登記於您本人名下。如無本人名下之門號，請選擇其他驗證方式。');
+								$('#pop-message').modal('show');
+							} else {
+								if(isDoubleVerify){
+									$('#doubleVerifyAppend'+id.replace('double','')).find('div').first().addClass('disabled-mask');
+								}
+								updataMemberInfo(id.replace('double',''), resp, false, 'mobileId');
+							}
+						},
+						error : function() {
+							$('#message-text').text('此手機號碼非登記於您本人名下。如無本人名下之門號，請選擇其他驗證方式。');
+							$('#pop-message').modal('show');
+						}
+					});
+				}
+			}else{
+				showPopMessage('請選擇身分驗證');
+			}
+		}
+
+		/* 驗證碼確認 */
+		function emailOrMobileMessageCheck(e){
+			var psId = $(e).attr('data-id');
+			var name = getUnmaskValue('#name');
+			var mobile= getMobile(psId);
+			var email = getEmail(psId);
+			var method = getInformMethod(psId);
+			if(name==null || name.length==0){
+				showPopMessage("請輸入姓名", $('name'))
+				return;
+			}
+			if(method=='mobile' && (mobile==null || mobile.length==0)){
+				showPopMessage("請輸入手機號碼", $('mobile'+psId));
+				return;
+			}
+			if(method=='email' && (email==null || email.length==0)){
+				showPopMessage("請輸入電子信箱", $('email'+psId));
+				return;
+			}
+
+			var checkCode = '';
+			if(method=='email') {
+				checkCode = $('#verifyCodeEmail'+psId).val();
+			} else {
+				checkCode = $('#verifyCodeMobile'+psId).val();
+			}
+			if(checkCode!=null&&checkCode!=''){
+				var data = {
+					prId: psId, //因統一使用去帶入此參數
+					uuidcheckforCheckCode: $('#uuidcheckforCheckCode'+psId).val(),
+					checkforCheckCode:checkCode
+				};
+				var showVerifyView = false;
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/emailOrMobileMessage/check',
+					data: data,
+					loadSpin : true,
+					showVerifyView : showVerifyView,
+					complete : function(xhr, status) {
+						if(showVerifyView == true) {
+							setTimeout(function(){
+								saveMember(e);
+							},400);
+						}
+					},
+					success : function(resp) {
+						if (resp.code < 0) {
+							$('#verifyCode').val('');
+							if(resp.code == -1209){
+								showPopMessage("驗證碼輸入錯誤或失效");
+							}else{
+								showPopMessage("系統錯誤，請重新操作！");
+							}
+						}else{
+							showVerifyView = true;
+						}
+					}
+				});
+			} else {
+				showPopMessage("請輸入驗證碼", $('#verifyCode'));
+			}
+		}
+
+		/*補登資料*/
+		function saveMember(e){
+			var psId = $(e).attr('data-id')
+			var name = getUnmaskValue('#name');
+			var mobile= getMobile(psId);
+			var email = getEmail(psId);
+			var method = getInformMethod(psId);
+			if(name==null || name.length==0){
+				showPopMessage("請輸入姓名", $('name'))
+				return;
+			}
+			if(method=='mobile' && (mobile==null || mobile.length==0)){
+				showPopMessage("請輸入手機號碼", $('mobile'+psId));
+				return;
+			}
+			if(method=='email' && (email==null || email.length==0)){
+				showPopMessage("請輸入電子信箱", $('email'+psId));
+				return;
+			}
+			if(method !='email' && method!='mobile'){
+				showPopMessage('請輸入聯絡方式');
+				return;
+			}
+			var data = {
+				id: $('#memberId').val(),
+				name: name,
+				method: method,
+				mobile: mobile,
+				email: email
+			};
+			RiAPI.run({
+	            type: 'POST',
+	            url: '/rest/service/saveMember',
+	            data: data,
+	            loadSpin : true,
+	            success: function(resp) {
+	            		if(resp.code < 0){
+							showPopMessage(resp.text);
+	            		}else{
+	            			$('#step2Div div:first').addClass('disabled-mask');
+	            			$('#mStep').find('#member').addClass('pass');
+	            			var member = resp.data;
+							tmpMember = member;
+		            		$(e).hide();
+		            		//$('#step4').find('.name').html(hideName(member.name));
+		            		//$('#step4').find('.uid').html(hideData(member.uid, 6, member.uid.length-1));
+							$('.userName').empty().append(hideName(member.name));
+							$('.userUid').empty().append(hideData(member.uid, 6, member.uid.length-1));
+							if(typeof member.informMethod !='undefined'&& member.informMethod != null){
+								if(member.informMethod=='email'){
+									$('#step3InformWarming').empty().append('系統將自動發通知信至您的電子信箱 '+ maskEmailAddress(member.email) +'。如電子信箱有誤，或想變更電子信箱');
+								}else if(member.informMethod=='mobile'){
+									$('#step3InformWarming').empty().append('系統將自動發通知簡訊至您的手機號碼 '+ maskPhoneNumber(member.mobile) +'。如手機號碼有誤，或想變更手機號碼');
+								}
+							}
+							if(isDoubleVerify) {
+								$('#step4').addClass('step5');
+							} else {
+								$('#step4').addClass('step4');
+							}
+							$('#resendVerifyOTPText').hide();
+							clearInterval(waitEmailorMobileOTPsecInterval);
+							setTimeout(function() {
+								ckeckedApplyDirect("SP");
+							},500);
+	            		}
+	            }
+	        });
+		}
+
+		function updateInfo(e){
+			var changeMail = $('input[name=change_mail]:checked').val();
+			var changeMobile = $('input[name=change_mobile]:checked').val();
+			var data = {
+				id: $('#memberId').val(),
+				tempId: memberTemp.id,
+				changeMail: changeMail,
+				changeMobile: changeMobile
+			};
+			RiAPI.run({
+	            type: 'POST',
+	            url: '/rest/service/updateMember',
+	            data: data,
+	            loadSpin : true,
+	            success: function(resp) {
+	            		if(resp.code < 0){
+	           			$('#message-text').text(resp.text);
+						$('#pop-message').modal('show');
+	           		}else{
+	           			$('#mStep').find('#member').addClass('pass');
+	           			var member = resp.data;
+	           			tmpMember = member;
+	           			$(e).hide();
+						//$('#step4').find('.name').html(hideName(member.name));
+						//$('#step4').find('.uid').html(hideData(member.uid, 6, member.uid.length-1));
+						$('.userName').empty().append(hideName(member.name));
+						$('.userUid').empty().append(hideData(member.uid, 6, member.uid.length-1));
+						if(typeof member.informMethod !='undefined'&& member.informMethod != null) {
+							if (member.informMethod == 'email') {
+								$('#step3InformWarming').empty().append('系統將自動發通知信至您的電子信箱 ' + maskEmailAddress(member.email) + '。如電子信箱有誤，或想變更電子信箱');
+							} else if (member.informMethod == 'mobile') {
+								$('#step3InformWarming').empty().append('系統將自動發通知簡訊至您的手機號碼 ' + maskPhoneNumber(member.mobile) + '。如手機號碼有誤，或想變更手機號碼');
+							}
+						}
+
+						$('#step4').addClass('step4');
+						setTimeout(function() {
+							ckeckedApplyDirect("SP");
+						},500);
+	           		}
+	            }
+	        });
+		}
+
+		function previewToCompany(obj){
+			var httpcode = $(obj).attr('httpcode');
+			var downloadsn = $(obj).attr('downloadsn');
+			var prId = $(obj).attr('data-id');
+			var url = $(obj).attr('data-src');
+// 			if(typeof downloadsn!='undefined'&&downloadsn!=null&&downloadsn!=''){
+// 				url = url + "/" + downloadsn;
+// 			}
+			if(httpcode=='200'){
+                $('#preview-btn').attr('data-src',url);
+                $('#preview-btn').attr('data-id',prId);
+                $('#preview-btn').attr('httpcode',httpcode);
+                $('#preview-btn').attr('downloadsn',downloadsn);
+                $('#preview-message-text').text('此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。');
+                $('#preview-pop-message').modal('show');
+// 				window.open(url);
+			}else if(httpcode=='204'){
+				$('#message-text').text('點擊確認後，本平臺將立即刪除此資料檔案。');
+				$('#pop-message').modal('show');
+				//append change portal_resource_download stat=1 RiAPI
+				RiAPI.run({
+					type : 'GET',
+					url : '/rest/personal/download/changestatonebyspdetail/'+prId,
+					loadSpin : false,
+					success : function(resp) {
+						if (resp.code < 0) {
+							$('#message-text').text(resp.text);
+							$('#pop-message').modal('show');
+						} else {
+							//成功
+							//console.log('------apply success------:'+prId);
+							$('#accordion'+prId).attr('download-status','2');
+						}
+					}
+				});
+			}else{
+				//console.log('httpcode '+httpcode+' 申請失敗！');
+				//$('#message-text').text('httpcode '+httpcode+' 申請失敗！');
+				$('#message-text').text('資料申請失敗，請重新操作。');
+				$('#pop-message').modal('show');
+				//append change portal_resource_download stat=1 RiAPI
+				RiAPI.run({
+					type : 'GET',
+					url : '/rest/personal/download/changestatonebyspdetail/'+prId,
+					loadSpin : false,
+					success : function(resp) {
+						if (resp.code < 0) {
+							$('#message-text').text(resp.text);
+							$('#pop-message').modal('show');
+						} else {
+							//成功
+							//console.log('------apply success------:'+prId);
+							$('#accordion'+prId).attr('download-status','2');
+						}
+					}
+				});
+			}
+		}
+
+// 	    function previewToCompanyConfirmYes(obj){
+// 			var httpcode = $(obj).attr('httpcode');
+// 			var downloadsn = $(obj).attr('downloadsn');
+// 			var prId = $(obj).attr('data-id');
+// 			var url = $(obj).attr('data-src');
+// 			if(typeof downloadsn!='undefined'&&downloadsn!=null&&downloadsn!=''){
+// 				url = url + "/" + downloadsn;
+// 			}
+// 			window.open(url);
+// 			$('#preview-pop-message').modal('hide');
+// 		}
+
+		function hideName(data){
+			if(data==null||data==''){
+				return '';
+			}
+			if(data.length < 3){
+				return hideData(data, 1, 1);
+			}else if(data.length >= 3){
+				return hideData(data, 1, data.length-2);
+			}
+		}
+
+		function hideEmail(data){
+			if(data==null||data==''){
+				return '';
+			}
+			var dataSplit = data.split('@');
+			if(dataSplit[0].length < 6){
+				return hideData(dataSplit[0], 2, dataSplit[0].length-1)+'@'+dataSplit[1];
+			}else if(dataSplit[0].length >= 6){
+				return hideData(dataSplit[0], 4, dataSplit[0].length-1)+'@'+dataSplit[1];
+			}
+		}
+
+		function hideData(data, start, end){
+			if(data==null||data==''){
+				return '';
+			}
+			var returnStr = data.substring(0, start);
+			for(var i=start;i<=end;i++){
+				returnStr += '*';
+			}
+			returnStr += data.substring(end+1);
+			return returnStr;
+		}
+
+		$('div.content-wrap, label').keydown(function(e) {
+			if (e.keyCode == 13) {
+				$(this).trigger('click');
+			}
+		});
+
+	    function previewToCompanyConfirmYes(obj){
+			var prId = $(obj).attr('data-id');
+			var downloadSn = $(obj).attr('downloadSn');
+			var p = {
+				key:publicKeyBase64
+			};
+	        RiAPI.run({
+	            type : 'POST',
+	            url : '/rest/personal/sppreview/'+prId+'/'+downloadSn,
+	            data: p,
+	            loadSpin : true,
+	            success : function(resp) {
+	                if (resp.code < 0) {
+	                    if(resp.code == -5) {
+	                        showTimeoutMessage(resp);
+	                        return;
+	                    }
+	                    $('#message-text').text(resp.text);
+	                    $('#pop-message').modal('show');
+	                } else {
+	                	if(typeof resp.data.data!='undefined' &&resp.data.data.length>0){
+	                		preViewDataDecodeAndShow(resp.data);
+	                	}
+	                }
+	            },
+	            error : function() {
+	                $('#message-text').text('線上預覽檔案失敗。');
+	                $('#pop-message').modal('show');
+	            }
+
+	        });
+			$('#preview-pop-message').modal('hide');
+	    }
+
+		var algorithmKeyGen = {
+			name: "RSA-OAEP",
+			hash: {name: "sha-256"},
+			modulusLength: 2048,
+			publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+		};
+
+		function createNewUserKey(){
+			return crypto.subtle.generateKey(algorithmKeyGen, true, ['encrypt', 'decrypt']).then(function(key) {
+				return Promise.all([crypto.subtle.exportKey("spki", key.publicKey),
+				crypto.subtle.exportKey("pkcs8", key.privateKey)]);
+			});  
+		}
+
+	    function arrayBufferToBase64(arrayBuffer) {
+	        var byteArray = new Uint8Array(arrayBuffer);
+	        var byteString = '';
+	        for(var i=0; i < byteArray.byteLength; i++) {
+	            byteString += String.fromCharCode(byteArray[i]);
+	        }
+	        var b64 = window.btoa(byteString);
+
+	        return b64;
+	    }
+
+	    function addNewLines(str) {
+	        var finalString = '';
+	        while(str.length > 0) {
+	            finalString += str.substring(0, 64) + '\n';
+	            str = str.substring(64);
+	        }
+
+	        return finalString;
+	    }
+
+	    function toPrivatePem(privateKey) {
+	        var b64 = addNewLines(arrayBufferToBase64(privateKey));
+	        var pem = "-----BEGIN PRIVATE KEY-----\n" + b64 + "-----END PRIVATE KEY-----";
+
+	        return pem;
+	    }
+
+	    function toPublicPem(publicKey) {
+	        //var b64 = addNewLines(arrayBufferToBase64(publicKey));
+	        var b64 = arrayBufferToBase64(publicKey);
+	        var pem = "-----BEGIN PUBLIC KEY-----\n" + b64 + "-----END PUBLIC KEY-----";
+
+	        return b64;
+	    }
+
+	    function convertPemToBinary(pem) {
+	        var lines = pem.split('\n')
+	        var encoded = ''
+	        for(var i = 0;i < lines.length;i++){
+	          if (lines[i].trim().length > 0 &&
+	              lines[i].indexOf('-BEGIN RSA PRIVATE KEY-') < 0 &&
+	              lines[i].indexOf('-BEGIN PRIVATE KEY-') < 0 &&
+	              lines[i].indexOf('-BEGIN RSA PUBLIC KEY-') < 0 &&
+	              lines[i].indexOf('-BEGIN PUBLIC KEY-') < 0 &&
+	              lines[i].indexOf('-END RSA PRIVATE KEY-') < 0 &&
+	              lines[i].indexOf('-END PRIVATE KEY-') < 0 &&
+	              lines[i].indexOf('-END PUBLIC KEY-') < 0 &&
+	              lines[i].indexOf('-END RSA PUBLIC KEY-') < 0) {
+	            encoded += lines[i].trim()
+	          }
+	        }
+	        return base64StringToArrayBuffer(encoded)
+	    }
+
+	    function base64StringToArrayBuffer(b64str) {
+	        var byteStr = atob(b64str)
+	        var bytes = new Uint8Array(byteStr.length)
+	        for (var i = 0; i < byteStr.length; i++) {
+	          bytes[i] = byteStr.charCodeAt(i)
+	        }
+	        return bytes.buffer
+		}
+
+	    function importPrivateKey(pemKey) {
+	        return new Promise(function(resolve) {
+	          var importer = crypto.subtle.importKey("pkcs8", convertPemToBinary(pemKey), algorithmKeyGen, true, ['decrypt'])
+	          importer.then(function(key) {
+	            resolve(key)
+	          })
+	        })
+	    }
+
+		function preViewDataDecodeAndShow(data){
+			var encryptedKey = data.key;
+			var encryptedData = data.data;
+			var encryptedIv = data.iv;
+			importPrivateKey(privatKeyBase64).then(function(key){
+				//importkey 解密
+				return crypto.subtle.decrypt({name: 'rsa-oaep'}, key, base64StringToArrayBuffer(encryptedKey));
+			}).then(function(decryptedKey){
+				var base64Str = cbcdecrypt(encryptedData,new TextDecoder("UTF-8").decode(new Uint8Array(decryptedKey)),encryptedIv);
+				return new Promise(function(resolve) {
+					resolve(base64Str);
+				});
+			}).then(function(base64Str){
+				showbase64StrPdf(base64Str);
+			});
+		}
+
+
+		function showbase64StrPdf(base64Str){
+			var binary = atob(base64Str.replace(/\s/g, ''));
+			var len = binary.length;
+			var buffer = new ArrayBuffer(len);
+			var view = new Uint8Array(buffer);
+			for (var i = 0; i < len; i++) {
+			    view[i] = binary.charCodeAt(i);
+			}
+			var blob = new Blob([view], { type: "application/pdf" });
+			var blobURL = URL.createObjectURL(blob);
+			window.open(blobURL);
+		}
+
+		//解密
+		function cbcdecrypt(e, key, iv){
+		   var r = CryptoJS.enc.Utf8.parse(iv);
+		   var  n = CryptoJS.enc.Utf8.parse(key);
+		   var o = CryptoJS.AES.decrypt(e, n, {
+		        iv: r,
+		        mode: CryptoJS.mode.CBC,
+		        padding: CryptoJS.pad.Pkcs7
+		   });
+		   return CryptoJS.enc.Utf8.stringify(o).toString();
+		}
+
+		function refreshCaptchaImage(id) {
+			var url = /*[[@{/captcha.jpg}]]*/"";
+			url += "?" + "ctime=" + new Date().getTime() + "&prId=" + id;
+			$('#captchaImg'+id).attr('src', url);
+			$('#captcha'+id).val('');
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>MyData | 財政部財政資訊中心109/7/17~7/20系統維護通知</title>
+  <link rel="icon" type="image/png" sizes="16x16"
+		href="image/smydatalogo.png"
+		th:href="@{/resources/dist/image/smydatalogo.png}">
+  <meta name="description" content="沒時間臨櫃申辦個人資料與服務嗎？快來線上申辦 MyData 雲服務，安全、安心、省時間！" />
+  <meta name="keywords" content="便民服務、線上申請個人資料、戶政、地政、健保局、交通局、財政、勞保局、教育部" />
+  <meta property="og:site_name" content="MyData 個人化資料自主運用，線上申辦好方便！" />
+  <meta property="og:type" content="website" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="MyData 個人化資料自主運用，線上申辦好方便！" />
+  <meta property="og:description" content="沒時間臨櫃申辦個人資料與服務嗎？快來線上申辦 MyData 雲服務，安全、安心、省時間！" />
+  <meta property="og:url" content="/tw/" />
+  <meta property="og:image" content="" />
+  <link rel="stylesheet" href="css/bootstrap.css" th:href="@{/resources/dist/css/bootstrap.css}" />
+  <link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+  <link rel="stylesheet" href="css/style.css" th:href="@{/resources/dist/css/style.css}" />
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="js/jquery-3.5.1.min.js" th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/popper.min.js" th:src="@{/resources/dist/js/popper.min.js}"></script>
+  <script src="js/bootstrap.js" th:src="@{/resources/dist/js/bootstrap.min.js}"></script>
+</head>
+<!-- 登入後增加 .after-login 以顯示會員名稱與條碼按鈕 -->
+
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+  <!--======= header =======-->
+  <header th:replace="fragment/header::header"></header>
+  <!--======= header =======-->
+
+  <!-- 參考 css 的 /* icon 檢索 */ -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pb-0">
+      <a href="#" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+      <li class="breadcrumb-item">
+        <a href="#"><img src="images/breadcrumb-home.png"
+                         th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="" />首頁</a>
+      </li>
+      <li class="breadcrumb-item" aria-current="page"><a href="#" th:href="@{/news/list}">最新消息</a></li>
+<!--       <li class="breadcrumb-item" aria-current="page">介接試辦要點</li> -->
+      <li class="breadcrumb-item active" aria-current="page">財政部財政資訊中心109/7/17~7/20系統維護通知</li>
+    </ol>
+  </nav>
+  <div class="content-wrap latest-news-detail pt-0">
+    <div class="section-wrap">
+      <h2 class="alert">
+        財政部財政資訊中心109/7/17~7/20系統維護通知
+        <p class="block"><small class="gray">更新日期：109/07/17</small></p>
+      </h2>
+      <div class="content">
+		<p>財政部財政資訊中心將於07/17(五)16:30 ~ 07/20(一)09:00，進行系統維護作業，作業期間系統將停止服務，屆時無法取用財政部財政資訊中心之相關資料集，敬請見諒</p>
+      </div>
+    </div>
+  </div>
+
+  <!--======= footer =======-->
+  <footer th:replace="fragment/footer::footer"></footer>
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+     role="button" title="網頁置頂" data-toggle="tooltip" data-placement="left"
+     style="display: inline;">
+    <img class="arrow-position" src="images/top-arrow.png"
+         th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+  </a>
+  <!--======= footer end =======-->
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>agree-policy</title>
+</head>
+<body>
+    <th:block th:fragment="analysis-script">
+        <script type="text/javascript" th:inline="javascript">
+            $(function() {
+                callAnalysis();
+            });
+
+            function callAnalysis() {
+                var p = {
+                    referrer: document.referrer,
+                    title: document.title
+                }
+
+                RiAPI.run({
+                    type: 'POST',
+                    url: '/rest/analysis/record',
+                    data: p,
+                    loadSpin: false,
+                    success: function (resp) {
+                    }
+                });
+            }
+        </script>
+    </th:block>
+</body>
+</html>

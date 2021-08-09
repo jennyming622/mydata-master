@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.VerificationLogMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.VerificationLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="verification_type" jdbcType="VARCHAR" property="verificationType" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="signature" jdbcType="VARCHAR" property="signature" />
+    <result column="is_double_verify" jdbcType="INTEGER" property="isDoubleVerify" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, account, type, verification_type, ctime, status, signature, isDoubleVerify
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from verification_log
+    where 1 = 1
+    <if test="id != null">
+      and id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="account != null">
+      and account = #{account,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null">
+      and type = #{type,jdbcType=VARCHAR}
+    </if>
+    <if test="verificationType != null">
+      and verification_type = #{verificationType,jdbcType=VARCHAR}
+    </if>
+    <if test="ctime != null">
+      and ctime = #{ctime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from verification_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from verification_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.VerificationLog" useGeneratedKeys="true"  keyProperty="id">
+    insert into verification_log (account, type,
+    verification_type, ctime, status, signature, is_double_verify
+    )
+    values (#{account,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+    #{verificationType,jdbcType=VARCHAR}, #{ctime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{signature,jdbcType=VARCHAR},
+    #{isDoubleVerify,jdbcType=VARCHAR}
+    )
+    <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+      SELECT currval('verification_log_id_seq');
+    </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.VerificationLog" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into verification_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="verificationType != null">
+        verification_type,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="signature != null">
+        signature,
+      </if>
+      <if test="isDoubleVerify != null">
+        is_double_verify,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationType != null">
+        #{verificationType,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="signature != null">
+        #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="isDoubleVerify != null">
+        #{isDoubleVerify,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+      SELECT currval('verification_log_id_seq');
+    </selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.VerificationLog">
+    update verification_log
+    <set>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationType != null">
+        verificationType = #{verificationType,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="signature != null">
+        signature = #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="isDoubleVerify != null">
+        is_double_verify = #{isDoubleVerify,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.VerificationLog">
+    update verification_log
+    set account = #{account,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      verificationType = #{verificationType,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      signature = #{signature,jdbcType=INTEGER},
+      is_double_verify = #{isDoubleVerify,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

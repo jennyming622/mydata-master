@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:if="${_csrf}"
+          th:content="${_csrf.headerName}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title th:text="'MyData | '+${portalServiceCategory.cateName}">MyData | 服務明細</title>
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="image/smydatalogo.png"
+          th:href="@{/resources/dist/image/smydatalogo.png}">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet"
+          th:href="@{/resources/dist/css/bootstrap.css}">
+    <link href="css/style.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/dist/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+    <script th:src="@{/resources/dist/js/font-awesone.min.js}" ></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.5.1.min.js"
+            th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"
+            th:src="@{/resources/dist/js/popper.min.js}"></script>
+    <script src="js/bootstrap.js"
+            th:src="@{/resources/dist/js/bootstrap.js}"></script>
+    <script src="js/scrollreveal.js"
+            th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+    <script src="js/moment.min.js" th:src="@{/resources/dist/js/moment.min.js}"></script>
+    <script src="js/certLogin.js" th:src="@{/resources/dist/js/certLogin.js}"></script>
+    <script src="js/errorcode.js" th:src="@{/resources/dist/js/errorcode.js}"></script>
+    <script src="js/qrcode.js" th:src="@{/resources/dist/js/qrcode.js}"></script>
+    <!-- twca js-->
+    <script th:src="@{/resources/dist/js/mydata.twca.ap.js}"></script>
+    <script th:src="@{/resources/dist/js/tcw.api.js}"></script>
+    <script th:src="@{/resources/dist/js/twcaCryptoLib.js}"></script>
+</head>
+
+<!-- 登入後增加 .after-login 以顯示會員名稱與條碼按鈕 -->
+
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+
+    <!--======= header =======-->
+    <header th:replace="fragment/header::header"></header>
+    <!--======= header =======-->
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <a href="#" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+            <li class="breadcrumb-item"><a href="#" th:href="@{'/'}">
+                <img th:src="@{/resources/dist/image/breadcrumb-home.png}"
+                     src="images/breadcrumb-home.png"
+                     alt="">首頁</a></li>
+            <li class="breadcrumb-item"><a href="#" th:href="@{'/sp/service/counter'}">臨櫃服務</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${portalServiceCategory.cateName}"></li>
+        </ol>
+    </nav>
+    <div class="landing-page">
+        <section class="package-service-wrap text-center section-wrap content-wrap organ mt-0">
+            <h2 th:text="${portalService.name}"></h2>
+        </section>
+    </div>
+
+    <div class="content-wrap news-wrap">
+        <!-- Collaspe -->
+        <div id="collaspe-wrapper">
+            <!-- 卡片展開時，在 Class 'card' 旁加上 'show' -->
+            <div class="card shadow-sm" onclick="javascript:toggleClass(this);">
+                <div id="card-header" class="card-header" data-toggle="collapse" href="#list1">
+                    <a class="card-link">
+                        <h4>服務詳細介紹</h4><i class="fa fa-chevron-up pull-right"></i>
+                    </a>
+                </div>
+                <div id="list1" class="collapse show" data-parent="#collaspe-wrapper">
+                    <div class="card-body">
+                        <h5>服務介紹</h5>
+                        <p th:utext="${portalService.counterDescription}"></p>
+                        <th:block th:each="counterSubExt, subState : ${counterSubExtList}">
+                            <h5><th:block th:text="${counterSubExt.name} + ' - '" th:if="${counterSubExt.name != null && counterSubExt.name != ''}"></th:block> 應備文件</h5>
+                            <p class="secondary mb-0">由MyData提供</p>
+                            <div class="mb-0 cms-editor take-file-wrap">
+                                <th:block th:each="subScopeExt : ${counterSubExt.subScopeExtList}">
+                                    <th:block th:if="${subScopeExt.type == 'required'}">
+                                        <h6>必要文件</h6>
+                                        <ol class="listNum-wrap">
+                                            <th:block th:each="dp : ${subScopeExt.dpList}">
+                                                <li th:text="${dp.name}"></li>
+                                            </th:block>
+                                        </ol>
+                                    </th:block>
+                                    <th:blcok th:if="${subScopeExt.type == 'choose'}">
+                                        <h6>多選文件(最少選擇<th:block th:text="${subScopeExt.selectCount}">2</th:block>項)</h6>
+                                        <ol class="listNum-wrap">
+                                            <th:block th:each="dp : ${subScopeExt.dpList}">
+                                                <li th:text="${dp.name}"></li>
+                                            </th:block>
+                                        </ol>
+                                    </th:blcok>
+                                </th:block>
+                            </div>
+                            <p class="secondary mb-0" th:if="${counterSubExt.preparedDocument!=null and counterSubExt.preparedDocument!=''}">須自行提供</p>
+                            <div class="mb-0 cms-editor"
+                                 th:utext="${counterSubExt.preparedDocument}"
+                                 th:if="${counterSubExt.preparedDocument!=null and counterSubExt.preparedDocument!=''}">應備文件說明</div>
+                        </th:block>
+                        <h5 th:if="${portalService.counterBrief!=null and portalService.counterBrief!=''}">申辦服務相關資訊</h5>
+                        <div class="mb-0 cms-editor" th:utext="${portalService.counterBrief}" th:if="${portalService.counterBrief!=null and portalService.counterBrief!=''}">聯絡電話：02-27993839</div>
+
+                        <img class="inregular-img" src="./images/fail-to-log-in-m.jpg" th:if="${maintain} == true" alt="" th:src="@{/resources/dist/image/fail-to-log-in-m.jpg}">
+                        <div class="mt-4 mb-1 p-3 bg-gray" th:if="${maintain} == true">
+                            <strong class="alert">
+                                此服務目前維護中，暫時無法提供申請，請稍候再試，如需了解進一步資訊，請與客服聯繫!<br>
+                                <!-- 							電子化政府客服中心：02-2192-7111。或 -->
+                                請寫信至mydata@ndc.gov.tw，我們會在最快的時間處理。</strong>
+                        </div>
+                        <p class="bg-gray p-3 mb-4 alert-box" id="showMsgMobile" style="display: none;">
+                            <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+                                 alt="注意事項：" style="width: 15px; margin-right: 3px"> 此服務暫時無法使用手機下載。
+                        </p>
+                        <p class="bg-gray p-3 mb-4 alert-box" id="showMsgMobileOS" style="display: none;">
+                            <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+                                 alt="注意事項：" style="width: 15px; margin-right: 3px"> 你使用的載具作業系統版本不支援使用本系統，點擊連結<a th:href="@{/sp/about}" class="link" target="_blank" title="另開新頁前往關於Mydata">查看支援版本</a>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="counter-apply" th:if="${maintain == false}">
+                <!-- 進度條 -->
+                <div class="progress-wrap counter-progress-wrap mb-4 mt-5">
+                    <div class="progress-line-wrap">
+                        <div class="p-2 flex-between progress-inline-wrap">
+                            <!-- 當下的黃色線用line-primary -->
+                            <!-- 未發生的灰色線用line-gray -->
+                            <span class="line-gray"></span>
+                            <span class="line-gray"></span>
+                            <span class="line-gray"></span>
+                        </div>
+                        <div class="flex-between point-wrapper">
+                            <!-- 完成的點用current-tex -->
+                            <!-- 未發生的點用next-text -->
+                            <div class="step-box">
+                                <span class="current-text">1</span>
+                                <span class="step-text">資料填寫</span>
+                            </div>
+                            <div class="step-box">
+                                <span class="next-text">2</span>
+                                <span class="step-text text-gray">應備文件</span>
+                            </div>
+                            <div class="step-box">
+                                <span class="next-text">3</span>
+                                <span class="step-text text-gray">身分驗證</span>
+                            </div>
+                            <div class="step-box">
+                                <span class="next-text">4</span>
+                                <span class="step-text text-gray">下載完成</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 資料下載線上服務條款 -->
+                <div id="step1" class="policy-wrap">
+                    <th:blcok th:replace="fragment/v2/download-privacy::download-privacy"></th:blcok>
+                    <hr>
+                    <th:blcok th:replace="fragment/v2/basic-info::basic-info(moecaCheck = ${moecaCheck}==true?1:0, uidType = 0)"></th:blcok>
+                    <div class="text-center mt-3">
+                        <button class="btn theme-btn" onclick="nextStep2();">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+                <div id="step2" style="display: none;">
+                    <th:blcok th:replace="fragment/v2/counter-case::counter-case"></th:blcok>
+                    <div class="text-center mt-3">
+                        <button class="btn theme-btn" onclick="nextStep3_1();">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+                <div id="step3-1" style="display: none;">
+                    <th:blcok th:replace="fragment/v2/member-privacy::privacy"></th:blcok>
+                    <div class="text-center mt-3">
+                        <button class="btn theme-btn" onclick="nextStep3_2();">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+                <div id="step3-2" style="display: none;">
+                    <h5 class="text-mainred">身份驗證</h5>
+                    <p class="description">您可以選用下列其中一種方式驗證身分：</p>
+                    <th:blcok th:replace="fragment/v2/identify-verify::identify-verify(id = 1, level = 4, uidType = 0, type = 0, showTwca = 'true', showMobile = false)"></th:blcok>
+                    <div class="text-center mt-3">
+                        <button id="apply1" class="btn theme-btn" onclick="nextStep3_3();" disabled>
+                            下一步
+                        </button>
+                    </div>
+                </div>
+                <div id="step3-3" style="display: none;">
+                    <h5 class="text-mainred">雙重驗證</h5>
+                    <p class="description">初次使用MyData平臺，為確認您的身分，需進行第二證件驗證作業，您可選擇下列其中一種方式驗證</p>
+                    <th:blcok th:replace="fragment/v2/identify-verify::identify-verify(id = double1, level = 4, uidType = 0, type = 0, showTwca = 'true', showMobile = true)"></th:blcok>
+                    <div class="text-center mt-3">
+                        <button id="apply2" class="btn theme-btn" onclick="nextStep3_4();">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+                <div id="step3-4" style="display: none;">
+                    <th:blcok th:replace="fragment/v2/fill-member::fill-member"></th:blcok>
+                    <div class="text-center mt-3">
+                        <button class="btn theme-btn" onclick="nextStep4();">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+                <div id="step4" style="display: none;">
+                    <th:blcok th:replace="fragment/v2/sp-same::sp-step4-counter"></th:blcok>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--======= footer =======-->
+    <footer th:replace="fragment/footer::footer"></footer>
+    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+       role="button" title="網頁置頂"
+       data-toggle="tooltip" data-placement="left" style="display: inline;">
+        <img class="arrow-position" src="images/top-arrow.png"
+             th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+    </a>
+    <!--======= end footer =======-->
+
+    <!--======= health-card =======-->
+    <span th:replace="fragment/login-health::login-health"></span>
+    <div th:replace="fragment/pop_msg_refresh_modal::sp_pop_msg_refresh_modal"></div>
+    <!--======= end health-card =======-->
+
+    <!--===== include js =====-->
+    <th:block th:replace="fragment/v2/download-privacy::agree-policy-script"></th:block>
+    <th:block th:replace="fragment/v2/basic-info::basic-info-script"></th:block>
+    <th:block th:replace="fragment/v2/counter-case::counter-case-script"></th:block>
+    <th:block th:replace="fragment/v2/dp-param::dp-param-script"></th:block>
+    <th:block th:replace="fragment/v2/member-privacy::privacy-script"></th:block>
+    <th:block th:replace="fragment/v2/identify-verify::identify-verify-script"></th:block>
+    <th:blcok th:replace="fragment/v2/fill-member::fill-member-script"></th:blcok>
+    <th:blcok th:replace="fragment/v2/sp-same::sp-same-script"></th:blcok>
+
+    <th:block th:replace="fragment/sp-pop-msg::refuse-modal"></th:block>
+    <th:block th:replace="fragment/sp-pop-msg::pid-pop-message"></th:block>
+    <th:block th:replace="fragment/sp-pop-msg::check-resource-ok"></th:block>
+    <th:block th:replace="fragment/sp-pop-msg::deactivate"></th:block>
+
+    <!--線上預覽檔案提示-->
+    <div id="preview-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+                    <button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div id="preview-message-text" class="modal-body">此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。</div>
+                <div class="modal-footer">
+                    <button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+                    <button id="preview-btn" class="theme-btn" data-id="" data-src="" onclick="javascript:previewToCompanyConfirmYes(this);">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 代辦人設定 -->
+    <div id="change-agent-pop-message" class="modal fade bd-example-modal-lg show" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">代辦人設定</h5>
+                    <button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body txt_left">
+                    <div id="agent-step1">
+                        <p>請輸入代辦人資訊</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="flex-center w-100 nowrap mb-0 word-4">身分證字號：
+                                    <input class="w-100" id="agent_uid" name="uid" type="text" placeholder="請輸入代辦人的身分證字號"
+										  onfocus="inputFocusinEvent_1(this)" 
+										  oninput="inputTypingEvent(this, MaskType.uid)" 
+										  onblur="inputFocusoutEvent_1(this, MaskType.uid)" 
+                                          autocomplete="off">
+                                    <i onclick="maskorUnMask_v2(this);" th:id="'agent_uid'" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+                                </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="flex-center w-100 nowrap mb-0 word-3">生日：
+                                    <input class="w-100" id="agent_birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="請輸入代辦人生日(例：0770101)"
+										onfocus="inputFocusinEvent_1(this)" 
+										oninput="inputTypingEvent(this, MaskType.birthdate)" 
+										onblur="inputFocusoutEvent_1(this, MaskType.birthdate)" 
+                                        autocomplete="off">
+                                    <i onclick="maskorUnMask_v2(this);" th:id="'agent_birthdate'" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+                                </label>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="alert-box mt-2"><img th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+                                    點擊確認後，系統將檢核此代辦人是否為MyData會員，如非會員請代辦人成為會員後方可使用。
+                                </p>
+                                <div class="text-center mt-2">
+                                    <button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+                                    <button id="agent-step1-next-btn" class="theme-btn mt-1" onclick="javascript:boxAgentCheck(this);">確定</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center pop-error-message" style="display:none;">
+                        <p class="alert mb-0"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 代辦人設定同意 -->
+    <div id="change-agent-pop-agree-message" class="modal fade bd-example-modal-lg show" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">代辦人設定</h5>
+                    <button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body txt_left">
+                    <div id="agent-step-agree">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="alert-box mt-2">
+                                    您將同意<span id="agreeAgentName">王○明</span>代辦【 <span id="providerName">嘉義縣</span> - <span id="serviceName">長照服務 2.0 線上申辦</span> 】，後續將由代辦人進行服務申辦。
+                                </p>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="text-center mt-2">
+                                    <button class="theme-btn false mr-3" data-dismiss="modal">不同意</button>
+                                    <button id="agent-step2-next-btn" class="theme-btn mt-1" onclick="javascript:boxAgentUpdate(this);">同意</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center pop-error-message" style="display:none;">
+                        <p class="alert mb-0"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" th:inline="javascript">
+        var psdId;
+        var level = /*[[${level}]]*/'';
+        var member = /*[[${member}]]*/'';
+        var maintain = /*[[${maintain}]]*/'';
+        var signedInUser = /*[[${session.SignedInUser}]]*/'';
+        var publicKeyBase64;
+        var privatKeyBase64;
+        var typing = false;
+        $(function(){
+            piiPrompt();
+            
+            if(typeof crypto.subtle!='undefined'){
+                createNewUserKey().then(function(key){
+                    publicKeyBase64 = toPublicPem(key[0]);
+                    privatKeyBase64 = toPrivatePem(key[1]);
+                });            	
+            }
+
+            showDpDetailTitle();
+            showMsgMobileOS();
+            
+//     		var typing = false;
+    		$('input').each((idx, element)=>{
+    			$(element).on('compositionstart',function(){
+    			    typing = true;
+    			});
+    			$(element).on('compositionend',function(){
+    			    typing = false;
+    			});
+    			var oninputAttr = $(element).attr('oninput');
+    			if(typeof oninputAttr!='undefined'){
+    				if(oninputAttr.indexOf('MaskType.phone')>-1){
+    					$(element).on('input',function(){
+    					    setTimeout(function() {
+    					        if(!typing) {
+    					        	inputTypingEvent($(element), MaskType.phone);
+    					        }
+    					    },0);
+    					})	
+    				}
+    				if(oninputAttr.indexOf('MaskType.uid')>-1){
+    					$(element).on('input',function(){
+    					    setTimeout(function() {
+    					        if(!typing) {
+    					        	inputTypingEvent($(element), MaskType.uid);
+    					        }
+    					    },0);
+    					})	
+    				}
+    				if(oninputAttr.indexOf('MaskType.email')>-1){
+    					$(element).on('input',function(){
+    					    setTimeout(function() {
+    					        if(!typing) {
+    					        	inputTypingEvent($(element), MaskType.email);
+    					        }
+    					    },0);
+    					})	
+    				}
+    				if(oninputAttr.indexOf('MaskType.birthdate')>-1){
+    					$(element).on('input',function(){
+    					    setTimeout(function() {
+    					        if(!typing) {
+    					        	inputTypingEvent($(element), MaskType.birthdate);
+    					        }
+    					    },0);
+    					})	
+    				}
+    				if(oninputAttr.indexOf('MaskType.NHI')>-1){
+    					$(element).on('input',function(){
+    					    setTimeout(function() {
+    					        if(!typing) {
+    					        	inputTypingEvent($(element), MaskType.NHI);
+    					        }
+    					    },0);
+    					})	
+    				}
+    				if(oninputAttr.indexOf('MaskType.domicile')>-1){
+    					$(element).on('input',function(){
+    					    setTimeout(function() {
+    					        if(!typing) {
+    					        	inputTypingEvent($(element), MaskType.domicile);
+    					        }
+    					    },0);
+    					})	
+    				}
+    			}			
+        	});
+        });
+
+        function toggleClass(obj){
+            setTimeout(function(){
+                showMsgMobileOS();
+
+                var $elt = $('#card-header');
+
+                if($elt.hasClass('collapsed')){
+                    $elt.removeClass('show');
+                    $elt.find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                }else{
+                    $elt.addClass('show');
+                    $elt.find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                }
+            }, 100);
+        }
+
+        function showMsgMobileOS() {
+            var $showMsgMobile = $('#showMsgMobile');
+            var $showMsgMobileOS = $('#showMsgMobileOS');
+            var $apply = $('#counter-apply');
+            if (maintain == 'true') {
+                return;
+            }
+            if (isMobile() && checkMobileOs() == false) {
+                if (level == 0) {
+                    $showMsgMobile.show();
+                    $apply.hide();
+                } else if (level == 1){
+                    $showMsgMobileOS.show();
+                    $apply.hide();
+                }
+            } else if (isMobile() && checkMobileOs() == true) {
+                if (level == 0) {
+                    $showMsgMobile.show();
+                    $apply.hide();
+                }
+            }
+        }
+
+        function errorMsg(resp) {
+            if(resp.code == -5) {
+                showTimeoutMessage(resp);
+                return;
+            }
+            $('#message-text').text(resp.text);
+            $('#pop-message').modal('show');
+        }
+
+        function changeStep(step) {
+            $('.progress-line-wrap').find('.progress-inline-wrap span:eq(' + (step - 2) + ')').addClass('line-primary');
+            $('.progress-line-wrap').find('.point-wrapper div:eq(' + (step - 1) + ') .next-text').addClass('current-text');
+            $('.progress-line-wrap').find('.point-wrapper div:eq(' + (step - 1) + ') .step-text').removeClass('text-gray');
+        }
+
+        function nextStep2() {
+            if(!checkAgreePolicy()) return;
+            if(!checkMemberData()) return;
+            // 先確認身分證字號與生日 再確認是否已經同一條款
+            checkUidAndBirthdate(checkIsAgreePolicy, showNext2);
+        }
+
+        function showNext2(resp) {
+            $('#step1').hide();
+            $('#step2').show();
+            scrollToPos('#step2');
+            var $collaspe = $('#collaspe-wrapper');
+            $collaspe.find('.card-header').addClass('collaspe');
+            $collaspe.find('.collapse').removeClass('show');
+
+            changeStep(2);
+
+            if(personalOrCompany() == 'personal') {
+                $('#company-verify').hide();
+                $('#personal-verify').show();
+
+            } else {
+                $('#company-verify').show();
+                $('#personal-verify').hide();
+            }
+
+            if(isOpenAgent() == 0) {
+                $('#agentSendBtn').hide();
+                $('#agentSendMsg').hide();
+            } else {
+                $('#agentSendBtn').show();
+                $('#agentSendMsg').show();
+            }
+
+            var agree = resp.data.agree;
+            $('#step3-1').attr('data-agree', agree);
+            if(!agree) {
+                $('#agree-privacy').attr('data-privacy-uuid', resp.data.checkPrivacyUUID);
+            }
+        }
+
+        function nextStep3_1() {
+            if(!checkCounterDp()) return;
+            if(!checkCounterInputParam()) return;
+
+            $('#step2').hide();
+            var level = getLevel();
+            showLevel(level, 1);
+            changeStep(3);
+
+            var isAgree = $('#step3-1').attr('data-agree');
+            if(isAgree === 'true') {
+                $('#step3-2').show();
+                scrollToPos('#step3-2');
+            } else {
+                $('#step3-1').show();
+                scrollToPos('#step3-1');
+            }
+        }
+
+        function nextStep3_2() {
+            if(!checkAgreePrivacy()) return false;
+            callPrivacyApi(showStep3_3, errorMsg);
+        }
+
+        function showStep3_3() {
+            $('#step3-1').hide();
+            $('#step3-2').show();
+            scrollToPos('#step3-2');
+        }
+
+        function nextStep3_3() {
+            verify(1, false);
+        }
+
+        function nextStep3_4() {
+            verify('double1', true);
+        }
+
+        function nextStep4() {
+            emailOrMobileMessageCheck();
+        }
+
+        function showUpdateMember(notDoubleVerify) {
+            if(notDoubleVerify) {
+                $('#step3-2').hide();
+                $('#step3-3').show();
+                scrollToPos('#step3-3');
+            } else {
+                $('#step3-2').hide();
+                $('#step3-3').hide();
+                $('#step3-4').show();
+                scrollToPos('#step3-4');
+            }
+        }
+
+        function showFinishStep() {
+            $('#step3-2').hide();
+            $('#step3-4').hide();
+            $('#step4').show();
+            scrollToPos('#step4');
+            changeStep(4);
+        }
+
+        function checkYesApply() {
+            $('.userName').empty().append(maskName(tmpMember.name));
+            $('.userUid').empty().append(maskUid(tmpMember.uid));
+            if(typeof tmpMember.informMethod !='undefined'&& tmpMember.informMethod != null){
+                if(tmpMember.informMethod=='email'){
+                    $('#step3InformWarming').empty().append('系統將自動發通知信至您的電子信箱 '+ maskEmailAddress(tmpMember.email) +'。如電子信箱有誤，或想變更電子信箱');
+                }else if(tmpMember.informMethod=='mobile'){
+                    $('#step3InformWarming').empty().append('系統將自動發通知簡訊至您的手機號碼 '+ maskPhoneNumber(tmpMember.mobile) +'。如手機號碼有誤，或想變更手機號碼');
+                }
+            }
+
+            setTimeout(function() {
+                ckeckedApplyDirect('MyData');
+            },500);
+        }
+
+        function checkDp() {
+            return false;
+        }
+
+        function previewToCompany(obj){
+            var httpcode = $(obj).attr('httpcode');
+            var downloadsn = $(obj).attr('downloadsn');
+            var prId = $(obj).attr('data-id');
+            var url = $(obj).attr('data-src');
+
+            if(httpcode=='200'){
+                $('#preview-btn').attr('data-src',url);
+                $('#preview-btn').attr('data-id',prId);
+                $('#preview-btn').attr('httpcode',httpcode);
+                $('#preview-btn').attr('downloadsn',downloadsn);
+                $('#preview-message-text').text('此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。');
+                $('#preview-pop-message').modal('show');
+            }else if(httpcode=='204'){
+                $('#message-text').text('點擊確認後，本平臺將立即刪除此資料檔案。');
+                $('#pop-message').modal('show');
+                RiAPI.run({
+                    type : 'GET',
+                    url : '/rest/personal/download/changestatonebyspdetail/'+prId,
+                    loadSpin : false,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            if(resp.code == -5) {
+                                showSPTimeoutMessage(resp);
+                                return;
+                            }
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        } else {
+                            //成功
+                            //console.log('------apply success------:'+prId);
+                            $('#accordion'+prId).attr('download-status','2');
+                        }
+                    }
+                });
+            }else{
+                $('#message-text').text('資料申請失敗，請重新操作。');
+                $('#pop-message').modal('show');
+                RiAPI.run({
+                    type : 'GET',
+                    url : '/rest/personal/download/changestatonebyspdetail/'+prId,
+                    loadSpin : false,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            if(resp.code == -5) {
+                                showSPTimeoutMessage(resp);
+                                return;
+                            }
+
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        } else {
+                            //成功
+                            //console.log('------apply success------:'+prId);
+                            $('#accordion'+prId).attr('download-status','2');
+                        }
+                    }
+                });
+            }
+        }
+
+        function previewToCompanyConfirmYes(obj){
+            var prId = $(obj).attr('data-id');
+            var downloadSn = $(obj).attr('downloadSn');
+            var p = {
+                key:publicKeyBase64
+            };
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/personal/sppreview/'+prId+'/'+downloadSn,
+                data: p,
+                loadSpin : true,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        }
+                        $('#message-text').text(resp.text);
+                        $('#pop-message').modal('show');
+                    } else {
+                        if(typeof resp.data.data!='undefined' &&resp.data.data.length>0){
+                            preViewDataDecodeAndShow(resp.data);
+                        }
+                    }
+                },
+                error : function() {
+                    $('#message-text').text('線上預覽檔案失敗。');
+                    $('#pop-message').modal('show');
+                }
+
+            });
+            $('#preview-pop-message').modal('hide');
+        }
+
+        var algorithmKeyGen = {
+            name: "RSA-OAEP",
+            hash: {name: "sha-256"},
+            modulusLength: 2048,
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        };
+
+        function createNewUserKey(){
+            return crypto.subtle.generateKey(algorithmKeyGen, true, ['encrypt', 'decrypt']).then(function(key) {
+                return Promise.all([crypto.subtle.exportKey("spki", key.publicKey),
+                    crypto.subtle.exportKey("pkcs8", key.privateKey)]);
+            });
+        }
+
+        function arrayBufferToBase64(arrayBuffer) {
+            var byteArray = new Uint8Array(arrayBuffer);
+            var byteString = '';
+            for(var i=0; i < byteArray.byteLength; i++) {
+                byteString += String.fromCharCode(byteArray[i]);
+            }
+            var b64 = window.btoa(byteString);
+
+            return b64;
+        }
+
+        function addNewLines(str) {
+            var finalString = '';
+            while(str.length > 0) {
+                finalString += str.substring(0, 64) + '\n';
+                str = str.substring(64);
+            }
+
+            return finalString;
+        }
+
+        function toPrivatePem(privateKey) {
+            var b64 = addNewLines(arrayBufferToBase64(privateKey));
+            var pem = "-----BEGIN PRIVATE KEY-----\n" + b64 + "-----END PRIVATE KEY-----";
+
+            return pem;
+        }
+
+        function toPublicPem(publicKey) {
+            //var b64 = addNewLines(arrayBufferToBase64(publicKey));
+            var b64 = arrayBufferToBase64(publicKey);
+            var pem = "-----BEGIN PUBLIC KEY-----\n" + b64 + "-----END PUBLIC KEY-----";
+
+            return b64;
+        }
+
+        function convertPemToBinary(pem) {
+            var lines = pem.split('\n')
+            var encoded = ''
+            for(var i = 0;i < lines.length;i++){
+                if (lines[i].trim().length > 0 &&
+                    lines[i].indexOf('-BEGIN RSA PRIVATE KEY-') < 0 &&
+                    lines[i].indexOf('-BEGIN PRIVATE KEY-') < 0 &&
+                    lines[i].indexOf('-BEGIN RSA PUBLIC KEY-') < 0 &&
+                    lines[i].indexOf('-BEGIN PUBLIC KEY-') < 0 &&
+                    lines[i].indexOf('-END RSA PRIVATE KEY-') < 0 &&
+                    lines[i].indexOf('-END PRIVATE KEY-') < 0 &&
+                    lines[i].indexOf('-END PUBLIC KEY-') < 0 &&
+                    lines[i].indexOf('-END RSA PUBLIC KEY-') < 0) {
+                    encoded += lines[i].trim()
+                }
+            }
+            return base64StringToArrayBuffer(encoded)
+        }
+
+        function base64StringToArrayBuffer(b64str) {
+            var byteStr = atob(b64str)
+            var bytes = new Uint8Array(byteStr.length)
+            for (var i = 0; i < byteStr.length; i++) {
+                bytes[i] = byteStr.charCodeAt(i)
+            }
+            return bytes.buffer
+        }
+
+        function importPrivateKey(pemKey) {
+            return new Promise(function(resolve) {
+                var importer = crypto.subtle.importKey("pkcs8", convertPemToBinary(pemKey), algorithmKeyGen, true, ['decrypt'])
+                importer.then(function(key) {
+                    resolve(key)
+                })
+            })
+        }
+
+        function preViewDataDecodeAndShow(data){
+            var encryptedKey = data.key;
+            var encryptedData = data.data;
+            var encryptedIv = data.iv;
+            importPrivateKey(privatKeyBase64).then(function(key){
+                //importkey 解密
+                return crypto.subtle.decrypt({name: 'rsa-oaep'}, key, base64StringToArrayBuffer(encryptedKey));
+            }).then(function(decryptedKey){
+                var base64Str = cbcdecrypt(encryptedData,new TextDecoder("UTF-8").decode(new Uint8Array(decryptedKey)),encryptedIv);
+                return new Promise(function(resolve) {
+                    resolve(base64Str);
+                });
+            }).then(function(base64Str){
+                showbase64StrPdf(base64Str);
+            });
+        }
+
+
+        function showbase64StrPdf(base64Str){
+            var binary = atob(base64Str.replace(/\s/g, ''));
+            var len = binary.length;
+            var buffer = new ArrayBuffer(len);
+            var view = new Uint8Array(buffer);
+            for (var i = 0; i < len; i++) {
+                view[i] = binary.charCodeAt(i);
+            }
+            var blob = new Blob([view], { type: "application/pdf" });
+            var blobURL = URL.createObjectURL(blob);
+            window.open(blobURL);
+        }
+
+        //解密
+        function cbcdecrypt(e, key, iv){
+            var r = CryptoJS.enc.Utf8.parse(iv);
+            var  n = CryptoJS.enc.Utf8.parse(key);
+            var o = CryptoJS.AES.decrypt(e, n, {
+                iv: r,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            return CryptoJS.enc.Utf8.stringify(o).toString();
+        }
+
+        function changeAgentPopWin(obj){
+            var boxId = $(obj).attr('data-id');
+            $('#agent-step1-next-btn').attr('data-id',boxId);
+            $('#agent_uid').val('');
+            $('#agent_uid').attr('data-value','');
+            $('#agent_birthdate').val('');
+            $('#agent_birthdate').attr('data-value','');
+            $('div.pop-error-message p').empty();
+            $('#change-agent-pop-message').modal('show');
+        }
+
+        function boxAgentCheck(obj){
+            var boxId = $(obj).attr('data-id');
+            var agent_uid = getUnmaskValue('#agent_uid');
+            var agent_birthdate = getUnmaskValue('#agent_birthdate');
+            if(typeof agent_uid=='undefined' || agent_uid==''){
+                $('div.pop-error-message p').empty().append('請輸入代辦人身分證字號。');
+                $('div.pop-error-message').show();
+                focusNewEmailOrMobile('#agent_uid');
+                return;
+            }
+            if(typeof agent_birthdate=='undefined' || agent_birthdate==''){
+                $('div.pop-error-message p').empty().append('請輸入代辦人生日。');
+                $('div.pop-error-message').show();
+                focusNewEmailOrMobile('#agent_birthdate');
+                return;
+            }
+            $('div.pop-error-message p').empty().append('');
+            $('div.pop-error-message').hide();
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/checkBoxAgentData',
+                loadSpin : true,
+                data : {boxId: boxId, agent_uid : agent_uid ,agent_birthdate : agent_birthdate},
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        $('#change-agent-pop-message').modal('hide');
+                        $('#message-text').text(resp.text);
+                        $('#pop-message').modal('show');
+                    }else{
+                        $('#change-agent-pop-message').modal('hide');
+                        //$('#agentSendBtn').addClass('disabled');
+                        //$('#agentSendBtn').attr('disabled', true);
+                        $('#agent-step2-next-btn').attr('data-id',resp.data.boxId);
+                        $('#agreeAgentName').empty().append(resp.data.agentName);
+                        $('#providerName').empty().append(resp.data.providerName);
+                        $('#serviceName').empty().append(resp.data.serviceName);
+                        $('#change-agent-pop-agree-message').modal('show');
+                    }
+                }
+            });
+        }
+
+        function boxAgentUpdate(obj){
+            var boxId = $(obj).attr('data-id');
+            var agent_uid = getUnmaskValue('#agent_uid');
+            var agent_birthdate = getUnmaskValue('#agent_birthdate');
+            if(typeof agent_uid=='undefined' || agent_uid==''){
+                $('div.pop-error-message p').empty().append('請輸入代辦人身分證字號。');
+                $('div.pop-error-message').show();
+                focusNewEmailOrMobile('#agent_uid');
+                return;
+            }
+            if(typeof agent_birthdate=='undefined' || agent_birthdate==''){
+                $('div.pop-error-message p').empty().append('請輸入代辦人生日。');
+                $('div.pop-error-message').show();
+                focusNewEmailOrMobile('#agent_birthdate');
+                return;
+            }
+            $('div.pop-error-message p').empty().append('');
+            $('div.pop-error-message').hide();
+            var returl = /*[[@{/sp/member}]]*/'';
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/changeBoxAgentData',
+                loadSpin : true,
+                data : {boxId: boxId, agent_uid : agent_uid ,agent_birthdate : agent_birthdate},
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //resp.text
+                        $('div.pop-error-message p').empty().append(resp.text);
+                        $('div.pop-error-message').show();
+                    }else{
+                        $('#change-agent-pop-agree-message').modal('hide');
+                        $('#agentSendBtn').addClass('disabled');
+                        $('#agentSendBtn').attr('disabled', true);
+                        window.location.href = returl + '/' + resp.data.boxId;
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

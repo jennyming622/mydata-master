@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalResourceMaintainMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalResourceMaintain">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pr_id" jdbcType="INTEGER" property="prId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="stime" jdbcType="TIMESTAMP" property="stime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+    <result column="day" jdbcType="INTEGER" property="day" />
+    <result column="week_day" jdbcType="INTEGER" property="weekDay" />
+    <result column="s_stime" jdbcType="TIME" property="sStime" />
+    <result column="s_etime" jdbcType="TIME" property="sEtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pr_id, type, stime, etime, day, week_day, s_stime, s_etime
+  </sql>
+  <select id="selectByPrId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from portal_resource_maintain
+	where pr_id = #{prId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_resource_maintain
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_resource_maintain
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByPrId" parameterType="java.lang.Integer">
+    delete from portal_resource_maintain
+	where pr_id = #{prId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceMaintain">
+    insert into portal_resource_maintain (id, pr_id, type, 
+      stime, etime, day, 
+      week_day, s_stime, s_etime)
+    values (#{id,jdbcType=INTEGER}, #{prId,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{stime,jdbcType=TIMESTAMP}, #{etime,jdbcType=TIMESTAMP}, #{day,jdbcType=INTEGER}, 
+      #{weekDay,jdbcType=INTEGER}, #{sStime,jdbcType=TIME}, #{sEtime,jdbcType=TIME})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceMaintain">
+    insert into portal_resource_maintain
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="prId != null">
+        pr_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="stime != null">
+        stime,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+      <if test="day != null">
+        day,
+      </if>
+      <if test="weekDay != null">
+        week_day,
+      </if>
+      <if test="sStime != null">
+        s_stime,
+      </if>
+      <if test="sEtime != null">
+        s_etime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="prId != null">
+        #{prId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="stime != null">
+        #{stime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="day != null">
+        #{day,jdbcType=INTEGER},
+      </if>
+      <if test="weekDay != null">
+        #{weekDay,jdbcType=INTEGER},
+      </if>
+      <if test="sStime != null">
+        #{sStime,jdbcType=TIME},
+      </if>
+      <if test="sEtime != null">
+        #{sEtime,jdbcType=TIME},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceMaintain">
+    update portal_resource_maintain
+    <set>
+      <if test="prId != null">
+        pr_id = #{prId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="stime != null">
+        stime = #{stime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="day != null">
+        day = #{day,jdbcType=INTEGER},
+      </if>
+      <if test="weekDay != null">
+        week_day = #{weekDay,jdbcType=INTEGER},
+      </if>
+      <if test="sStime != null">
+        s_stime = #{sStime,jdbcType=TIME},
+      </if>
+      <if test="sEtime != null">
+        s_etime = #{sEtime,jdbcType=TIME},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceMaintain">
+    update portal_resource_maintain
+    set pr_id = #{prId,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      stime = #{stime,jdbcType=TIMESTAMP},
+      etime = #{etime,jdbcType=TIMESTAMP},
+      day = #{day,jdbcType=INTEGER},
+      week_day = #{weekDay,jdbcType=INTEGER},
+      s_stime = #{sStime,jdbcType=TIME},
+      s_etime = #{sEtime,jdbcType=TIME}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

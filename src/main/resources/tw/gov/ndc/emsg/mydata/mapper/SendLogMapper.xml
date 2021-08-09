@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.SendLogMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.SendLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="info" jdbcType="VARCHAR" property="info" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+  </resultMap>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.SendLog" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into send_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="info != null">
+        info,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null">
+        #{info,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+      SELECT currval('send_log_id_seq');
+    </selectKey>
+  </insert>
+</mapper>

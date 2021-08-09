@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>login-health</title>
+</head>
+<body>
+	<span th:fragment="login-health">
+		<input type="hidden" id="orgId" value="GSP-VS"/>
+		<input type="hidden" id="orgPass" value="Gsp@Vs2018"/>
+		<input type="hidden" id="orgUnit" value="www.cp.gov.tw"/>
+		<input type="hidden" id="healthUid"/>
+		<input type="hidden" id="secureBasic"/>
+		<input type="hidden" id="encPwd"/>
+		<input type="hidden" id="version"/>
+		<input type="hidden" id="random"/>
+		<input type="hidden" id="sign"/>
+		<input type="hidden" id="step" />
+		
+		<script src="js/stuff.js" th:src="@{/resources/dist/js/stuff.js}"></script>
+		<script type="text/javascript" th:inline="javascript">
+			var browserName;
+			var wsUri = "wss://iccert.nhi.gov.tw:7777/echo"; 
+			var healthPwd;
+			var callbackFun;
+			var healthCardCanVerify = false;
+			// Handle difference for IE.
+			if (window.addEventListener) {
+				window.addEventListener("load", browserDetect, false);
+			}else if (window.attachEvent) {
+				window.attachEvent("onload", browserDetect)    
+			}
+			
+			function browserDetect() {
+				browserName = BrowserDetect.browser;
+				if(browserName == "Safari"){
+			        wsUri = "wss://iccert.nhi.gov.tw:7777/echo";  	
+			    }
+// 			    var arr = document.cookie.match(new RegExp("(^| )"+"mNHIICCService"+"=([^;]*)(;|$)"));
+// 			    if(arr!=null) {
+// 			    		var exp = new Date();
+// 			      	exp.setTime(exp.getTime() - 1);
+// 			      	var cval=unescape(arr[2]);
+// 			       	document.cookie = "mNHIICCService="+cval+";expires="+exp.toGMTString();
+// 			    }
+				onLoad();
+			}
+			
+			function onLoad() {
+			    websocket = new WebSocket(wsUri);
+			    websocket.onopen = function(evt) { onOpen(evt) };
+			    websocket.onclose = function(evt) { onClose(evt) };
+			    websocket.onmessage = function(evt) { onMessage(evt) };
+			    websocket.onerror = function(evt) { onError(evt) };
+			}
+			
+			function onOpen(evt) {
+// 			    var exp  = new Date();    
+// 			    exp.setTime(exp.getTime() + 60000);
+// 			    document.cookie = "mNHIICCService="+ escape ("Conn") + ";expires=" + exp.toGMTString();
+			    healthCardCanVerify = true;
+			}
+			
+			function onClose(evt) {
+				healthCardCanVerify = false;
+			}
+			
+			function onError(evt) { 
+				websocket = new WebSocket(wsUri);
+				websocket.onopen = function(evt) { onOpen(evt) };
+				websocket.onclose = function(evt) { onClose(evt) };
+				websocket.onmessage = function(evt) { onMessage(evt) };
+				websocket.onerror = function(evt) { onError(evt) };
+				healthCardCanVerify = false;
+		    }
+			
+		    function addMessage()  {
+		        var message = chat.value;
+		        chat.value = "";
+		        websocket.send(message);
+		    }
+			
+			function verifyHealth(pwd, callback) {
+				if(pwd==null || pwd==''){
+					$('#message-text').text('請輸入註冊密碼');
+					$('#pop-message').modal('show');
+					return;
+				}
+				healthPwd = pwd;
+				callbackFun = callback;
+				getUid();
+			}
+			
+			function getUid() {
+				$("#step").val("getUid");
+				websocket.send("GetBasic");
+			}
+			
+			function getSecureBasic() {
+				$("#step").val("getSecureBasic");
+				websocket.send("SecureGetBasicWithParam?Pwd="+healthPwd);
+			}
+			
+			function getEncPwd() {
+				$("#step").val("getEncPwd");
+				websocket.send("EnCrypt?Pwd="+healthPwd);
+			}
+			
+			function getVersion(){
+				$("#step").val("getVersion");
+				websocket.send("GetVersion");
+			}
+			
+			function getRandom(){
+				$("#step").val("getRandom");
+				websocket.send("GetRandom");
+			}
+			
+			function getH_Sign(){
+				$("#step").val("getH_Sign");
+				websocket.send("H_Sign?Random=" +$("#version").val() + $("#random").val());
+			}
+			
+			function onMessage(evt) {
+				var step = $("#step").val();
+	
+				if(evt.data == '8013'){
+					$('#message-text').text('未安裝讀卡機或健保卡未插入讀卡機');
+					$('#pop-message').modal('show');
+					return;
+				}
+				if(evt.data == '7004'){
+					$('#message-text').text('健保卡未插入讀卡機');
+					$('#pop-message').modal('show');
+					return;
+				}
+				if(evt.data == 'A001'){
+					$('#message-text').text('元件安裝問題');
+					$('#pop-message').modal('show');
+					return;
+				}
+				if(evt.data == '4061'){
+					$('#message-text').text('健保卡驗證功能暫時無法使用，請改用其他驗證方式');
+					$('#pop-message').modal('show');
+					return;
+				}
+				
+				if(step == "getUid"){
+					$('#healthUid').val(evt.data.split(',')[1]);
+					getSecureBasic();
+				}
+				if (step == "getSecureBasic") {
+					//windows取此值時有包含前綴，mac無
+					if(evt.data.indexOf(':') > -1){
+						$('#secureBasic').val(evt.data.split(':')[1]);
+					}else{
+						$('#secureBasic').val(evt.data);
+					}
+			    		getEncPwd();
+			    }
+				if (step == "getEncPwd") {
+			    		$('#encPwd').val(evt.data.split(':')[1]);
+			    		getVersion();
+			    }
+		        if (step == "getVersion") {
+		        		$('#version').val(evt.data.split(':')[1]);
+		        		getRandom();
+		        }
+		        if (step == "getRandom") {
+		    			$('#random').val(evt.data.split(':')[1]);
+		    			getH_Sign();
+		        }
+		        if (step == "getH_Sign") {
+					$('#sign').val(evt.data.split(':')[1]);
+					getHealthData(callbackFun);
+		   		}
+		    }
+			
+			function getHealthData(callback){
+				var data = {
+					p_Orgid: $('#orgId').val(),
+					p_OrgPass: $('#orgPass').val(),
+					p_GetBasic: $('#secureBasic').val(),
+					p_PassCode: $('#encPwd').val(),
+					p_Random: $('#version').val()+$('#random').val(),
+					p_Token: $('#sign').val(),
+					p_idno: $('#healthUid').val(),
+					p_unit: $('#orgUnit').val()
+				};
+				callback(data);
+			}
+		</script>
+	</span>
+</body>
+</html>

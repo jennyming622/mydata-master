@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>footer</title>
+</head>
+<body>
+	<th:block th:fragment="privacy(id)">
+		<p class="text-left">為確保您的權益，請詳細閱讀本平臺之服務條款與隱私權保護政策</p>
+		<div class="policy-box policy-page shadow-sm p-0 mb-3">
+<!--			<p class="bg-gray box-title  text-center p-3 mb-0 h2">-->
+<!--				個人化資料自主運用(MyData)平臺服務條款暨隱私權保護政策-->
+<!--			</p>-->
+			<div class="content p-4 privacy-content" th:data-id="${id}">
+				<p class="text-center sub-title alert m-1 mb-4">服務條款</p>
+				<p class="m-0" style="text-align: left">國家發展委員會（以下簡稱本會）配合行政院推動優質電子化政府服務，建置個人化資料自主運用(MyData)平臺（以下簡稱本平臺），提供資料下載、線上服務及臨櫃服務作業，期望透過本平臺增進使用者瞭解個人資料運用方式。本會係依據下列服務條款提供各項服務，為確保您的權益，請詳細閱讀下列服務條款：</p>
+				<ul>
+					<li>
+						<h3 class="alert">隱私權保護政策</h3>
+						<ol>關於您的會員註冊以及其他特定資料，將依「個人化資料自主運用(MyData)平臺隱私權保護政策」保護與規範。您瞭解並同意當您使用本平臺時，本平臺可依據「個人化資料自主運用(MyData)平臺隱私權保護政策」之規範進行您個人資料的蒐集、處理與利用。
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">一般條款</h3>
+						<ol>
+							<li>本條款構成您與本會就您使用本平臺之完整合意，取代您先前與本會間有關本平臺所為之任何約定。本條款部分無效時，不影響本平臺其他有效條款之效力。</li>
+							<li>本條款之解釋及其他未盡事項，均依中華民國法律處理。本條款如有未盡完善之處，雙方應優先以最大誠意，依誠實信用、平等互惠原則，共商解決之道，凡因使用本平臺所生之爭執，均以臺灣臺北地方法院為第一審管轄法院。</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">會員的註冊義務及會員帳號、密碼安全</h3>
+
+						<ol>
+							<!--					<li>本服務「帳號資訊」功能中，您本人因註冊流程或使用本服務時，須提供正確及完整的個人資料，並持續更新該資料。若有內容錯誤為您無法變更之項目，請立即通知本會。</li>-->
+							為了能使用本平臺，您同意並承諾下列事項
+							<li>使用本平臺提供之「資料下載」、「線上服務」、「臨櫃服務」功能時，須提供您本人個人資料，例如姓名、身分證字號、生日、電子郵件地址、行動電話號碼、網路連線位址(IP)，利系統進行身分驗證作業，如不提供，則無法使用本平臺。</li>
+							<li>使用「會員專區」功能，亦須進行身分驗證，完成驗證後將可查詢您使用本平臺之使用紀錄及已填寫之個人資料。您的個人資料如有錯誤或異動，應進行修改並重新驗證，以避免影響您使用本平臺之權益；若有內容錯誤或異動且您無法修改者，請立即通知本會。</li>
+							<li>若您提供任何不完整、錯誤或不實的資料，本會有權暫停、終止或限制您使用本平臺的權限，並拒絕您使用本平臺之全部或部分服務。</li>
+							<li>為確保您的資料安全，請務必妥善保管您的身分認證資訊及硬體設備。建議您應避免在公用電腦使用本平臺，或在您使用本平臺的硬體設備安裝可疑軟體。如您發現身分認證資訊或硬體設備有遭他人非法使用或任何異常使用之情形，請立即洽詢原認證資訊核發單位或做必要之處理。</li>
+							<li>您委託第三人代為使用本平臺之一切行為，視為您本人親自所為之行為。</li>
+							<li>您應確保使用本平臺時所輸入之資料內容均屬正確，您透過本平臺所為之申請、查詢、下載等行為，將依相關規定而生法律上效力。</li>
+							<li>在您使用本平臺之期間，建議您妥善儲存使用結果，並於其他分離之儲存媒體進行備份。如您未進行前述之備份動作或所儲存檔案遺失，本會對此不負任何責任。</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">使用者行為規範與義務</h3>
+						<ol>
+							<li>當您完成資料輸入或開始使用本平臺時，視為您已閱讀、瞭解並同意遵守本條款所有內容及相關法律規定，為保障您的權益，請詳細閱讀本條款所有內容及相關法律規定。</li>
+							<li>若您為未滿二十歲之未成年人，則應請您的父母或監護人閱讀、瞭解並同意遵守本條款之所有內容，方得使用本平臺。當您使用本平臺時，即推定您的父母或監護人已閱讀、瞭解並同意接受本條款之所有內容。</li>
+							<li>您使用本平臺之一切行為必須符合本條款及相關法令規定；對於您使用本平臺之一切行為，您須自行負擔全部責任。若您對本條款內容存有疑義，或您所屬之國家或地域不適用本條款內容之全部或部分時，您應立即停止使用本平臺。</li>
+							<li>當您使用本平臺之特定功能時，可能會依據該特定功能之性質，而必須遵守本平臺所另行公告之服務條款或相關規定，此另行公告之服務條款或相關規定亦均併入屬於本條款。</li>
+							<li>除遵守上開條款外，您亦同意不從事下列行為：
+								<ol>
+									<li>冒用他人名義使用本平臺。</li>
+									<li>侵害他人名譽、隱私權、著作權、智慧財產權及其他權利。</li>
+									<li>上載、張貼或公布任何不實、誹謗、侮辱、具威脅性、攻擊性、違背公序良俗、引人犯罪或其他不法之文字、圖片或任何形式的檔案。</li>
+									<li>上載、張貼或公布任何含有電腦木馬、病毒或任何對電腦軟、硬體產生中斷、破壞或限制功能之程式碼或資料。</li>
+									<li>破壞及干擾本平臺所提供之各項資料、活動或功能，或以任何方式侵入、試圖侵入、破壞本平臺之任何系統，或藉由本平臺為任何侵害或破壞行為。</li>
+									<li>未經同意蒐集他人個人資料，例如:姓名、身分證字號、生日、電子郵件地址、行動電話號碼、網路連線位址(IP)等。</li>
+									<!--							<li>破壞及干擾本服務所提供之各項資料、活動或功能，或以任何方式侵入、試圖侵入、破壞本服務之任何系統，或藉由本服務為任何侵害或破壞行為。</li>-->
+									<!--							<li>未經同意蒐集他人電子郵件位址及其他個人資料者。</li>-->
+									<!--							<li>您同意本會得基於前述及其他正當理由隨時終止或限制您使用全部或部分之本服務，並得將本服務內您的任何相關資料予以刪除。您亦同意若您對本服務之使用權利被終止或限制時，本會對您或任何第三人均不承擔責任。</li>-->
+								</ol>
+							</li>
+							<li>您同意本會得基於前述及其他正當理由隨時暫停、終止或限制您使用本平臺之全部或部分權限，並得將本平臺內有關您的任何資料予以刪除。您亦同意若您對本平臺之使用權限被暫停、終止或限制時，本會對您或任何第三人均不負任何責任。</li>
+							<li>您若係中華民國以外之使用者，並同意遵守所屬國家或地域之相關法規。您同意不利用本平臺從事違法或損害他人權益之行為。</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">本會的免責事項</h3>
+						<ol>
+							<li>本平臺有時可能會出現中斷或故障等現象，或許將造成您使用上的不便或錯誤等情形。您使用本平臺時宜自行採取防護措施。本會對於您因使用（或無法使用）本平臺而造成的損害，不負任何賠償責任。</li>
+							<li>本平臺所提供之各項功能、資訊及內容，均依該功能、資訊及內容當時之現況提供使用，其完整性、可靠性、安全性、正確性均由該服務之原始提供機關(構)負責，本會對其不負任何明示或默示之擔保責任。</li>
+							<li>您使用本平臺時，使用過程中所有的資料紀錄，以本平臺資料庫所記錄之資料為準，如有任何糾紛或訴訟，以本平臺資料庫所記錄之資料為認定標準，但您如能提出其他資料並證明為真實者，則不在此限。</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">與第三方網站之連結及第三方提供之內容</h3>
+						<ol>
+							<li>本平臺可能會提供連結至第三方機關(構)之網站；該網站均由各該機關(構)自行負責，不屬本會控制及負責範圍之內。本會不擔保其有效性、正確性、合適性及完整性，本會對因使用第三方機關(構)之網站所生之任何直接、間接損害，不負損害賠償責任。</li>
+							<li>本會得與第三方機關(構)合作，由其提供包括政令、新聞、訊息、活動等不同內容供本平臺刊登，且本平臺於刊登時均將註明內容來源。基於尊重內容提供者之智慧財產權，本平臺對其所提供之內容並不做實質之審查或修改。對該等內容之正確性或真偽，請您自行判斷之，本會對該等內容之正確性或真偽，不負任何責任。您若認為某些內容屬不適宜、侵權或有所不實，請逕向該內容提供者反應意見。</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">服務變更及通知</h3>
+						<ol>
+							<li>本平臺有權於任何時間修改、變更本平臺服務條款之內容；修改或變更時，本平臺將於平臺網頁進行公告，不再個別通知使用者，建議您定期查閱本平臺服務條款。如依法或其他相關規定須為通知時，本平臺得以張貼於本平臺網頁、電子郵件或其他合理之方式通知您。</li>
+							<li>如您於本平臺服務條款修改或變更後仍續使用本平臺服務，則視為您（暨您的監護人）已閱讀、瞭解與同意接受本平臺服務條款修改或變更，若您對本條款內容存有疑義，或您所屬之國家或地域不適用本條款內容之全部或部分時，您應立即停止使用本平臺。</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">智慧財產權保護</h3>
+						<ol>
+							<li>本平臺所使用之軟體、程式及網站上所有內容，例如著作、圖片、檔案、資訊、資料、網站架構、網站畫面的安排、網頁設計等，均由本會或其他權利人依法擁有其智慧財產權，包括商標權、專利權、著作權、營業秘密與專有技術等。</li>
+							<li>任何人不得逕行使用、修改、重製、公開播送、改作、散布、發行、公開發表、進行還原工程、解編或反向組譯前項內容。如欲引用或轉載前項之軟體、程式或網站內容，必須依法取得本會或其他權利人的書面同意。如有違反之情事，您應對本會或其他權利人負損害賠償責任（包括訴訟費用及律師費用等）。</li>
+							<li>若您認為您的著作權或其他智慧財產權遭受侵害，請提供下列資訊予本會，本會將儘速依法維護您的權益：
+								<ol>
+									<li>您的正確資料與聯絡方式，於有異議情形時，同意將其資料提供給被檢舉人。</li>
+									<li>能合法代表著作權或智慧財產權利益之所有人之證明。</li>
+									<li>您所主張受侵害之著作或其他智慧財產權，以及受侵害資料之描述。</li>
+									<li>您基於善意認為該利用未經著作權人其代理人或法律許可之聲明。</li>
+								</ol>
+							</li>
+							<!--					<li>本會有權於任何時間修改、變更本條款之內容，修改或變更時，本會將於站內進行公告，不再個別通知使用者，建議您定期查閱本服務條款。如依法或其他相關規定須為通知時，本服務得以張貼於本服務網頁、電子郵件，或其他合理之方式通知您。</li>-->
+							<!--					<li>如您於本條款修改或變更後仍續使用本服務，則視為您（暨您的監護人）已閱讀、瞭解與同意接受本條款修改或變更。</li>-->
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">諮詢服務</h3>
+						<ol>
+							若您對本條款有任何疑問，歡迎您隨時與我們聯絡。
+							<br>
+							<!-- 				客服電話：<a href="tel:0221927111" title="致電Mydata客服電話">(02)2192-7111</a>， -->
+							客服信箱：<a href="mailto:mydata@ndc.gov.tw" title="寫信至Mydata客服信箱">mydata@ndc.gov.tw</a><br>
+							客服電話：<a href="tel:0800-009-868">0800-009-868</a><br>
+							<!--					電話服務時間：週一～週五 9:00~12:00、13:30~18:00 (例假日除外，非上述時間請多利用客服信箱)-->
+						</ol>
+					</li>
+				</ul>
+				<p class="text-center sub-title alert m-1 mb-4">隱私權保護政策</p>
+				<ul>
+					<li>
+						<h3 class="alert">個人資料權益宣告：</h3>
+						<ol>
+							國家發展委員會（以下簡稱本會）配合行政院推動優質電子化政府服務，提供個人化資料自主運用(MyData)平臺（以下簡稱MyData平臺）。本會基於尊重及保護用戶的個人隱私權，為協助您清楚地瞭解本平臺如何蒐集、處理及利用您所提供的個人資料，請您詳細閱讀隱私權保護政策。
+							下列政策內容不適用於與本平臺資料集連結與介接至各政府機關網站或其他網站。凡經由本平臺連結與介接至其他網站，均適用各該網站專屬之隱私權保護政策，本平臺不負任何連帶責任。
+						</ol>
+						<ol>
+							<li>平臺會員資料：
+								<ol>
+									<li>蒐集目的：<br>本平臺為進行會員身分驗證、會員管理、服務使用分析與系統維運，依個人資料保護法之特定目的「資(通)訊服務」、「資（通）訊與資料庫管理」、「資通安全與管理」、「調查、統計與研究分析」等蒐集您的個人資料。
+									</li>
+									<li>蒐集之個人資料類別：<br>辨識個人者，例如姓名、身分證字號、生日、電子郵件地址、行動電話號碼、網站連線位址(IP)。
+									</li>
+									<li>個人資料利用之期間、地區、對象及方式：
+										<ol>
+											<li>期間：個人資料蒐集之特定目的存續期間、依相關法令規定或契約約定之保存年限及本平臺因執行職務或業務所必須之保存期間。</li>
+											<li>地區：中華民國行政區域內。</li>
+											<li>對象：本平臺營運管理機關，以及營運相關事務之必要第三方機關(構)(如：資料提供者、服務提供者)。</li>
+											<li>方式：電子文件、紙本，或以自動化機器或其他非自動化之利用方式。</li>
+										</ol>
+									</li>
+									<li>您可以向本平臺行使下列權利：
+										<ol>
+											<li>查詢或請求閱覽。</li>
+											<li>請求製給複製本。</li>
+											<li>請求補充或更正。</li>
+											<li>請求停止蒐集、處理或利用。</li>
+											<li>請求刪除。</li>
+										</ol>若您欲行使上述權利，應填具申請文件及提供您的身分證明文件；若委託他人代為申請者，並應出具委任書，且提供您本人及代理人之身分證明文件，向本平臺諮詢服務信箱<a
+												href="mailto:mydata@ndc.gov.tw">mydata@ndc.gov.tw</a> 提出申請。
+									</li>
+									<li>您可以自由選擇提供您之個人資料予本平臺，惟若不提供完整資料，則無法使用本平臺。</li>
+									<li>您於本平臺之操作紀錄僅保留近兩年資料。</li>
+									<li>若您提出退出平臺會員時，本平臺將於確認您個人身份後，刪除您的會員資訊，但近兩年之操作紀錄仍將留存兩年後，再逕行刪除作業。</li>
+								</ol>
+							</li>
+							<li>向他機關(構)間接蒐集資料：
+								<ol>
+									<li>蒐集目的：<br>本平臺經由驗證您的身分與線上同意後，單次即時提供您個人資料自行下載或提供給第三方機關(構)進行線上服務或臨櫃服務作業。
+									</li>
+									<li>蒐集之個人資料類別：<br>經由驗證您的身分與線上同意後，單次即時提供您個人資料自行下載或提供給第三方機關(構)進行線上服務或臨櫃服務作業所需之資料。
+									</li>
+									<li>個人資料利用之期間、地區、對象及方式：
+										<ol>
+											<li>
+												期間：本平臺單次即時提供您取得個人資料之功能，包含個人資料自行下載或提供給第三方機關(構)進行線上服務或臨櫃服務作業，資料一旦取用後，系統將立即刪除該取得之個人資料。若您未取用該個人資料或未提供給第三方機關(構)進行線上服務或臨櫃核驗作業，本平臺將於八小時後自動刪除該個人資料。
+											</li>
+											<li>地區：第三方機關(構)可提供服務之地區。</li>
+											<li>對象：提供線上服務或臨櫃核驗作業之第三方機關(構)。</li>
+											<li>方式：電子文件、紙本，或以自動化機器或其他非自動化之利用方式。</li>
+										</ol>
+									</li>
+									<li>您可以自由選擇提供本平臺身分驗證並同意資料取用，惟若不提供驗證並同意，則無法使用本平臺。</li>
+								</ol>
+							</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">資訊安全管理</h3>
+						<ol>為維護本平臺資訊安全，以確保本平臺能夠持續為您服務，本平臺提供下列安全保護措施：
+						</ol>
+						<ol>
+							<li>使用網路入侵偵測機制，監控網路流量，以確認未經授權而企圖上載或更改、網頁資訊或蓄意破壞者。</li>
+							<li>裝設防火牆防止非法入侵、破壞或竊取資料，以避免平臺遭到非法使用，以保障您的權益。</li>
+							<li>裝設掃毒軟體，定期掃毒，以提供您更安全的網頁瀏覽環境。</li>
+							<li>不定期模擬駭客攻擊，演練發生安全事件時的系統回復程序，並提供適當的安全防禦等級。</li>
+							<li>定期進行備份作業，將所有資料備份到備援主機。</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">本平臺絕不會任意出售、交換、或出租任何您的會員基本資料給其他團體、個人或私人企業，於利用您的會員基本資料時，均與蒐集之特定目的相符，但有下列情形之一者，得為特定目的外之利用：</h3>
+						<ol>
+							<li>法律明文規定。</li>
+							<li>為維護國家安全或增進公共利益之必要。</li>
+							<li>為免除當事人之生命、身體、自由或財產上之危險。</li>
+							<li>為防止他人權益之重大危害。</li>
+							<li>公務機關或學術研究機構基於公共利益為統計或學術研究而有必要，且資料經過提供者處理後或蒐集者依其揭露方式無從識別特定之當事人。</li>
+							<li>有利於當事人權益。</li>
+							<li>經當事人同意。</li>
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">Cookie運用</h3>
+						<ol>
+							Cookie是伺服端為區別使用者喜好，經由瀏覽器寫入使用者硬碟的一些簡短資訊。本平臺會在您瀏覽器中寫入並讀取Cookie，您可以在瀏覽器設定項目中，拒絕Cookie的執行，並不會影響您使用本平臺之服務。上述之Cookie僅會對個別連線者的瀏覽器予以標示，記錄瀏覽器在本平臺內部所瀏覽的網頁，進行瀏覽人數統計及瀏覽模式分析，做為本平臺改善服務的參考，但不會識別特定當事人。
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">本平臺蒐集、處理或利用個資，除有其他法律特定規定外，皆依個人資料保護法規定辦理。</h3>
+					</li>
+					<li>
+						<h3 class="alert">自我資料安全保護措施</h3>
+						<ol>請妥善保管您個人資料，切勿將個人資料提供給任何第三人，以保障您的權益。若您是與他人共享電腦或使用公共電腦，使用完畢請務必記得登出帳號，並關閉瀏覽器視窗。
+						</ol>
+					</li>
+					<li>
+						<h3 class="alert">隱私權保護政策修訂</h3>
+						<ol>
+							本隱私權保護政策條款如有修訂，將公告於本平臺，請您隨時注意修訂之公告訊息。若您對於修訂內容有表示反對等任何意見，請利用本平臺諮詢服務信箱
+							<a href="mailto:mydata@ndc.gov.tw">mydata@ndc.gov.tw</a>
+							聯繫我們，如未經表示反對仍繼續使用本平臺，則視為您已閱讀、瞭解並同意接受修訂內容。
+						</ol>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- <p class="bg-gray p-3 mb-4 alert-box">
+			<img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+				 alt="注意事項：" style="width: 15px; margin-right: 3px"> 請先閱讀完整條款，並將條款文字的捲軸拉到最下方，方能勾選同意條款。
+		</p> -->
+		<p class="text-left">請務必閱讀完畢上述服務條款與隱私權保護政策內容，並勾選同意</p>
+		<div class="form">
+			<div class="form-group mb-0">
+				<input type="checkbox" class="agree-policy" th:id="'agree-privacy'+${id}" th:name="'agree-privacy'+${id}"
+					   th:data-id="${id}" data-version="v1.0" disabled th:onclick="'javascript:changeAgree(\''+${id}+'\');'">
+				<label class="flex-middle mb-0" th:for="'agree-privacy'+${id}" tabindex="0" title="勾選同意上述服務條款">
+					<strong>我已了解並同意</strong>
+				</label>
+			</div>
+		</div>
+	</th:block>
+	<th:block th:fragment="member-privacy(id)">
+		<div class="policy-wrap m-3">
+			<th:blcok th:replace="fragment/member-privacy::privacy(id = ${id})"></th:blcok>
+			<div class="text-center mt-3">
+				<button class="btn theme-btn" th:id="'agree-privacy-btn'+${id}" th:onclick="'javascript:agreePrivacy(\''+${id}+'\');'">
+					確認
+				</button>
+			</div>
+		</div>
+	</th:block>
+	<th:block th:fragment="privacy-script">
+		<script type="text/javascript" th:inline="javascript">
+			$('.privacy-content').scroll(function() {
+				var objDivs = document.getElementsByClassName("privacy-content");
+				Array.from(objDivs).forEach(function(obj) {
+					var elt = $(obj)[0];
+
+					//console.log(elt.scrollTop + elt.offsetHeight, elt.scrollHeight);
+					if((elt.scrollTop + elt.offsetHeight >= elt.scrollHeight - 10) && elt.scrollTop > 0) {
+						var dataId = obj.getAttribute("data-id");
+						if(dataId === null) dataId = '';
+						$('#agree-privacy' + dataId).prop('disabled', false);
+					}
+				});
+			});
+
+			// 同一條款是否已勾選
+			function isAgreePrivacy(id) {
+				return $('#agree-privacy' + id).prop('checked');
+			}
+
+			function changeAgree(id) {
+				if($('#agree-privacy' + id).hasClass('user-agree')) {
+					$('#agree-privacy' + id).removeClass('user-agree');
+				} else {
+					$('#agree-privacy' + id).addClass('user-agree');
+				}
+			}
+		</script>
+	</th:block>
+	<th:block th:fragment="member-privacy-script">
+		<th:blcok th:replace="fragment/member-privacy::privacy-script"></th:blcok>
+		<script type="text/javascript" th:inline="javascript">
+			function agreePrivacy(dataId) {
+				var checkboxCheck = isAgreePrivacy(dataId);
+
+				if(!checkboxCheck) {
+					showPopMessage('請務必閱讀完畢上述服務條款與隱私權保護政策內容，並勾選同意', $('#agree-privacy' + dataId));
+					return;
+				}
+
+				var checkPrivacyUUID = $('#agree-privacy-btn'+dataId).attr('data-privacy-uuid');
+				var version = $('#agree-privacy'+dataId).attr('data-version');
+
+				var data = {
+					checkPrivacyUUID: checkPrivacyUUID,
+					version: version,
+					id: dataId
+				};
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/agree/privacy',
+					data: data,
+					loadSpin : true,
+					success : function(resp) {
+						if (resp.code < 0) {
+							if(resp.code == -5) {
+								showTimeoutMessage(resp);
+								return;
+							}
+							$('#message-text').text(resp.text);
+							$('#pop-message').modal('show');
+						}else{
+							showPrivacyNext(dataId)
+						}
+					}
+				});
+			}
+		</script>
+	</th:block>
+	<th:block th:fragment="member-privacy-for-download-script">
+		<script type="text/javascript" th:inline="javascript">
+			function showPrivacyNext(dataId) {
+				$('#member-privacy-mask'+dataId).addClass('disabled-mask');
+				$('#member-verify'+dataId).addClass('step4');
+				$('#member-verify'+dataId).show();
+				scrollToPos('#member-verify'+dataId);
+			}
+		</script>
+	</th:block>
+	<th:block th:fragment="member-privacy-for-login-script">
+		<script type="text/javascript" th:inline="javascript">
+			function showPrivacyNext(dataId) {
+				$('#step2').hide();
+				$('#step3').show();
+			}
+		</script>
+	</th:block>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalCounterSubScopeMapperExt">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalCounterSubScope">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ps_id" jdbcType="INTEGER" property="psId" />
+    <result column="pcs_id" jdbcType="INTEGER" property="pcsId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="select_count" jdbcType="TIMESTAMP" property="selectCount" />
+  </resultMap>
+
+  <resultMap id="withScopeMap" type="tw.gov.ndc.emsg.mydata.entity.ext.PortalCounterSubScopeExt" extends="BaseResultMap">
+    <collection  property="dpList"
+                 ofType="tw.gov.ndc.emsg.mydata.entity.PortalResourceExt"
+                 javaType="ArrayList"
+                 column="id"
+                 select="tw.gov.ndc.emsg.mydata.mapper.PortalCounterSubScopeMapperExt.selectResource">
+    </collection>
+  </resultMap>
+
+  <resultMap id="withResourceMap" type="tw.gov.ndc.emsg.mydata.entity.PortalResourceExt" extends="tw.gov.ndc.emsg.mydata.mapper.PortalResourceMapper.BaseResultMap">
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, ps_id, pcs_Id, type, select_count
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_counter_sub_scope
+    where 1 = 1
+    <if test="psId != null">
+      and ps_id = #{pcsId,jdbcType=INTEGER}
+    </if>
+    <if test="pcsId != null">
+      and pcs_id = #{pcsId,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="selectByPcsId" resultMap="withScopeMap">
+    select
+    <include refid="Base_Column_List" />
+    from portal_counter_sub_scope
+    where 1 = 1
+    and pcs_id = #{pcsId,jdbcType=INTEGER}
+  </select>
+  <select id="selectResource" resultMap="withResourceMap">
+    select
+        distinct pp.*
+    from portal_resource pp
+    left join portal_resource_scope prs on pp.pr_id = prs.pr_id
+    left join portal_service_scope_counter pssc on prs.scope = pssc.scope
+    where 1 = 1
+      and pssc.ps_id = #{psscId,jdbcType=INTEGER}
+  </select>
+</mapper>

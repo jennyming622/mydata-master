@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalServiceScopeCounterMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalServiceScopeCounter">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="scope" jdbcType="VARCHAR" property="scope" />
+    <result column="ps_id" jdbcType="INTEGER" property="psId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, scope, ps_id, status, ctime
+  </sql>
+  <select id="selectByExample" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceScopeCounterExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from portal_service_scope_counter
+    where 1=1
+    <if test="psId != null">
+      and ps_id = #{psId,jdbcType=INTEGER}
+    </if>
+    <if test="scope != null">
+      and scope = #{scope,jdbcType=VARCHAR}
+    </if>
+    <if test="scopeInList != null">
+      and scope in <foreach collection="scopeInList" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+    </if>
+    <if test="statusIsNullOrZero != null">
+    	  and (status is null or status = 0)
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_service_scope_counter
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_service_scope_counter
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceScopeCounterExample">
+    delete from portal_service_scope_counter
+    where 1=1
+    <if test="psId != null">
+      and ps_id = #{psId,jdbcType=INTEGER}
+    </if>
+    <if test="scopeInList != null">
+      and scope in <foreach collection="scopeInList" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+    </if>
+    <if test="statusIsNullOrZero != null">
+    	  and (status is null or status = 0)
+    </if>
+    <if test="psId == null">
+      and 1=2
+    </if>
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceScopeCounter">
+    insert into portal_service_scope_counter (id, scope, ps_id, 
+      status, ctime)
+    values (#{id,jdbcType=INTEGER}, #{scope,jdbcType=VARCHAR}, #{psId,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{ctime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceScopeCounter">
+    insert into portal_service_scope_counter
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="scope != null">
+        scope,
+      </if>
+      <if test="psId != null">
+        ps_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="scope != null">
+        #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="psId != null">
+        #{psId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceScopeCounter">
+    update portal_service_scope_counter
+    <set>
+      <if test="scope != null">
+        scope = #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="psId != null">
+        ps_id = #{psId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceScopeCounter">
+    update portal_service_scope_counter
+    set scope = #{scope,jdbcType=VARCHAR},
+      ps_id = #{psId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      ctime = #{ctime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="countByPsId" resultType="java.lang.Integer">
+    select
+        count(id)
+    from portal_service_scope_counter
+    where ps_id = #{psId,jdbcType=INTEGER}
+  </select>
+  <select id="prListByPsId" resultType="java.lang.String">
+    select string_agg(distinct pr.name, ',') from portal_service_scope_counter pss
+        left join portal_resource_scope prs on pss.scope = prs.scope
+        left join portal_resource pr on prs.pr_id = pr.pr_id
+        where ps_id = #{psId,jdbcType=INTEGER}
+        group by pss.ps_id;
+  </select>
+  <select id="selectByScope" resultMap="BaseResultMap">
+    select pss.* from portal_service_scope_counter pss
+        left join portal_service ps on pss.ps_id = ps.ps_id
+        left join portal_provider pp on ps.provider_id = pp.provider_id
+        left join portal_service_category psc on ps.cate_id = psc.cate_id
+        where pss.scope = #{scope,jdbcType=VARCHAR}
+        order by pp.name asc,ps.name asc
+  </select>
+</mapper>

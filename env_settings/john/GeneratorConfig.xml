@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+  <classPathEntry location="/Users/zhanqianjin/lib/postgresql-9.4.1209.jre6.jar" />
+  <context id="context1" defaultModelType="flat">
+    <!-- plugin -->
+    <!-- <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" /> -->
+    <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+    <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+    <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+    <!-- generator -->
+    <!-- <jdbcConnection driverClass="org.postgresql.Driver"
+        connectionURL="jdbc:postgresql://127.0.0.1:5432/mydata?charSet=UTF-8"
+        userId="postgres" password="riease1qaz" /> -->
+    <!--    <jdbcConnection driverClass="org.postgresql.Driver" -->
+    <!--    	connectionURL="jdbc:postgresql://192.168.1.212:5432/mydata?charSet=UTF-8" -->
+    <!--    	userId="postgres" password="riease1qaz" />	-->
+    <jdbcConnection driverClass="org.postgresql.Driver"
+                    connectionURL="jdbc:postgresql://117.56.91.4:5432/mydata_stage?charSet=UTF-8"
+                    userId="postgres" password="robert@1qaz!QAZ" />
+
+
+    <javaModelGenerator targetPackage="tw.gov.ndc.emsg.mydata.entity" targetProject="/Users/zhanqianjin/RieasePlace/mydata/src/main/java" />
+    <!--        <sqlMapGenerator targetPackage="tw.gov.ndc.emsg.mydata.mapper" targetProject="/Users/zhanqianjin/RieasePlace/mydata/src/main/resources" />-->
+    <!--        <javaClientGenerator targetPackage="tw.gov.ndc.emsg.mydata.mapper" targetProject="/Users/zhanqianjin/RieasePlace/mydata/src/main/java" type="XMLMAPPER" />-->
+
+    <!-- <table tableName="application">
+    </table>-->
+    <!-- <table tableName="authcode">
+    </table> -->
+    <!-- <table tableName="category">
+    </table>
+     <table tableName="portal_provider">
+    </table>-->
+    <!-- <table tableName="portal_resource">
+   </table> -->
+    <!-- <table tableName="portal_resource_log">
+    </table> -->
+    <table tableName="portal_resource_download"/>
+    <table tableName="portal_service_download"/>
+    <!-- <table tableName="portal_resource_err_log">
+    </table> -->
+    <!-- <table tableName="portal_resource_scope">
+    </table> -->
+    <!-- <table tableName="portal_resource_scope_log">
+    </table> -->
+    <!-- <table tableName="contactus">
+    </table> -->
+    <!-- <table tableName="contactusbysys">
+    </table> -->
+    <!-- <table tableName="portal_resource_field">
+    </table> -->
+    <!-- <table tableName="portal_resource_field_log">
+    </table> -->
+    <!--    <table tableName="portal_resource_param"/>-->
+    <!--    <table tableName="portal_resource_param_log">-->
+    <!--    </table>-->
+    <!--  <table tableName="oid_information">
+     </table> -->
+    <!-- <table tableName="portal_resource_category">
+   </table> -->
+    <!-- <table tableName="portal_service">
+   </table> -->
+    <!-- <table tableName="portal_service_log">
+    </table> -->
+    <!-- <table tableName="portal_service_err_log">
+    </table> -->
+    <!-- <table tableName="portal_service_scope">
+    </table> -->
+    <!-- <table tableName="portal_service_category">
+   </table> -->
+    <!-- <table tableName="portal_service_scope_log">
+    </table> -->
+    <!-- <table tableName="ulog">
+    </table>  -->
+    <!-- <table tableName="sys_role">
+    </table>
+    <table tableName="sys_role_authority">
+    </table> -->
+    <!-- <table tableName="sys_user">
+    </table> -->
+    <!-- <table tableName="ulog_user">
+    </table> -->
+    <!-- <table tableName="ulog_api">
+    </table> -->
+    <!-- <table tableName="click_log">
+   </table> -->
+    <!-- <table tableName="apply_unit">
+    </table> -->
+    <!-- <table tableName="portal_service_scope_audit">
+    </table>
+    <table tableName="portal_service_audit">
+    </table>
+    <table tableName="portal_resource_audit">
+    </table> -->
+    <!-- <table tableName="portal_service_allow_ip">
+    </table>
+    <table tableName="portal_service_allow_ip_log">
+    </table> -->
+    <!-- <table tableName="notification">
+    </table> -->
+    <!--      <table tableName="white_ip_list"> </table>-->
+    <!--              <table tableName="organ_white_ip_list"> </table>-->
+  </context>
+</generatorConfiguration>

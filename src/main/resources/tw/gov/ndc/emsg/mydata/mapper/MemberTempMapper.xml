@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.MemberTempMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.MemberTemp">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="name" jdbcType="VARCHAR" property="name" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="birthdate" jdbcType="DATE" property="birthdate" />
+    <result column="gender" jdbcType="VARCHAR" property="gender" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="uid_verified" jdbcType="BIT" property="uidVerified" />
+    <result column="email" jdbcType="VARCHAR" property="email" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="email_verified" jdbcType="BIT" property="emailVerified" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="mobile_verified" jdbcType="BIT" property="mobileVerified" />
+    <result column="tx_id" jdbcType="VARCHAR" property="txId" />
+    <result column="verification_type" jdbcType="VARCHAR" property="verificationType" />
+    <result column="as_id" jdbcType="VARCHAR" property="asId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, account, name, birthdate, gender, uid, uid_verified, email, email_verified, mobile, 
+    mobile_verified, tx_id, verification_type, as_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from member_temp
+    where 1=1
+    <if test="id != null">
+      and id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="account != null">
+      and account = #{account,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null">
+      and name = #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="birthdate != null">
+      and birthdate = #{birthdate,jdbcType=DATE}
+    </if>
+    <if test="gender != null">
+      and gender = #{gender,jdbcType=VARCHAR}
+    </if>
+    <if test="uid != null">
+      and uid = #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="uidVerified != null">
+      and uid_verified = #{uidVerified,jdbcType=BIT}
+    </if>
+    <if test="email != null">
+      and email = #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="emailVerified != null">
+      and email_verified = #{emailVerified,jdbcType=BIT}
+    </if>
+    <if test="mobile != null">
+      and mobile = #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="mobileVerified != null">
+      and mobile_verified = #{mobileVerified,jdbcType=BIT}
+    </if>
+    <if test="txId != null">
+      and tx_id = #{txId,jdbcType=VARCHAR}
+    </if>
+    <if test="verificationType != null">
+      and verification_type = #{verificationType,jdbcType=VARCHAR}
+    </if>
+    <if test="asId != null">
+      and as_id = #{asId,jdbcType=VARCHAR}
+    </if>       
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from member_temp
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from member_temp
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.MemberTemp">
+    insert into member_temp (id, account, name, 
+      birthdate, gender, uid, 
+      uid_verified, email, 
+      email_verified, mobile, 
+      mobile_verified, tx_id, verification_type, as_id)
+    values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{birthdate,jdbcType=DATE}, #{gender,jdbcType=VARCHAR}, #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{uidVerified,jdbcType=BIT}, #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{emailVerified,jdbcType=BIT}, #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{mobileVerified,jdbcType=BIT}, #{txId,jdbcType=VARCHAR}, #{verificationType,jdbcType=VARCHAR}, #{asId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.MemberTemp">
+    insert into member_temp
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="birthdate != null">
+        birthdate,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="uidVerified != null">
+        uid_verified,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="emailVerified != null">
+        email_verified,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="mobileVerified != null">
+        mobile_verified,
+      </if>
+      <if test="txId != null">
+        tx_id,
+      </if>
+      <if test="verificationType != null">
+        verification_type,
+      </if>
+      <if test="asId != null">
+        as_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="birthdate != null">
+        #{birthdate,jdbcType=DATE},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="uidVerified != null">
+        #{uidVerified,jdbcType=BIT},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="emailVerified != null">
+        #{emailVerified,jdbcType=BIT},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="mobileVerified != null">
+        #{mobileVerified,jdbcType=BIT},
+      </if>
+      <if test="txId != null">
+        #{txId,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationType != null">
+      	#{verificationType,jdbcType=VARCHAR},
+      </if>
+      <if test="asId != null">
+      	#{asId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.MemberTemp">
+    update member_temp
+    <set>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="birthdate != null">
+        birthdate = #{birthdate,jdbcType=DATE},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="uidVerified != null">
+        uid_verified = #{uidVerified,jdbcType=BIT},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="emailVerified != null">
+        email_verified = #{emailVerified,jdbcType=BIT},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="mobileVerified != null">
+        mobile_verified = #{mobileVerified,jdbcType=BIT},
+      </if>
+      <if test="txId != null">
+        tx_id = #{txId,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationType != null">
+        verification_type = #{verificationType,jdbcType=VARCHAR},
+      </if>
+      <if test="asId != null">
+        as_id = #{asId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.MemberTemp">
+    update member_temp
+    set account = #{account,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      birthdate = #{birthdate,jdbcType=DATE},
+      gender = #{gender,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      uid_verified = #{uidVerified,jdbcType=BIT},
+      email = #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      email_verified = #{emailVerified,jdbcType=BIT},
+      mobile = #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      mobile_verified = #{mobileVerified,jdbcType=BIT},
+      tx_id = #{txId,jdbcType=VARCHAR},
+      verification_type = #{verificationType,jdbcType=VARCHAR},
+      as_id = #{asId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalResourceParamMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalResourceParam">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pr_id" jdbcType="INTEGER" property="prId" />
+    <result column="param_name" jdbcType="VARCHAR" property="paramName" />
+    <result column="param_desc" jdbcType="VARCHAR" property="paramDesc" />
+    <result column="param_name_desc" jdbcType="VARCHAR" property="paramNameDesc" />
+    <result column="is_option" jdbcType="INTEGER" property="isOption" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pr_id, param_name, param_desc, param_name_desc, is_option
+  </sql>
+  <select id="selectByExample" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceParamExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_resource_param
+    where 1=1
+    <if test="prId != null">
+    		and pr_id = #{prId,jdbcType=INTEGER}
+    </if>
+    <if test="paramName != null">
+    		and param_name = #{paramName,jdbcType=VARCHAR}
+    </if>
+    <if test="paramDesc != null">
+    		and param_desc = #{paramDesc,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_resource_param
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_resource_param
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceParamExample">
+    delete from portal_resource_param
+    where 1=1
+    <if test="prId != null">
+    		and pr_id = #{prId,jdbcType=INTEGER}
+    </if>
+    <if test="paramName != null">
+    		and param_name = #{paramName,jdbcType=VARCHAR}
+    </if>
+    <if test="paramDesc != null">
+    		and param_desc = #{paramDesc,jdbcType=VARCHAR}
+    </if>
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceParam">
+    insert into portal_resource_param (id, pr_id, param_name, 
+      param_desc, param_name_desc, is_option)
+    values (#{id,jdbcType=INTEGER}, #{prId,jdbcType=INTEGER}, #{paramName,jdbcType=VARCHAR}, 
+      #{paramDesc,jdbcType=VARCHAR}, #{paramNameDesc,jdbcType=VARCHAR},#{isOption,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceParam">
+    insert into portal_resource_param
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="prId != null">
+        pr_id,
+      </if>
+      <if test="paramName != null">
+        param_name,
+      </if>
+      <if test="paramDesc != null">
+        param_desc,
+      </if>
+      <if test="paramNameDesc != null">
+        param_name_desc,
+      </if>
+      <if test="isOption != null">
+        is_option,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="prId != null">
+        #{prId,jdbcType=INTEGER},
+      </if>
+      <if test="paramName != null">
+        #{paramName,jdbcType=VARCHAR},
+      </if>
+      <if test="paramDesc != null">
+        #{paramDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="paramNameDesc != null">
+        #{paramNameDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isOption != null">
+        #{isOption,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceParam">
+    update portal_resource_param
+    <set>
+      <if test="prId != null">
+        pr_id = #{prId,jdbcType=INTEGER},
+      </if>
+      <if test="paramName != null">
+        param_name = #{paramName,jdbcType=VARCHAR},
+      </if>
+      <if test="paramDesc != null">
+        param_desc = #{paramDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="paramNameDesc != null">
+        param_name_desc = #{paramNameDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isOption != null">
+        is_option = #{isOption,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceParam">
+    update portal_resource_param
+    set pr_id = #{prId,jdbcType=INTEGER},
+      param_name = #{paramName,jdbcType=VARCHAR},
+      param_desc = #{paramDesc,jdbcType=VARCHAR},
+      param_name_desc = #{paramNameDesc,jdbcType=VARCHAR},
+      is_option = #{isOption,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

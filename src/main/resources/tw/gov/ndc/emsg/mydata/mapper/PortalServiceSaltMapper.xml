@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalServiceSaltMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalServiceSalt">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ps_id" jdbcType="INTEGER" property="psId" />
+    <result column="tx_id" jdbcType="VARCHAR" property="txId" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, ps_id, tx_id, salt, ctime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_service_salt
+    where 1=1
+    <if test="id != null">
+      and id = #{id,jdbcType=INTEGER}
+    </if>
+ 	<if test="psId != null">
+     and ps_id = #{psId,jdbcType=INTEGER}
+    </if>
+    <if test="txId != null">
+      and tx_id = #{txId,jdbcType=VARCHAR}
+    </if>
+    <if test="salt != null">
+      and salt = #{salt,jdbcType=VARCHAR}
+    </if>
+    <if test="ctime != null">
+      and ctime = #{ctime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_service_salt
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_service_salt
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceSalt">
+    insert into portal_service_salt (id, ps_id, tx_id, 
+      salt, ctime)
+    values (#{id,jdbcType=INTEGER}, #{psId,jdbcType=INTEGER}, #{txId,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{ctime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceSalt">
+    insert into portal_service_salt
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="psId != null">
+        ps_id,
+      </if>
+      <if test="txId != null">
+        tx_id,
+      </if>
+      <if test="salt != null">
+        salt,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="psId != null">
+        #{psId,jdbcType=INTEGER},
+      </if>
+      <if test="txId != null">
+        #{txId,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceSalt">
+    update portal_service_salt
+    <set>
+      <if test="psId != null">
+        ps_id = #{psId,jdbcType=INTEGER},
+      </if>
+      <if test="txId != null">
+        tx_id = #{txId,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceSalt">
+    update portal_service_salt
+    set ps_id = #{psId,jdbcType=INTEGER},
+      tx_id = #{txId,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>header</title>
+</head>
+<body>
+	<header class="header" th:fragment="header">
+		<noscript>
+			<span class="noscript">您的瀏覽器不支援JavaScript功能，若網頁功能無法正常使用時，請開啟瀏覽器JavaScript狀態</span>
+		</noscript>
+		<div class="header-fixed">
+			<div class="navbar top-nav">
+				<a href="#main_area" id="to_main" title="跳到主要內容" class="show-lg-only aa-index show-focus">跳到主要內容</a> 
+				<a href="#head_area" id="head_area" title="上方導覽列區塊" class="show-lg-only aa-index">:::</a>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link sitemap-mini" href="sitemap.html" th:href="@{/sp/sitemap}" title="網站導覽">
+							<span>網站導覽</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link faq-mini" href="faq.html" th:href="@{/sp/faq}" title="常見問題">
+							<span>常見問題</span>
+						</a>
+					</li>
+					<!-- 在 <body> 旁加上 .font-lg .font-m .font-s 即可切換字體大小  -->
+					<li class="nav-item font-size-wrap dropdown pointer" id="navbarDropdown2" role="button" data-toggle="dropdown" data-target="#navbarDropdown2Div" aria-haspopup="true" aria-expanded="false">
+						字級：<a href="javascript:clickFontSizeMark();"><span class="fontSizeMark" >中</span></a>
+						<div id="navbarDropdown2Div" class="dropdown-menu shadow" aria-labelledby="navbarDropdown2">
+						    <a class="nav-link font-lg" href="javascript:void(0);" onclick="javascript:setFontSize('font-lg');">大</a>
+						    <a class="nav-link font-m active" href="javascript:void(0);" onclick="javascript:setFontSize('font-m');">中</a>
+						    <a class="nav-link font-s" href="javascript:void(0);" onclick="javascript:setFontSize('font-s');">小</a>
+					    </div>
+					</li>
+					<li class="nav-item my-area-wrap">
+			            <a class="nav-link my-area-box before-login" href="javascript:toLogin();">
+			              前往會員專區
+			            </a>
+			            <a class="nav-link  my-area-box login" href="#" th:href="@{/sp/member}">
+			              會員專區
+			            </a>
+						<a class="nav-link my-area-box login logout p-0" th:data-src="@{/logout}" href="javascript:void(0);" onclick="javascript:openLogout(this);" title="登出">
+							<span>登出</span>
+						</a>
+			        </li>
+				</ul>
+			</div>
+			<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+				<h1>
+					<a  class="navbar-brand" href="index.html" th:href="@{/}" title="回到MyData首頁">
+						<img src="./images/new-logo.png" th:src="@{/resources/dist/image/new-logo.png}" alt="MyData 個人化資料自主運用">
+							<span id="span-brand" class=""></span>
+					</a>
+				</h1>
+				<a class="btn bg-img p-0 hidden-lg" href="javascript:searchToggle();" title="切換搜尋區塊">
+					<img src="/resources/dist/image/search.png" th:src="@{/resources/dist/image/search.png}" alt="搜尋">
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse"
+					data-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav ml-auto">
+						<!-- 當在此頁面時，加上 .active -->
+						<li class="nav-item">
+							<a class="nav-link" href="about-us.html" th:href="@{/sp/about}" title="關於MyData">關於 MyData</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="javascript:void(0);" th:href="@{/news/list}" title="最新消息">最新消息</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="javascript:void(0);" th:href="@{/sp/service}" title="資料下載">資料下載</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="javascript:void(0);" th:href="@{/sp/service#package-service}" title="線上服務">線上服務</a>
+						</li>
+						<li class="nav-item" th:if="${counterAgentVer==0}">
+							<a class="nav-link" href="javascript:void(0);" th:href="@{/sp/service/counter}" title="臨櫃服務">臨櫃服務</a>
+						</li>
+						<li class="nav-item dropdown" th:if="${counterAgentVer==1}">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownForOnlineService" role="button"
+							   data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								臨櫃服務
+							</a>
+							<div class="dropdown-menu shadow" aria-labelledby="navbarDropdownForOnlineService">
+								<a class="dropdown-item" th:href="@{/sp/service/counter}">選擇服務</a>
+								<a class="dropdown-item" th:href="@{/sp/service/counter/agent}">代辦服務</a>
+							</div>
+						</li>
+						<li class="nav-item dropdown before-login hidden-lg">
+							<a class="nav-link dropdown-toggle my-area-box before-login" href="javascript:openLogin();">
+								前往會員專區
+							</a>
+						</li>
+						<li class="nav-item dropdown login hidden-lg">
+							<a class="nav-link dropdown-toggle my-area-box login" href="#" id="navbarDropdown" role="button"
+							   data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								會員專區
+							</a>
+							<div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+								<a class="dropdown-item" th:href="@{/sp/member}">會員專區</a>
+								<a class="dropdown-item" th:data-src="@{/logout}" href="javascript:void(0);"
+								   onclick="javascript:openLogout(this);">退出專區</a>
+							</div>
+						</li>
+						<li>
+							<a href="multiple-downloads.html" th:href="@{/mutipledownload/list}" class="btn bg-img ml-3" title="前往一次下載多筆資料頁面">
+								<img src="./images/i-mul-chart-btn.svg" th:src="@{/resources/dist/image/i-mul-chart-btn.svg}" alt="多筆資料">
+							</a>
+						</li>
+						<!-- <li>
+							在 .barcode-btn 加 .active 圖片會換色 
+							th:style="${session.SignedInUser!=null ? 'display:block' : 'display:none'}"
+							<a href="barcode.html" th:href="@{/signin?toPage=verification}" th:if="${session.SignedInUser==null}" class="btn bg-img m-0 ml-1" title="前往資料條碼區">
+								<img src="./images/barcode-mini.svg" th:src="@{/resources/dist/image/barcode-mini.svg}" alt="資料條碼">
+							</a>
+							<a href="barcode.html" th:href="@{/sp/member/1}" th:if="${session.SignedInUser}" class="btn bg-img m-0 ml-1" th:classappend="${session.SignedInUser.boxcheck} ? 'active' : ''"  title="前往資料條碼區">
+								<img src="./images/barcode-mini.svg" th:src="@{/resources/dist/image/barcode-mini.svg}" alt="資料條碼">
+							</a>
+						</li> -->
+						<li class="flex-middle">
+							<a class="btn bg-img" href="javascript:searchToggle();" title="切換搜尋區塊">
+								<img src="/resources/dist/image/search.png" th:src="@{/resources/dist/image/search.png}" alt="搜尋">
+							</a>
+							<span class="hidden-lg"> 
+								<input class="form-control mr-3 keywordMobile" title="輸入搜尋資料集或服務名稱" type="search" placeholder="請輸入資料集/服務名稱..." aria-label="Search" autocomplete="off">
+							</span>
+						</li>
+						<ul class="navbar-nav hidden-lg">
+							<li class="nav-item">
+								<a class="nav-link sitemap-mini br-s" href="sitemap.html" th:href="@{/sp/sitemap}" title="網站導覽">
+									<span>網站導覽</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link faq-mini br-s" href="faq.html" th:href="@{/sp/faq}" title="常見問題">
+									<span>常見問題</span>
+								</a>
+							</li>
+							<li class="nav-item font-size-wrap flex-center">字級：
+								<a class="nav-link font-lg" href="javascript:setFontSize('font-lg');">大</a>
+								<a class="nav-link font-m active" href="javascript:setFontSize('font-m');">中</a>
+								<a class="nav-link font-s" href="javascript:setFontSize('font-s');">小</a>
+							</li>
+						</ul>
+					</ul>
+					<!-- common js-->
+					<script src="js/r_common.js" th:src="@{/resources/dist/js/r_common.js}"></script>
+					<script src="maskWordFunction.js" th:src="@{/resources/dist/js/maskWordFunction.js}"></script>
+					<script src="js/scrollreveal.js" th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+					<script src="js/creative.js" th:src="@{/resources/dist/js/creative.js}"></script>
+					<script type="text/javascript" th:src="@{/RiAPI.js}"></script>
+					<script src="js/functionkey.js" th:src="@{/resources/dist/js/functionkey.js}"></script>
+					<script src="js/jquery.cookie.js" th:src="@{/resources/dist/js/jquery.cookie.js}"></script>
+					<script src="js/crypto-aes.js" th:src="@{/resources/dist/js/crypto-aes.js}"></script>
+					<script src="js/lodash.js" th:src="@{/resources/dist/js/lodash.js}"></script>
+					<th:block th:if="${analysisVer == 1}">
+						<th:blcok th:replace="fragment/analysis::analysis-script"></th:blcok>
+					</th:block>
+					<script type="text/javascript" th:inline="javascript">
+						var platform = window.navigator.platform;
+				        var pluginDownload = '';
+				        var img = null;
+				        
+					    function get_bits_system_architecture() {
+					        var _to_check = [];
+					        if (window.navigator.cpuClass) _to_check.push((window.navigator.cpuClass + "").toLowerCase());
+					        if (window.navigator.platform) _to_check.push((window.navigator.platform + "").toLowerCase());
+					        if (navigator.userAgent) _to_check.push((navigator.userAgent + "").toLowerCase());
+
+					        var _64bits_signatures = ["x86_64", "x86-64", "Win64", "x64;", "amd64", "AMD64", "WOW64", "x64_64", "ia64", "sparc64", "ppc64", "IRIX64"];
+					        var _bits = 32, _i, _c;
+					        outer_loop:
+					        for (var _c = 0; _c < _to_check.length; _c++) {
+					            for (_i = 0; _i < _64bits_signatures.length; _i++) {
+					                if (_to_check[_c].indexOf(_64bits_signatures[_i].toLowerCase()) != -1) {
+					                    _bits = 64;
+					                    break outer_loop;
+					                }
+					            }
+					        }
+					        return _bits;
+					    }
+
+
+					    function is_32bits_architecture() { return get_bits_system_architecture() == 32 ? 1 : 0; }
+					    function is_64bits_architecture() { return get_bits_system_architecture() == 64 ? 1 : 0; }
+					    
+					    function checkHiCOSCardPlugin() {
+					        var platform = window.navigator.platform;
+					        var pluginDownload = '';
+					        var img = null;
+					        var ctx;
+					        var output = "";
+					        var ua = window.navigator.userAgent;
+					        img = document.createElement("img");
+					        img.crossOrigin = "Anonymous";
+					        img.src = 'http://localhost:61161/p11Image.bmp';
+					        var canvas = document.createElement("canvas");
+					        canvas.width = 2000; canvas.height = 1;
+					        ctx = canvas.getContext('2d');
+					        img.onreadystatechange = function () {
+					            ctx.drawImage(img, 0, 0);
+					            ctx.drawImage(img, 0, 0);
+					            output = getImageInfo(ctx);
+					        };
+					        img.onload = function () {
+					            ctx.drawImage(img, 0, 0);
+					            ctx.drawImage(img, 0, 0);
+					            output = getImageInfo(ctx);
+					            if (output != ""){
+					            	setOutput(output);
+					            }
+					        };
+					        img.onerror = function () {
+					            if (platform.indexOf("Win") !== -1)
+					                pluginDownload = "https://api-hisecurecdn.cdn.hinet.net/HiCOS_Client.zip";
+					            if (platform.indexOf("Mac") !== -1)
+					                pluginDownload = "https://api-hisecurecdn.cdn.hinet.net/HiPKILocalSignServer/mac/HiPKILocalSignServer.pkg";
+					            if (platform.indexOf("Linux") !== -1)
+					                pluginDownload = "https://api-hisecurecdn.cdn.hinet.net/HiPKILocalSignServer/linux/HiPKILocalSignServerApp.tar.gz";
+								$('#hicosplugin-confirm-btn').attr('data-src',pluginDownload);
+								$('#hicosplugin-pop-message').modal('show');
+					        };
+					    }
+					    
+					    //HiCOS執行檔錯誤或逾時
+					    function getImageInfo(ctx) {
+					        var output = "";
+					        for (i = 0; i < 2000; i++) {
+					            var data = ctx.getImageData(i, 0, 1, 1).data;
+					            if (data[2] == 0) console.log(i); break;
+					            output = output + String.fromCharCode(data[2], data[1], data[0]);
+					        }
+					        return output;
+					    }
+						//HiCOS檢查信任網站
+					    function setOutput(output) {
+					        var ret = JSON.parse(output);
+					        if (ret.ret_code == 0x76000031) {
+								$('#message-text').text(window.location.hostname +'非信任網站，請先加入信任網站');
+				    				$('#pop-message').modal('show');
+					            return;
+					        }
+					    }
+					    
+						function downloadPluginFile(obj){
+							$('#hicosplugin-pop-message').modal('hide');
+							var downloadPlugin = $(obj).attr('data-src');
+							window.open(downloadPlugin);
+						}
+						
+					    function checkNHICardPlugin() {
+					    		//console.log('--checkNHICardPlugin--');
+					        var osName2 = getOS();
+					        var pluginDownload = '';
+					        if (osName2 == "Windows") {
+					        		pluginDownload = "https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/Setup.zip";
+					        } else if (osName2 == "Mac") {
+					        		pluginDownload = "https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/mac.Install1.zip";
+					        } else if (osName2 == "Linux-Ubuntu") {
+					        		pluginDownload = "https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/mLNHIICC_Setup.Ubuntu.zip";
+					        } else if (osName2 == "Linux-Fedora") {
+					        		pluginDownload = "https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/mLNHIICC_Setup.fedora.zip";
+					        }
+					        if (window.WebSocket){
+					        		//SUCCESS
+					        		if(healthCardCanVerify==false){
+									$('#nhiplugin-confirm-btn').attr('data-src',pluginDownload);
+									$('#nhiplugin-pop-message').modal('show');
+					        		}
+					        }else{
+					        		//ERROR
+								$('#nhiplugin-confirm-btn').attr('data-src',pluginDownload);
+								$('#nhiplugin-pop-message').modal('show');
+					        }
+					    }
+					    
+						function downloadNHIPluginFile(obj){
+							$('#nhiplugin-pop-message').modal('hide');
+							var downloadPlugin = $(obj).attr('data-src');
+							window.open(downloadPlugin);
+						}
+					    
+					    function getOS() {
+					        var os, ua = navigator.userAgent;
+					        if (ua.match(/Win(dows )?NT 6\.1/)) {
+					            os = "Windows";               // Windows 7
+					        }
+					        else if (ua.match(/Win(dows )?NT 6\.0/)) {
+					            os = "Windows";               // Windows Vista
+					        }
+					        else if (ua.match(/Win(dows )?NT 5\.2/)) {
+					            os = "Windows";         // Windows Server 2003
+					        }
+					        else if (ua.match(/Win(dows )?(NT 5\.1|XP)/)) {
+					            os = "Windows";              // Windows XP
+					        }
+					        else if (ua.match(/Win(dows )? (9x 4\.90|ME)/)) {
+					            os = "Windows";              // Windows ME
+					        }
+					        else if (ua.match(/Win(dows )?(NT 5\.0|2000)/)) {
+					            os = "Windows";                // Windows 2000
+					        }
+					        else if (ua.match(/Win(dows )?98/)) {
+					            os = "Windows";              // Windows 98
+					        }
+					        else if (ua.match(/Win(dows )?NT( 4\.0)?/)) {
+					            os = "Windows";              // Windows NT 4.0
+					        }
+					        else if (ua.match(/Win(dows )?95/)) {
+					            os = "Windows";              // Windows 95
+					        }
+					        else if (ua.match(/Mac|PPC/)) {
+					            os = "Mac";                  // Macintosh
+					        }
+					        else if (ua.match(/Linux/)) {
+					            if (ua.match(/Ubuntu/)) {
+					                os = "Linux-Ubuntu";                   // Linux
+					            } else if (ua.match(/Fedora/)) {
+					                os = "Linux-Fedora";
+					            } else {
+					                os = "Linux";
+					            }
+					        }
+					        else if (ua.match(/(Free|Net|Open)BSD/)) {
+					            os = RegExp.$1 + "BSD";             // BSD
+					        }
+					        else if (ua.match(/SunOS/)) {
+					            os = "Solaris";                 // Solaris
+					        }
+					        else {
+					            os = "Unknown";                 // Other OS
+					        }
+					        return os;
+					    }
+					    
+						var focusBefore = null;
+						$.cookie.defaults.path = '/';
+						/**
+						* 每5秒自動check一次
+						**/
+						setInterval(function(){
+							RiAPI.run({
+					            type: 'GET',
+					            url: '/rest/user/alive',
+					            loadSpin: false,
+					            success: function(resp) {}
+							});
+						},5*1000);
+						
+						/**
+						 * idle-monitor 監控網頁的閒置狀態。
+						 * 機制說明：
+						 * 1. 監控 mousemove, keyup, scroll 事件，於一定時間內未觸發上述三種事件即符合閒置條件。
+						 */
+						var sessionTimoutToPage = /*[[@{/login-again}]]*/'';
+						let __idleMonitorConfig = {
+						    idleThresholdInSeconds: 1200,    // 判斷為閒置狀態的持續時間，單位：秒。
+						    watchIntervalInSeconds: 10,    // 監控的間隔時間。單位：秒。
+						    lastMouseMoveTime: new Date().getTime(),
+						    lastScrollTime: new Date().getTime(),
+						    lastKeyupTime: new Date().getTime(),
+						    lastTouchstartTime: new Date().getTime(),
+						    logoutRestUrl: '/rest/auth/logout',   // logout with rest api
+						    indexUrl: sessionTimoutToPage,
+						    intervalId: null,
+						    debugMode: false
+						}
+						
+						$(function(){
+						    // 綁定用於判斷的事件別
+							RiAPI.run({
+					            type: 'GET',
+					            url: '/rest/user/alive',
+					            loadSpin: false,
+					            success: function(resp) {}
+							});
+							$.cookie('lastMouseMoveTime', new Date().getTime(), { expires : 1, path: "/;SameSite=Lax"});
+							$.cookie('lastScrollTime', new Date().getTime(), { expires : 1, path: "/;SameSite=Lax"});
+							$.cookie('lastKeyupTime', new Date().getTime(), { expires : 1, path: "/;SameSite=Lax"});
+							$.cookie('lastTouchstartTime', new Date().getTime(), { expires : 1, path: "/;SameSite=Lax"});
+						    _idleMonitor_start();
+						});
+						
+						function _idleMonitor_start() {
+						    // mouse-move
+						    $(window).on('mousemove', function (e) {
+				    				$.cookie('lastMouseMoveTime', new Date().getTime(), { expires : 1, path: "/;SameSite=Lax"});
+						    });
+						    if(__idleMonitorConfig.debugMode) console.log('_idleMonitor_start, bind mousemove event on window');
+						    // scroll
+						    $(window).on('scroll', function (e) {
+					    			$.cookie('lastScrollTime', new Date().getTime(), { expires : 1, path: "/;SameSite=Lax"});
+						    });
+						    if(__idleMonitorConfig.debugMode) console.log('_idleMonitor_start, bind scroll event on window');
+						    // keyup
+						    $(window).on('keyup', function (e) {
+						        $.cookie('lastKeyupTime', new Date().getTime(), { expires : 1, path: "/;SameSite=Lax"});
+						    });
+						    if(__idleMonitorConfig.debugMode) console.log('_idleMonitor_start, bind keyup event on window');
+						    // touchstart
+						    $(window).on('touchstart', function (e) {
+						        $.cookie('lastTouchstartTime', new Date().getTime(), { expires : 1, path: "/;SameSite=Lax"});
+						    });
+						    if(__idleMonitorConfig.debugMode) console.log('_idleMonitor_start, bind touchstart event on window');
+						    
+						    // 啟動監控。
+						    __idleMonitorConfig.intervalId = setInterval(_idleMonitor_watchHandler,
+						        __idleMonitorConfig.watchIntervalInSeconds*1000);
+						}
+						
+						// 監控判斷式。若符合觸發條件呼叫 firedCallback, 反之呼叫 notFireCallback。
+						function _idleMonitor_watchHandler() {
+						    let _now = new Date().getTime();
+						    let threshold = __idleMonitorConfig.idleThresholdInSeconds * 1000;
+						    let lastTime1 = $.cookie('lastMouseMoveTime');
+						    let lastTime2 = $.cookie('lastScrollTime');
+						    let lastTime3 = $.cookie('lastKeyupTime');
+						    let lastTime4 = $.cookie('lastTouchstartTime');
+						    let canFire = ((_now - lastTime1) > threshold)  
+						    && ((_now - lastTime2) > threshold)  
+						    && ((_now - lastTime3) > threshold) 
+						    && ((_now - lastTime4) > threshold);
+						    
+						    if(__idleMonitorConfig.debugMode) {
+						        console.log('_idleMonitor_watchHandler -> now:'+_now
+						            + ', lastMouseMoveTime:'+lastTime1
+						            + ', lastScrollTime:'+lastTime2
+						            + ', lastKeyupTime:'+lastTime3
+						            + ', lastTouchstartTime:'+lastTime4
+						            + ', canFire:'+canFire);
+						    }
+						
+						    if(canFire) {
+				                RiAPI.run({
+				                    type : 'POST',
+				                    url : '/rest/user/info',
+				                    loadSpin : false,
+				                    success : function(resp) {
+				                        if (resp.code < 0) {
+				                        		clearInterval(__idleMonitorConfig.intervalId);
+				                        } else {
+				                            //區分已登入為登入及身分 resp.data.userInfo.userName
+				                            clearInterval(__idleMonitorConfig.intervalId);
+				                            if(typeof resp.data.userInfo!='undefined'&&resp.data.userInfo!=null){
+										        // do logout with rest-api.
+										        RiAPI.run({
+										            type: 'GET',
+										            url: __idleMonitorConfig.logoutRestUrl,
+										            loadSpin: true,
+										            success: function (resp) {
+										                window.location.href = __idleMonitorConfig.indexUrl;
+										            },
+										            error: function (resp) {
+										                console.error(resp);
+										            },
+										            complete: function (resp) {
+										                clearInterval(__idleMonitorConfig.intervalId);
+										                _idleMonitor_sleep(500);
+										            }
+										        });
+				                            }
+				                        }
+				                    },
+				                    error: function (resp) {
+				                    		clearInterval(__idleMonitorConfig.intervalId);
+						                console.error(resp);
+						            },
+						            complete: function (resp) {
+						                clearInterval(__idleMonitorConfig.intervalId);
+						            }
+				                });
+						        if(__idleMonitorConfig.debugMode) {
+						            console.log('_idleMonitor_watchHandler, request logout -> url:'+__idleMonitorConfig.logoutRestUrl);
+						        }
+						    }
+						}
+						
+						function _idleMonitor_sleep(delay) {
+						    let start = new Date().getTime();
+						    while (new Date().getTime() < start + delay);
+						}
+						
+						$(function(){
+
+							var historyLength = window.history.length;
+
+							if(historyLength == 0){
+								$.cookie('currentUrl',window.location.href, { expires : 1, path: "/;SameSite=Lax"});
+							}else if(historyLength == 1){
+								$.cookie('currentUrl',window.location.href, { expires : 1, path: "/;SameSite=Lax"});
+								$.cookie('previousUrl' , document.referrer, { expires : 1, path: "/;SameSite=Lax"});
+							}else if(historyLength > 1){
+								$.cookie('previous2Url',$.cookie('previousUrl'), { expires : 1, path: "/;SameSite=Lax"});
+								$.cookie('currentUrl',window.location.href, { expires : 1, path: "/;SameSite=Lax"});
+								$.cookie('previousUrl' , document.referrer, { expires : 1, path: "/;SameSite=Lax"});
+							}
+
+
+							// 返回上一頁的監控
+							window.onpopstate = function() {
+								//console.log('current ->'+ window.location.href);
+								//console.log('previous -> ' + document.referrer);
+								//console.log('previousUrl -> ' + $.cookie('previousUrl'));
+								if(window.location.href.indexOf('#') < 1){
+									window.location.href = $.cookie('previousUrl');
+									history.pushState({}, '');
+								}
+								};
+							// history.pushState({}, '');
+
+							// 根據domain和path顯示標籤
+							var host = window.location.hostname;
+							var path = window.location.pathname;
+							var $brand = $('#span-brand');
+							showServerName($brand, host, path);
+
+							$("input.keyword").keypress(function (event) {
+								if (event.keyCode == 13) {
+									searchByKeyword();
+								}
+							});
+							//keywordMobile
+							$("input.keywordMobile").keypress(function (event) {
+								if (event.keyCode == 13) {
+									searchByKeywordMobile();
+								}
+							});
+							$("input.service-keyword").keypress(function (event) {
+								if (event.keyCode == 13) {
+									serviceFilterByCondition();
+								}
+							});
+							// 關閉彈跳視窗後，focus定位
+							$('.modal.fade.show button[data-dismiss="modal"]').click(function(){
+								if(focusBefore != null){
+									focusBefore.focus();
+								}
+								focusBefore = null;
+							});
+							
+							$('.m-bottom-nav').find('a').click(function(){
+								$('.m-bottom-nav').find('a').removeClass('active');
+								$(this).addClass('active');
+							});
+							
+							//ie check
+							if(getIEVersion()=='MSIE'){
+								$('body').addClass('ie');
+							}
+							
+							//字體大小
+							if($.cookie('fontSize')!=null&&$.cookie('fontSize')!='undefined'){
+								//console.log('fontSize -> ' + $.cookie('fontSize'));
+								setFontSize($.cookie('fontSize'));
+							}
+							
+							var currentPathName = window.location.pathname;
+							if(currentPathName.indexOf('/sp/member/') >= 0) {
+								$('.m-bottom-nav').find('.m-barcode').addClass('active');
+							} else if(currentPathName.indexOf('/sp/service') >= 0 || currentPathName.indexOf('/personal/cate') >= 0 ||
+									currentPathName.indexOf('/mutipledownload') >= 0) {
+								var hash = window.location.hash;
+								if(hash == '#package-service') {
+									$('.m-bottom-nav').find('.m-service').addClass('active');
+								} else if(currentPathName.indexOf('/sp/service/counter') >= 0){
+									$('.m-bottom-nav').find('.m-organ-service').addClass('active');
+								} else{
+									$('.m-bottom-nav').find('.m-download').addClass('active');
+								}
+							} else if(currentPathName.indexOf('/signin') >= 0 || currentPathName.indexOf('/sp/member') >= 0) {
+								$('.m-bottom-nav').find('.m-my-area').addClass('active');
+							}
+							
+							// isIE show message
+							if(isIE() == true) {
+								$('#message-text').text('IE瀏覽器不支援本系統，請改用其他瀏覽器，如：Edge、Chrome、Safari、Firefox等連線，謝謝');
+				    				$('#pop-message').modal('show');
+							}
+						});
+						
+						function isIE() {
+							var ua = window.navigator.userAgent;
+							
+							var msie = ua.indexOf('MSIE ');
+				            if (msie > 0) {
+				                // 回傳版本 <=10 的版本
+				                return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10) <= 10;
+				            }
+
+				            var trident = ua.indexOf('Trident/');
+				            if (trident > 0) {
+				                // 回傳版本 >=11 的版本
+				                var rv = ua.indexOf('rv:');
+				                return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10) >= 11;
+				            }
+
+				            // other browser
+				            return false;
+						}
+
+						function isMobile() {
+							try{ document.createEvent("TouchEvent"); return true; }
+							catch(e){ return false;}
+						}
+						
+						var loginWindow;
+						var loginWindowTimer;
+				
+						function openLogin(obj) {
+							clearInterval(loginWindowTimer);
+							if(loginWindow){
+								loginWindow.close();
+							}
+							var popupWidth = 520;
+							var popupHeight = 635;
+							var xPosition = ($(window).width() - popupWidth) / 2;
+							var yPosition = ($(window).height() - popupHeight) / 2;
+							var loginUrl = /*[[@{/signin}]]*/'';
+							if(typeof obj!='undefined'&&obj!=''&&obj!=null){
+								loginUrl = obj;
+							}
+							//另開視窗
+							loginWindow = window.open(loginUrl, "LoginWindow",
+									"location=no,scrollbars=yes,resizable=yes," + "width="
+											+ popupWidth + ",height=" + popupHeight + ","
+											+ "left=" + xPosition + ",top=" + yPosition);
+							loginWindowTimer = setInterval(onTimerCallbackToCheckLoginWindowClosure, 500);
+						}
+				
+						function onTimerCallbackToCheckLoginWindowClosure() {
+							try {
+								if (loginWindow && loginWindow.closed) {
+									clearInterval(loginWindowTimer);
+									RiAPI.run({
+							            type: 'POST',
+							            url: '/rest/user/info',
+							            loadSpin: true,
+							            success: function(resp) {
+											if (resp.code < 0) {
+												clearInterval(loginWindowTimer);
+											} else {
+												clearInterval(loginWindowTimer);
+												if(typeof resp.data.userInfo!='undefined'&&resp.data.userInfo!=null){
+													if(typeof resp.data.userInfo.member.name!='undefined'&&resp.data.userInfo.member.name!=null){
+														$('body').addClass('after-login');
+													}
+													if(typeof resp.data.boxcheck!='undefined'&&resp.data.boxcheck==true){
+														$('a.barcode-btn').addClass('active');
+														var barcodeUrl = /*[[@{/sp/member/1}]]*/'';
+														$('a.barcode-btn').attr('href',barcodeUrl);
+													}else{
+														$('a.barcode-btn').removeClass('active');
+														var toBarcodeUrl = /*[[@{/signin}]]*/'';
+														toBarcodeUrl = toBarcodeUrl + '?toPage=verification';
+														$('a.barcode-btn').attr('href',toBarcodeUrl);
+													}
+													if(typeof resp.data.userInfo.member.uid!='undefined'&&resp.data.userInfo.member.uid!=null){
+														$('input[name=uid]').val(resp.data.userInfo.member.uid);
+														$('input[name=uid]').attr('disabled','true');
+													}
+													if(typeof resp.data.userInfo.member.birthdate!='undefined'&&resp.data.userInfo.member.birthdate!=null){
+														//console.log(resp.data.userInfo.member.birthdate);
+														var birthObj = new Date(resp.data.userInfo.member.birthdate);
+														var yearStr = birthObj.getFullYear().toString();
+														//console.log(yearStr);
+														var monthStr = (birthObj.getMonth()+1).toString();
+														if(monthStr.length==1){
+															monthStr = '0'+monthStr;
+														}
+														//console.log(monthStr);
+														var dateStr = birthObj.getDate().toString();
+														if(dateStr.length==1){
+															dateStr = '0'+dateStr;
+														}
+														//console.log(dateStr);
+														$('input[name=birthdate]').val(yearStr+monthStr+dateStr);
+														$('input[name=birthdate]').attr('disabled','true');
+													}
+													if(typeof resp.data.cancelBeforeLogin!='undefined'&&resp.data.cancelBeforeLogin==true){
+											    			$('#message-text').text('您已成功登入，為確保帳戶使用安全，我們將同步登出於其他瀏覽器，謝謝您');
+											    			$('#pop-message').modal('show');
+													}
+												}
+											}
+							            }
+									});
+								}
+							} catch (ex) {
+								clearInterval(loginWindowTimer);
+							}
+						}
+						
+						function openLogout(obj){
+							clearInterval(loginWindowTimer);
+							if(loginWindow){
+								loginWindow.close();
+							}
+							var popupWidth = 520;
+							var popupHeight = 635;
+							var xPosition = ($(window).width() - popupWidth) / 2;
+							var yPosition = ($(window).height() - popupHeight) / 2;
+							var logoutUrl = $(obj).attr('data-src');
+							//另開視窗
+							window.location.href = logoutUrl;
+						}
+						
+						function onTimerCallbackToCheckLogoutWindowClosure() {
+							try {
+								if (loginWindow && loginWindow.closed) {
+									//clearInterval(loginWindowTimer);
+									var homehref = /*[[@{/}]]*/'';
+									window.location.href = homehref;
+								}
+							} catch (ex) {
+								clearInterval(loginWindowTimer);
+							}
+						}						
+						
+						function toLogin(){
+							var loginUrl = /*[[@{/signin}]]*/'';
+							window.location.href = loginUrl;
+						}
+						
+						function toMobileLogin() {
+							if($('body').hasClass('after-login')) {
+								var loginUrl = /*[[@{/sp/member}]]*/'';
+								window.location.href = loginUrl;
+							} else {
+								var loginUrl = /*[[@{/signin}]]*/'';
+								window.location.href = loginUrl;
+							}
+						}
+						
+						function searchToggle(){
+							if($('input.keywordMobile').val()==''){
+								if($('#search-input-wrap').hasClass('active')){
+									$('#search-input-wrap').removeClass('active');
+								}else{
+									$('#search-input-wrap').addClass('active');
+								}
+							}else{
+								searchByKeywordMobile();
+							}
+						}
+						
+						function moreToggle(){
+							if($('.m-bottom-more-box').hasClass('show')){
+								$('.m-bottom-more-box').removeClass('show');
+							}else{
+								$('.m-bottom-more-box').addClass('show');
+							}
+						}
+						
+						function searchByKeyword(){
+							if($('input.keyword').val()==''){
+								$('#message-text').text('請輸入搜尋關鍵字');
+								$('#pop-message').modal('show');
+								focusBefore = $('input.keyword');
+							}else{
+								RiAPI.run({
+						            type: 'POST',
+						            data:{word:$('input.keyword').val()},
+						            url: '/rest/search/check',
+						            loadSpin: true,
+						            success: function(resp) {
+						            	var searchurl = /*[[@{/search}]]*/'';
+						            	window.location.href = searchurl+'/'+resp.data.word;
+						            },			
+						            error : function() {
+										$('#message-text').text('系統連線失敗');
+										$('#pop-message').modal('show');
+										focusBefore = $('input.keyword');
+									}
+								});
+							}
+						}
+
+						function showPopMessage(msg, element) {
+							$('#message-text').text(msg);
+							$('#pop-message').modal('show');
+							if(typeof element !== 'undefined') {
+								focusBefore = element;
+							}
+						}
+
+						//searchByKeywordMobile
+						function searchByKeywordMobile(){
+							if($('input.keywordMobile').val()==''){
+								$('#message-text').text('請輸入搜尋關鍵字');
+								$('#pop-message').modal('show');
+							}else{
+								RiAPI.run({
+						            type: 'POST',
+						            data:{word:$('input.keywordMobile').val()},
+						            url: '/rest/search/check',
+						            loadSpin: true,
+						            success: function(resp) {
+						            	var searchurl = /*[[@{/search}]]*/'';
+						            	window.location.href = searchurl+'/'+resp.data.word;
+						            },			
+						            error : function() {
+										$('#message-text').text('系統連線失敗');
+										$('#pop-message').modal('show');
+										focusBefore = $('input.keywordMobile');
+									}
+								});
+							}
+						}
+						
+						$(document).keydown(function(e) {
+							var ev = e || window.event;
+							var $focused = $(':focus');
+							if (ev.keyCode == 13){
+								if($focused.is('label')){
+									//UNDO
+								}else if($focused.is('button.btn')){
+									//UNDO
+									console.log('---click button.btn---');
+								}else{
+									$focused.click();
+								}
+							}
+						    if (ev.keyCode == 9) {
+						    		// 彈跳視窗focus循環
+							    	setTimeout(function(){
+					            		var boxIsOpen = false;
+					            		var box = null;
+					        			for(var i=0;i<$('.modal.fade.show').length;i++){
+					        				var display = $($('.modal.fade.show')[i]).css('display');
+					        				if(display == 'block'){
+					        					boxIsOpen = true;
+					        					box = $($('.modal.fade.show')[i]);
+					        					break;
+					        				}
+					        			}
+					    				if(boxIsOpen == true && box.find($(':focus')).length < 1){
+					    					var boxTab = box.find('button, a');
+					    					if(boxTab.length > 1){
+					    						if(!ev.shiftKey){
+					    							$(boxTab[0]).focus();
+					        					}else{
+					        						$(boxTab[boxTab.length-1]).focus();
+					        					}
+					    					}
+					    				}
+							    },100);
+						    		
+							    	// 頁尾按下tab跳回頁首
+							    	if(!ev.shiftKey && $focused.is('#back-to-top')){
+							    		e.preventDefault();
+							    		location.href='#to_main';
+							    	}
+						    }
+						});
+						
+						var ctrlKeyHold = false;
+						function keyinmaskdown(e){
+							if(e.ctrlKey || e.metaKey){
+								ctrlKeyHold = true;
+							}else{
+								ctrlKeyHold = false;
+							}
+						}
+												
+						function keyinmask(e,obj){
+							if(ctrlKeyHold==false && ((e.keyCode>=48&&e.keyCode<=57)||(e.keyCode>=48&&e.keyCode<=90)
+									||(e.keyCode>=96&&e.keyCode<=105)
+									||e.keyCode==8 //delete
+									||e.keyCode==46 // delete
+									||e.keyCode==229 // delete
+								)){
+								var maskchar = '*';
+								var encdataVal = $(obj).val();
+								var dataIdVal = '';
+								var lastInChar='';
+								if(typeof $(obj).attr('data-value')!='undefined'){
+									dataIdVal = $(obj).attr('data-value');
+								}
+								//最後字元
+								//隱藏資料的長度
+								var encdataValLen = encdataVal.length;
+								//真正資料的長度
+								var dataIdValLen = 0;
+								if(typeof dataIdVal!='undefined'){
+									dataIdValLen = dataIdVal.length;
+								}
+								if(encdataValLen>0){
+									lastInChar = String.fromCharCode(e.keyCode);
+									if(e.keyCode>=96&&e.keyCode<=105){
+										lastInChar =  String.fromCharCode(e.keyCode - 48);
+									}else if(e.keyCode==229){
+										lastInChar = encdataVal.substring(encdataValLen-1);
+									}
+									//最後字元為'*'
+									if(lastInChar==maskchar){
+										if(encdataValLen>dataIdValLen){
+										}else if(encdataValLen==dataIdValLen){
+											dataIdVal = dataIdVal.substring(0,encdataValLen);
+										}else{
+											dataIdVal = dataIdVal.substring(0,encdataValLen);
+										}
+										$(obj).attr('data-value',dataIdVal);
+									}else{
+										if(encdataValLen>dataIdValLen){
+											dataIdVal = dataIdVal + lastInChar;
+										}else if(encdataValLen==dataIdValLen){
+											dataIdVal = dataIdVal.substring(0,encdataValLen) + lastInChar;
+										}else{
+											dataIdVal = dataIdVal.substring(0,encdataValLen);
+										}
+										$(obj).attr('data-value',dataIdVal);
+									} 
+								}else{
+									$(obj).attr('data-value','');
+								}
+								//MASK
+								var returnStr = '';
+								if(encdataValLen>0){
+									if($(obj).attr('name')=='uid'){
+										if(encdataValLen>6){
+											returnStr = dataIdVal.substring(0,6);
+											for(var i=6;i<encdataValLen;i++){
+												returnStr += '*';
+											}
+										}else{
+											returnStr = dataIdVal;
+										}
+									}else if($(obj).attr('name')=='birthdate'){
+										for(var i=0;i<encdataValLen;i++){
+											if((i % 2)==0){
+												returnStr += dataIdVal.substring(i,(i+1));
+											}else{
+												returnStr += '*';	
+											}
+										}
+									}else{
+										for(var i=0;i<encdataValLen;i++){
+											returnStr += '*';
+										}
+									}
+									$(obj).val(returnStr);
+								}	
+							}
+						}
+						
+						function keyinmaskFocusoutEvent(obj, type) {
+						    if($(obj).val().length === 0){
+						        $(obj).attr('data-value','');
+						    }else {
+						    	var maskchar = '*';
+						    	if($(obj).val().indexOf(maskchar)==-1){
+							        // 更新value
+							        var newVal = $(obj).val();
+							        $(obj).attr('data-value', newVal);
+							        // 根據input的id判斷用什麼方法mask
+							        $(obj).val(maskSenstiveInformation_v2(type, newVal));
+						    	}
+						    }
+						}
+						
+						function toggleData(dataId){
+							var encdataVal = $('#'+dataId).val();
+							var dataVal = $('#'+dataId).attr('data-value');
+							if(encdataVal.startsWith('*')){
+								$('#'+dataId).val(dataVal);
+							}else{
+								var returnStr = '';
+								if(dataVal.length>0){
+									for(var i=0;i<dataVal.length;i++){
+										returnStr += '*';
+									}
+								}
+								$('#'+dataId).val(returnStr);
+							}
+						}
+						
+						function getIEVersion() { 
+							var OsObject = ""; 
+							//if(navigator.userAgent.indexOf("MSIE")>0) { 
+							if (navigator.userAgent.indexOf('MSIE') != -1 || navigator.appVersion.indexOf('Trident/') > 0) {
+								return "MSIE"; //IE 
+							} else if(isFirefox=navigator.userAgent.indexOf("Firefox")>0){ 
+								return "Firefox"; //火狐 
+							} else if(isSafari=navigator.userAgent.indexOf("Safari")>0) { 
+								return "Safari"; //Ipad瀏覽器 
+							} else if(isCamino=navigator.userAgent.indexOf("Camino")>0){ 
+								return "Camino"; 
+							} else if(isMozilla=navigator.userAgent.indexOf("Gecko/")>0){ 
+								return "Gecko"; 
+							} 
+						}
+						function setFontSize(obj){
+							$('.font-lg').removeClass('active');
+							$('.font-m').removeClass('active');
+							$('.font-s').removeClass('active');
+							$('body').removeClass('font-lg');
+							$('body').removeClass('font-m');
+							$('body').removeClass('font-s');
+							//console.log('--setFontSize--');
+							if(obj=='font-lg'){
+								$.cookie('fontSize', obj, { expires : 1, path: "/;SameSite=Lax"});
+								$('.font-lg').addClass('active');
+								//console.log('大');
+								$('span.fontSizeMark').empty().append('大');
+								$('body').addClass('font-lg');
+							}
+							if(obj=='font-m'){
+								$.cookie('fontSize', obj, { expires : 1, path: "/;SameSite=Lax"});
+								$('.font-m').addClass('active');
+								//console.log('中');
+								$('span.fontSizeMark').empty().append('中');
+								$('body').addClass('font-m');
+							}
+							if(obj=='font-s'){
+								$.cookie('fontSize', obj, { expires : 1, path: "/;SameSite=Lax"});
+								$('.font-s').addClass('active');
+								//console.log('小');
+								$('span.fontSizeMark').empty().append('小');
+								$('body').addClass('font-s');
+							}
+						}
+						
+						function clickFontSizeMark(){
+							$("#navbarDropdown2Div").modal('toggle');
+						}
+
+						function scrollToPos(id){
+							setTimeout(function() {
+								$('html, body').animate({scrollTop: $(id).offset().top - 150 }, {duration: 100,easing: 'swing'});
+							}, 100);
+						}
+					</script>
+				</div>
+			</nav>
+		</div>
+		<!-- 在 .search-input-wrap 加 .active 會出現搜尋輸入框 -->
+		<!-- 2020/04 搜尋輸入框 start -->
+	    <!-- 若點擊搜尋按鈕，則在 .search-input-wrap 加上 .active，即可開啟搜尋輸入頁 -->
+	    <div id="search-input-wrap" class="search-input-wrap shadow-sm">
+	      <div class="form-inline my-lg-0">
+	        <button class="btn bg-gray hidden-lg" onclick="javascript:searchToggle();" title="切換搜尋區塊">
+	          <img src="./images/goback-arrow-gray.svg" th:src="@{/resources/dist/image/goback-arrow-gray.svg}" alt="回上一頁">
+	        </button>
+	        <input class="form-control mr-3 keyword inline" type="search" title="輸入搜尋資料集或服務名稱" name="keyword"
+	          placeholder="請輸入資料集/服務名稱..." autocomplete="off">
+	        <button id="searchBtn" class="theme-btn-border ml-3 show-lg-only" onclick="javascript:searchByKeyword();"
+	          title="搜尋">搜尋</button>
+	        <!-- <div class="keyword-wrap ml-3">
+	          <small class="m-0">熱門關鍵字<span class="show-lg-only">：
+	            </span></small>
+	          <a href="#" class="mr-1">戶役政</a>
+	          <a href="#" class="mr-1">謄本</a> 
+	          <a href="#" class="mr-1">銀行開戶</a>
+	        </div> -->
+	      </div>
+	    </div>
+	    <!-- 2020/04 搜尋輸入框 end -->
+	    <!-- 2020/04 手機改版 start -->
+	    <div class="m-bottom-nav flex-between w-100 hidden-lg">
+	      <!-- 若該連結被點選，則在 <a> 加上 .class -->
+<!--	      <a href="/sp/about" th:href="@{/sp/about}" class="flex-center m-menu m-mydata">-->
+<!--	        關於我們-->
+<!--	      </a>-->
+	      <a href="/sp/service" th:href="@{/sp/service}" class="flex-center m-menu m-download">
+	        資料下載
+	      </a>
+	      <a href="/sp/service#package-service" th:href="@{/sp/service#package-service}" class="flex-center m-menu m-service">
+	        線上服務
+	      </a>
+	      <a href="/sp/service#package-service" th:href="@{/sp/service/counter}" class="flex-center m-menu m-organ-service">
+	        臨櫃服務
+	      </a>
+		  <a href="#" th:href="@{/signin?toPage=verification}" th:if="${session.SignedInUser==null}" class="flex-center m-menu m-barcode">
+			資料條碼
+		  </a>
+		  <a href="#" th:href="@{/sp/member/1}" th:if="${session.SignedInUser}" class="flex-center m-menu m-barcode">
+			資料條碼
+		  </a>
+		  <!-- <a href="javascript:toMobileLogin();" class="flex-center m-menu m-my-area">
+			會員專區
+		  </a> -->
+	      <a href="#" class="flex-center m-menu m-more" onclick="javascript:moreToggle();">
+	        更多選單
+	      </a>
+	    </div>
+	    <!-- 2020/04 手機改版 end -->
+	    <!-- 2020/04 更多選單 start -->
+		<!-- 當 .m-more 有 .active 時，在 .m-bottom-more-box 旁加上 .show -->
+		<div class="m-bottom-more-box hidden-lg text-center">
+			<ul>
+				<li><a href="#" class="more-text" th:href="@{/sp/about}">關於 MyData</a></li>
+				<li><a href="#" class="more-text" th:href="@{/news/list}">最新消息</a></li>
+				<li><a href="#" class="more-text" th:href="@{/mutipledownload/list}">下載多筆資料</a></li>
+				<!-- <li th:if="${session.SignedInUser}"><a href="#" class="more-text" th:href="@{/sp/member}">會員專區</a></li>
+				<li th:if="${session.SignedInUser==null}"><a href="#" class="more-text" th:href="@{/signin}">會員專區</a></li> -->
+				<li><a href="javascript:toMobileLogin();" class="more-text">會員專區</a></li>
+				<li th:if="${counterAgentVer==1}"><a href="#" class="more-text" th:href="@{/sp/service/counter/agent}">代辦服務</a></li>
+				<li><a href="#" class="more-text" th:href="@{/sp/sitemap}"> 網站導覽 </a></li>
+				<li><a href="#" class="more-text" th:href="@{/sp/faq}"> 常見問題 </a></li>
+				<li class="font-wrap">字級：
+					<a class="more-text font-lg" href="javascript:setFontSize('font-lg');"> 大 </a>
+					<a class="more-text font-m active" href="javascript:setFontSize('font-m');"> 中 </a> 
+					<a class="more-text font-s" href="javascript:setFontSize('font-s');"> 小 </a>
+				</li>
+				<li th:if="${session.SignedInUser} != null"><a class="more-text" th:data-src="@{/logout}" href="javascript:void(0);" 
+					onclick="javascript:openLogout(this);">登出</a></li>
+			</ul>
+		</div>
+		<!-- 2020/04 更多選單 end -->
+		<th:block th:if="${chatbotVer == 1}">
+			<th:blcok th:replace="fragment/chatbot::chatbot"></th:blcok>
+		</th:block>
+		<!-- Message -->
+		<div id="pop-message" class="modal fade show" role="dialog" data-backdrop="static" data-keyboard="false"
+			aria-labelledby="refuseModalLabel" style="display: none;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+						<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div id="message-text" class="modal-body">如有問題請洽客服人員，
+						<br>客服電話<a href="tel:0800-009-868" title="致電Mydata客服電話">0800-009-868</a>，
+						<br>客服信箱<a href="mailto:mydata@ndc.gov.tw" class="footer_about" title="寫信至Mydata客服信箱">mydata@ndc.gov.tw</a>
+					</div>
+					<div class="modal-footer">
+						<button id="pop-message-close-btn" class="theme-btn"
+							data-dismiss="modal">關閉</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="hicosplugin-pop-message" class="modal fade show" role="dialog" data-backdrop="static" data-keyboard="false"
+			aria-labelledby="refuseModalLabel" style="display: none;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+						<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div id="hicosplugin-message-text" class="modal-body">您並未安裝卡片讀卡元件，請確認後下載。</div>
+					<div class="modal-footer">
+						<button id="hicosplugin-pop-message-close-btn" class="theme-btn false" data-dismiss="modal">取消</button>
+						<button id="hicosplugin-confirm-btn" class="theme-btn" data-src="" onclick="javascript:downloadPluginFile(this);">下載</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="nhiplugin-pop-message" class="modal fade show" role="dialog" data-backdrop="static" data-keyboard="false"
+			aria-labelledby="refuseModalLabel" style="display: none;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+						<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div id="nhiplugin-message-text" class="modal-body">您並未安裝健保卡讀卡元件，請確認後下載。</div>
+					<div class="modal-footer">
+						<button id="nhiplugin-pop-message-close-btn" class="theme-btn false" data-dismiss="modal">取消</button>
+						<button id="nhiplugin-confirm-btn" class="theme-btn" data-src="" onclick="javascript:downloadNHIPluginFile(this);">下載</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="tfido-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">MyData 提醒</h5>
+						<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="modal-body txt_left">
+						<p class="mb-3" id="tfido-message-text">您尚未註冊 TW FidO。</p>
+						<div class="note-wrap">
+							<p class="mb-0">
+								＊我的手機支援 TW FidO 嗎？點擊連結查看<a href="https://fido.moi.gov.tw/devices" target="_blank" title="支援手機版本(另開新頁)" lass="link">支援手機版本</a>。
+							</p>
+							<p class="mb-0">
+								＊還沒有下載/註冊 TW FidO 嗎？請點擊連結<a href="https://play.google.com/store/apps/details?id=tw.gov.moi.tfido" title="下載 Android 版本(另開新頁)" target="_blank" class="link">下載 Android 版本</a>、<a href="https://apps.apple.com/tw/app/id1462866416" target="_blank" class="link">下載 iOS 版本</a>。
+							</p>
+							<p class="mb-0">
+								＊不知道怎麼操作嗎？請點擊<a href="https://fido.moi.gov.tw/qa" target="_blank" title="常見問題(另開新頁)" class="link">常見問題</a>。
+							</p>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="pop-message-close-btn" class="theme-btn" data-dismiss="modal">關閉</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- TFIDO OVERTIME-->
+		<div id="tfido-overtime-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+						<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div id="tfido-overtime-message-text" class="modal-body">TW FidO認證已逾兩分鐘，請重新操作。</div>
+					<div class="modal-footer">
+						<button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+						<button id="tfido-overtime-btn" class="theme-btn" data-id="" onclick="javascript:refreshTFidoQRcode(this);">確定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="level-low-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+						<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div id="level-low-message-text" class="modal-body">使用者授權等級不足。</div>
+					<div class="modal-footer">
+						<!-- <button class="theme-btn false mr-3" data-dismiss="modal">取消</button> -->
+						<button id="tfido-overtime-btn" class="theme-btn" onclick="javascript:redirectToReturnUrl401();">確定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="fragment/pop_msg_refresh_modal::pop_msg_refresh_modal"></div>
+		<div th:replace="fragment/pop_multi_member_modal::pop_multi_member_modal"></div>
+	</header>
+</body>
+</html>

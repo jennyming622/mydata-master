@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+
+<th:block th:fragment="fill-member">
+    <h5 class="text-mainred">會員資料填寫</h5>
+    <p>請填寫下列個人基本資料</p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="pt-2 pb-3 text-left">
+                <label class="w-100" for="name">
+                    <span>姓名<small class="alert">(必填)</small></span>
+                    <div class="w-100 position-r">
+                        <input id="name" th:id="'name'+(${id}==null?'':${id})" class="form-control" type="text" name="name" placeholder="請輸入您的姓名(例：林小華)"
+                            onfocus="inputFocusinEvent_1(this)"
+                            onblur="inputFocusoutEvent_1(this, MaskType.name)" autocomplete="off">
+                        <i onclick="maskorUnMask_v2(this);" th:id="'eye_name'+${id}" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <!-- 主要聯絡方式 -->
+        <div class="col-md-12">
+            <span>請選擇主要聯絡方式<small class="alert">(必填)</small></span>
+            <div class="flex-start w-100 mt-3 flex-wrap-w">
+                <div class="radio-wrap">
+                    <label>
+                        <input type="radio" name="methodRadio" class="radio-one" value="mobile" checked
+                            onclick="javascript:changeemailradio();">
+                        <span></span>
+                        手機號碼
+                    </label>
+                </div>
+                <div class="radio-wrap">
+                    <label>
+                        <input type="radio" name="methodRadio" class="radio-one" value="email"
+                               onclick="javascript:changeemailradio();">
+                        <span></span>
+                        電子信箱
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="pt-2 pb-3 text-left">
+                <label class="w-100" for="mobile" id="mobilelabel">
+                    <span>手機號碼</span>
+                    <div class="flex-start w-100 input-phone-wrap">
+                        <div class="w-100 position-r">
+                            <input id="mobile" class="form-control" type="text" pattern="[0-9]*" inputmode="numeric" name="mobile" placeholder="例：09123456789"
+                                   	onfocus="inputFocusinEvent_1(this)"
+                                	oninput="inputTypingEvent(this, MaskType.phone)"
+                                   	onblur="inputFocusoutEvent_1(this, MaskType.phone)" autocomplete="off">
+                            <i onclick="maskorUnMask_v2(this);" id="eye_mobile" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+                        </div>
+                        <button class="btn theme-btn-border ml-2" onclick="javascript:emailOrMobileMessageSend();">發送驗證碼</button>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-6" id="verifyMobilePreBlock"></div>
+        <div class="col-md-6">
+            <div class="pt-2 pb-3 text-left" id="verifyMobileBlock">
+                <span>驗證碼</span>
+                <div class="flex-start w-100">
+                    <input th:id="uuidcheckforCheckCode" type="hidden">
+                    <label class="w-100 eyes-switch-loca" for="verifyCodeMobile" style="">
+                        <input id="verifyCodeMobile" class="form-control" type="text" pattern="[0-9]*" inputmode="numeric" name="verifyCodeMobile" placeholder="請輸入驗證碼" autocomplete="off">
+                    </label>
+                </div>
+                <div class="text-left verify-tag-wrap mb-3" style="display: none;">
+                    <small th:id="resendVerifyMobileText">驗證碼已傳送至...</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="pt-2 pb-3 text-left">
+                <label class="w-100 hidden" for="email" id="emaillabel">
+                    <span>電子信箱</span>
+                    <div class="flex-start w-100 input-phone-wrap">
+                        <div class="w-100 position-r">
+                            <input id="email" class="form-control" type="text" name="email" placeholder="請輸入您的電子信箱"
+                                   onfocus="inputFocusinEvent_1(this)"
+                                   onblur="inputFocusoutEvent_1(this, MaskType.email)" autocomplete="off">
+                            <i onclick="maskorUnMask_v2(this);" th:id="eye_email" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+                        </div>
+                        <button class="btn theme-btn-border ml-2"
+                                onclick="javascript:emailOrMobileMessageSend();">發送驗證碼</button>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+        <div class="col-md-6">
+            <div class="pt-2 pb-3 text-left hidden" id="verifyEmailBlock">
+                <span>驗證碼</span>
+                <div class="flex-start w-100">
+                    <input th:id="uuidcheckforCheckCode" type="hidden">
+                    <label class="w-100 eyes-switch-loca" for="verifyCodeEmail" style="">
+                        <input id="verifyCodeEmail" class="form-control" type="text" pattern="[0-9]*" inputmode="numeric" name="verifyCodeEmail" placeholder="請輸入驗證碼" autocomplete="off">
+                    </label>
+                </div>
+                <div class="text-left verify-tag-wrap mb-3" style="display: none;">
+                    <small th:id="resendVerifyEmailText">驗證碼已傳送至...</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- 聯絡方式 -->
+        <div class="col-md-12">
+            <p class="bg-gray p-3 mb-4 ">
+                <img src="./images/ps-icon.svg" class="mr-1" alt="注意事項：" style="width: 20px;">為驗證聯絡方式的正確性，系統將發送驗證碼至您選擇的主要聯絡方式。
+            </p>
+        </div>
+    </div>
+</th:block>
+<th:block th:fragment="fill-member-script">
+    <script type="text/javascript" th:inline="javascript">
+        var waitEmailorMobileOTPsecInterval;
+
+        function getName(id) {
+            return getUnmaskValue('#name');
+        }
+        function getEmail(id) {
+            return getUnmaskValue('#email');
+        }
+        function getMobile(id) {
+            return getUnmaskValue('#mobile');
+        }
+        function getInformMethod() {
+            return $("input[name='methodRadio']:checked").val();
+        }
+
+        function emailOrMobileMessageCheck(){
+            var name = getName();
+            if(typeof name=='undefined' || name=='' ){
+                showPopMessage('請輸入姓名', $('#name'));
+                return;
+            }
+            var emailradioVal = getInformMethod();
+            if(emailradioVal=='email'||emailradioVal=='mobile'){
+                var email = getEmail();
+                if(emailradioVal=='email' && (typeof email=='undefined' || email=='')){
+                    showPopMessage('請輸入電子信箱', $('#email'));
+                    return;
+                }
+                var mobile = getMobile();
+                if(emailradioVal=='mobile'&&(typeof mobile=='undefined'|| mobile=='')){
+                    showPopMessage('請輸入手機號碼', $('#mobile'));
+                    return;
+                }
+            } else{
+                showPopMessage('請選擇聯絡方式');
+                return;
+            }
+            var checkCode = '';
+            if(emailradioVal=='email') {
+                checkCode = $('#verifyCodeEmail').val();
+            } else {
+                checkCode = $('#verifyCodeMobile').val();
+            }
+
+            if(checkCode!=null&&checkCode!=''){
+                var data = {
+                    uuidcheckforCheckCode: $('#uuidcheckforCheckCode').val(),
+                    checkforCheckCode:checkCode,
+                    prId:'',
+                    informMethod: emailradioVal
+                };
+                var showVerifyView = false;
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/emailOrMobileMessage/check',
+                    data: data,
+                    loadSpin : true,
+                    showVerifyView : showVerifyView,
+                    complete : function(xhr, status) {
+                        if(showVerifyView == true) {
+                            setTimeout(function(){
+                                fillMemberData()
+                            },500);
+                        }
+                    },
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            $('#verifyCode').val('');
+                            if(resp.code == -1209){
+                                showPopMessage('驗證碼輸入錯誤或失效');
+                            }else{
+                                showPopMessage('系統錯誤，請重新操作！');
+                            }
+                        }else{
+                            showVerifyView = true;
+                        }
+                    }
+                });
+            } else {
+                showPopMessage('請輸入驗證碼', $('#verifyCode'));
+            }
+        }
+        /*補登資料*/
+        function fillMemberData(id){
+            var checkFlag = true;
+            var emailradioVal = getInformMethod(id);
+            var verificationlevel = getVerificationLevel(id);
+
+            var uid = getPid();
+            var birthdate = getBirthdate();
+            if(verificationlevel == '0.5') {
+                birthdate = '';
+                uid = $('#muid' + id).val();
+            }
+            var p = {
+                "uid" : uid,
+                "birthdate" : birthdate,
+                "name" : getUnmaskValue('#name')
+            }
+            p.email = getEmail(id);
+            p.mobile = getMobile(id);
+
+            if(emailradioVal=='email'){
+                p.informMethod = 'email';
+            }else if(emailradioVal=='mobile'){
+                p.informMethod = "mobile";
+            }
+
+            if(checkFlag && (typeof $('#name').val()=='undefined' || $('#name').val()=='' )){
+                showPopMessage('請輸入姓名', $('#name'));
+                checkFlag = false;
+            }
+            if(checkFlag&&(emailradioVal=='email'||emailradioVal=='mobile')){
+                if(checkFlag&&emailradioVal=='email'&& (typeof $('#email').val()=='undefined' || $('#email').val()=='')){
+                    showPopMessage('請輸入電子信箱', $('#email'));
+                    checkFlag = false;
+                }
+                if(checkFlag&&emailradioVal=='mobile'&&(typeof $('#mobile').val()=='undefined'|| $('#mobile').val()=='')){
+                    showPopMessage('請輸入手機號碼', $('#mobile'));
+                    checkFlag = false;
+                }
+                if(checkFlag){
+                    var showVerifyView = false;
+                    RiAPI.run({
+                        type : 'POST',
+                        url : '/rest/user/emailOrMobileLoginStep2',
+                        loadSpin : true,
+                        data : p,
+                        showVerifyView : showVerifyView,
+                        complete : function(xhr, status) {
+                            if(showVerifyView == true) {
+                                setTimeout(function(){
+                                    checkYesApply();
+                                },500);
+                            }
+                        },
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                //登入失敗
+                                $('#message-text').text('登入失敗，請重新操作！');
+                                $('#pop-message').modal('show');
+                                window.close();
+                            } else {
+                                showVerifyView = true;
+                                clearInterval(waitEmailorMobileOTPsecInterval);
+                                $('#resendVerifyEmailText').parent().hide();
+                                $('#resendVerifyMobileText').parent().hide();
+                                var member = resp.data.member;
+                                tmpMember = member;
+                            }
+                        }
+                    });
+                }
+            }else{
+                if(checkFlag){
+                    showPopMessage('請選擇聯絡方式', $('#mobile'));
+                }
+            }
+        }
+        
+        function changeemailradio() {
+            var emailradioVal = getInformMethod();
+            if(emailradioVal=='email'){
+                $('#emaillabel').show();
+                $('#emaillabel').find('button').removeClass("false");
+                $('#emaillabel').find('button').prop('disabled', false);
+                $('#verifyEmailBlock').show();
+
+                $('#mobilelabel').hide();
+                $('#mobilelabel').find('button').addClass("false");
+                $('#mobilelabel').find('button').prop('disabled', true);
+
+                $('#verifyMobileBlock').hide();
+                $('#verifyMobilePreBlock').hide();
+                if($('#uuidcheckforCheckCode').val() != '') {
+                    $('#message-text').text('變更主要聯絡方式，請重新發送驗證碼');
+                    $('#pop-message').modal('show');
+                    $('#verify').show();
+                    $('#verify').find('small').empty().append('請發送驗證碼');
+                    $('#resendVerifyEmailText').parent().hide();
+                    clearInterval(waitEmailorMobileOTPsecInterval);
+                }
+            }
+            if(emailradioVal=='mobile'){
+                $('#emailradio1Label').addClass('active');
+                $('#emailradio2Label').removeClass('active');
+
+                $('#mobilelabel').show();
+                $('#mobilelabel').find('button').removeClass("false");
+                $('#mobilelabel').find('button').prop('disabled', false);
+
+
+                $('#verifyMobileBlock').show();
+                $('#verifyMobilePreBlock').show();
+                $('#emaillabel').hide();
+                $('#emaillabel').find('button').addClass("false");
+                $('#emaillabel').find('button').prop('disabled', true);
+
+
+                $('#verifyEmailBlock').hide();
+                if($('#uuidcheckforCheckCode').val() != '') {
+                    $('#message-text').text('變更主要聯絡方式，請重新發送驗證碼');
+                    $('#pop-message').modal('show');
+                    $('#verify').show();
+                    $('#verify').find('small').empty().append('請發送驗證碼');
+                    $('#resendVerifyMobileText').parent().hide();
+                    clearInterval(waitEmailorMobileOTPsecInterval);
+                }
+            }
+            
+        }
+
+        function emailOrMobileMessageSend(){
+            var emailradioVal = getInformMethod();;
+            if(emailradioVal=='email'){
+                var email = getUnmaskValue('#email');
+                if(typeof email == 'undefined' || email.length == 0) {
+                    showPopMessage("請輸入電子信箱", $('#email'));
+                    return;
+                }
+                if(!verfiyEmailExpression(email)){
+                    showPopMessage("電子信箱格式不正確", $('#email'));
+                    return;
+                }
+                var data = {
+                    email: email,
+                    prId:''
+                };
+
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/emailOrMobileMessage/send',
+                    data: data,
+                    loadSpin : true,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            if(resp.code == -5) {
+                                showTimeoutMessage(resp);
+                                return;
+                            } else {
+                                showPopMessage(resp.text);
+                            }
+                        }else{
+                            $('#uuidcheckforCheckCode').val(resp.data.uuidcheckforCheckCode);
+                            $('#emaillabel').find('button').addClass("false");
+                            $('#emaillabel').find('button').prop('disabled', true);
+                            $('#resendVerifyEmailText').attr('data-time',120);
+                            waitEmailorMobileOTPsecInterval = setInterval(function (type) {
+                                checkEmailOrMobileOTPWaitTime(type);
+                            }, 1000,'email');
+                        }
+                    }
+                });
+            }else if(emailradioVal=='mobile'){
+                var mobile = getUnmaskValue('#mobile');
+                if(typeof mobile == 'undefined' || mobile.length == 0) {
+                    showPopMessage("請輸入手機號碼", $('#mobile'));
+                    return;
+                }
+                if(!verifyMobileExpression(mobile)){
+                    showPopMessage("手機號碼格式不正確", $('#mobile'));
+                    return;
+                }
+
+                var data = {
+                    mobile: mobile,
+                    prId:''
+                };
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/emailOrMobileMessage/send',
+                    data: data,
+                    loadSpin : true,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            if(resp.code == -5) {
+                                showTimeoutMessage(resp);
+                                return;
+                            } else {
+                                showPopMessage(resp.text);
+                            }
+                        }else{
+                            $('#uuidcheckforCheckCode').val(resp.data.uuidcheckforCheckCode);
+                            $('#mobilelabel').find('button').addClass("false");
+                            $('#mobilelabel').find('button').prop('disabled', true);
+                            $('#resendVerifyMobileText').attr('data-time',120);
+                            waitEmailorMobileOTPsecInterval = setInterval(function (type) {
+                                checkEmailOrMobileOTPWaitTime(type);
+                            },1000, 'mobile');
+                        }
+                    }
+                });
+            }
+        }
+
+        /* 重發信件倒數 */
+        function checkEmailOrMobileOTPWaitTime(type){
+            if(type=='email'){
+                var waitsec = parseInt($('#resendVerifyEmailText').attr('data-time'));
+                waitsec =  parseInt(waitsec);
+                if(waitsec==0){
+                    $('#emaillabel').find('button').removeClass("false");
+                    $('#emaillabel').find('button').prop('disabled', false);
+                    $('#resendVerifyEmailText').parent().hide();
+                    clearInterval(waitEmailorMobileOTPsecInterval);
+                }else{
+                    var email = getUnmaskValue('#email');
+                    $('#resendVerifyEmailText').parent().show();
+                    $('#resendVerifyEmailText').empty().append('已發送驗證碼，請於 2 分鐘內輸入驗證碼<br> 2 分鐘後才能再次重新發送新驗證碼('+waitsec+'秒)');
+                    waitsec = waitsec - 1;
+                    $('#resendVerifyEmailText').attr('data-time',waitsec)
+                }
+            }else if(type=='mobile'){
+                var waitsec = parseInt($('#resendVerifyMobileText').attr('data-time'));
+                waitsec =  parseInt(waitsec);
+                if(waitsec==0){
+                    $('#mobilelabel').find('button').removeClass("false");
+                    $('#mobilelabel').find('button').prop('disabled', false);
+                    $('#resendVerifyMobileText').parent().hide();
+                    clearInterval(waitEmailorMobileOTPsecInterval);
+                }else{
+                    var mobile = getUnmaskValue('#mobile');
+                    $('#resendVerifyMobileText').parent().show();
+                    $('#resendVerifyMobileText').empty().append('已發送驗證碼，請於 2 分鐘內輸入驗證碼<br> 2 分鐘後才能再次重新發送新驗證碼('+waitsec+'秒)');
+                    waitsec = waitsec - 1;
+                    $('#resendVerifyMobileText').attr('data-time',waitsec)
+                }
+            }
+        }
+    </script>
+</th:block>
+</html>

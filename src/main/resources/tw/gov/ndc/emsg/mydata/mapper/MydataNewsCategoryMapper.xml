@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.MydataNewsCategoryMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.MydataNewsCategory">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+
+  <resultMap id="withNewsResultMap" type="tw.gov.ndc.emsg.mydata.entity.ext.MyDataNewsCategoryExt">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <collection column="id" javaType="ArrayList" ofType="MyDataNews" property="newsList" select="tw.gov.ndc.emsg.mydata.mapper.MydataNewsMapper.selectByCateId" >
+    </collection>
+  </resultMap>
+
+  <select id="selectCategoryWithNews" resultMap="withNewsResultMap">
+	    select * from mydata_news_category
+  </select>
+
+
+</mapper>

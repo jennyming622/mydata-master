@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.AnalysisMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.Analysis">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="session" jdbcType="VARCHAR" property="session" />
+    <result column="page" jdbcType="VARCHAR" property="page" />
+    <result column="prev_page" jdbcType="VARCHAR" property="prevPage" />
+    <result column="device" jdbcType="VARCHAR" property="device" />
+    <result column="browser" jdbcType="VARCHAR" property="browser" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="request" jdbcType="VARCHAR" property="request" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+  </resultMap>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.Analysis">
+
+    insert into analysis
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="session != null">
+        session,
+      </if>
+      <if test="page != null">
+        page,
+      </if>
+      <if test="prevPage != null">
+        prev_page,
+      </if>
+      <if test="device != null">
+        device,
+      </if>
+      <if test="browser != null">
+        browser,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="request != null">
+        request,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="session != null">
+        #{session,jdbcType=VARCHAR},
+      </if>
+      <if test="page != null">
+        #{page,jdbcType=VARCHAR},
+      </if>
+      <if test="prevPage != null">
+        #{prevPage,jdbcType=VARCHAR},
+      </if>
+      <if test="device != null">
+        #{device,jdbcType=VARCHAR},
+      </if>
+      <if test="browser != null">
+        #{browser,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="request != null">
+        #{request,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

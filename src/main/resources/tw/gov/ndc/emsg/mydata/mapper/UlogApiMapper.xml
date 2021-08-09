@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.UlogApiMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.UlogApi">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="provider_key" jdbcType="VARCHAR" property="providerKey" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="uid" jdbcType="VARCHAR" property="uid" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="action" jdbcType="VARCHAR" property="action" />
+    <result column="action_text" jdbcType="VARCHAR" property="actionText" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="resource_id" jdbcType="VARCHAR" property="resourceId" />
+    <result column="audit_event" jdbcType="INTEGER" property="auditEvent" />
+    <result column="scope" jdbcType="VARCHAR" property="scope" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="encrypted" jdbcType="BIT" property="encrypted" />
+    <result column="tx_id" jdbcType="VARCHAR" property="txId" />
+    <result column="transaction_uid" jdbcType="VARCHAR" property="transactionUid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, provider_key, user_name, uid, action, action_text, client_id, resource_id, audit_event, 
+    scope, ctime, ip, encrypted, tx_id, transaction_uid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ulog_api
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ulog_api
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.UlogApi">
+    insert into ulog_api (id, provider_key, user_name, 
+      uid, action, action_text, 
+      client_id, resource_id, audit_event, 
+      scope, ctime, ip,
+      encrypted, tx_id, transaction_uid, token)
+    values (#{id,jdbcType=INTEGER}, #{providerKey,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, #{action,jdbcType=VARCHAR}, #{actionText,jdbcType=VARCHAR}, 
+      #{clientId,jdbcType=VARCHAR}, #{resourceId,jdbcType=VARCHAR}, #{auditEvent,jdbcType=INTEGER}, 
+      #{scope,jdbcType=VARCHAR}, #{ctime,jdbcType=TIMESTAMP}, #{ip,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},#{encrypted,jdbcType=BIT}, #{txId,jdbcType=VARCHAR},
+      #{transactionUid,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.UlogApi">
+    insert into ulog_api
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="providerKey != null">
+        provider_key,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="action != null">
+        action,
+      </if>
+      <if test="actionText != null">
+        action_text,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="resourceId != null">
+        resource_id,
+      </if>
+      <if test="auditEvent != null">
+        audit_event,
+      </if>
+      <if test="scope != null">
+        scope,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="encrypted != null">
+        encrypted,
+      </if>
+      <if test="txId != null">
+        tx_id,
+      </if>
+      <if test="transactionUid != null">
+        transaction_uid,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="providerKey != null">
+        #{providerKey,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="action != null">
+        #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="actionText != null">
+        #{actionText,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceId != null">
+        #{resourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditEvent != null">
+        #{auditEvent,jdbcType=INTEGER},
+      </if>
+      <if test="scope != null">
+        #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="encrypted != null">
+        #{encrypted,jdbcType=BIT},
+      </if>
+      <if test="txId != null">
+        #{txId,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionUid != null">
+        #{transactionUid,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.UlogApi">
+    update ulog_api
+    <set>
+      <if test="providerKey != null">
+        provider_key = #{providerKey,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="action != null">
+        action = #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="actionText != null">
+        action_text = #{actionText,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceId != null">
+        resource_id = #{resourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditEvent != null">
+        audit_event = #{auditEvent,jdbcType=INTEGER},
+      </if>
+      <if test="scope != null">
+        scope = #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="encrypted != null">
+        encrypted = #{encrypted,jdbcType=BIT},
+      </if>
+      <if test="txId != null">
+        tx_id = #{txId,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionUid != null">
+        transaction_uid = #{transactionUid,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.UlogApi">
+    update ulog_api
+    set provider_key = #{providerKey,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      uid = #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      action = #{action,jdbcType=VARCHAR},
+      action_text = #{actionText,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      resource_id = #{resourceId,jdbcType=VARCHAR},
+      audit_event = #{auditEvent,jdbcType=INTEGER},
+      scope = #{scope,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      ip = #{ip,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      encrypted = #{record.encrypted,jdbcType=BIT},
+      tx_id = #{record.txId,jdbcType=VARCHAR},
+      transaction_uid = #{record.transactionUid,jdbcType=VARCHAR},
+      token = #{record.token,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithRowbounds" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ulog_api
+    where 1=1
+    <if test="auditEventList != null">
+      and audit_event in <foreach collection="auditEventList" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+    </if>
+    <if test="ctimeDesc != null">
+      order by ctime desc
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ulog_api
+    where 1=1
+    <if test="auditEvent != null">
+      and audit_event = #{auditEvent,jdbcType=INTEGER}
+    </if>
+    <if test="txId != null">
+      and tx_id = #{txId,jdbcType=VARCHAR}
+    </if>
+    <if test="transactionUid != null">
+      and transaction_uid = #{transactionUid,jdbcType=VARCHAR}
+    </if>
+    <if test="ctimeDesc != null">
+      order by ctime desc
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<th:block id="dp-param" th:fragment="dp-param(id, paramList, showName, defaultShow)">
+    <div th:id="'param'+${id}" th:data-id="${id}" class="data-detail-cell-wrap" th:if="${not #lists.isEmpty(paramList)}" th:classappend="${defaultShow == 'true'} ? '' : 'hidden'">
+        <!--             <p class="description secondary bold text-left mb-0" th:if="${showName} == 'false'">請輸入您想調閱的資料明細</p> -->
+        <p class="alert bold text-left mt-3 mb-0" th:if="${showName} == 'true'">
+            <th:block th:text="${prTmp.name}">財產資料</th:block> - 資料提供單位：<th:block th:text="${prTmp.providerName}">財政部財政資訊中心</th:block>
+        </p>
+        <div class="row">
+            <th:block th:each="pa,iter : ${paramList}">
+                <!-- 縣市別代號 -->
+                <th:block th:if="${pa.type=='location'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" onchange="javascript:changeLocation(this);" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <option value="">請選擇</option>
+                                    <option value="A">臺北市</option>
+                                    <option value="B">臺中市</option>
+                                    <option value="C">基隆市</option>
+                                    <option value="D">臺南市</option>
+                                    <option value="E">高雄市</option>
+                                    <option value="F">新北市</option>
+                                    <option value="G">宜蘭縣</option>
+                                    <option value="H">桃園市</option>
+                                    <option value="I">嘉義市</option>
+                                    <option value="J">新竹縣</option>
+                                    <option value="K">苗栗縣</option>
+                                    <option value="M">南投縣</option>
+                                    <option value="N">彰化縣</option>
+                                    <option value="O">新竹市</option>
+                                    <option value="P">雲林縣</option>
+                                    <option value="Q">嘉義縣</option>
+                                    <option value="T">屏東縣</option>
+                                    <option value="U">花蓮縣</option>
+                                    <option value="V">臺東縣</option>
+                                    <option value="W">金門縣</option>
+                                    <option value="X">澎湖縣</option>
+                                    <option value="Z">連江縣</option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- 鄉鎮代號 -->
+                <th:block th:if="${pa.type=='town'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" onchange="javascript:changeTown(this);" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <option value="">請選擇</option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- 村里代號 -->
+                <th:block th:if="${pa.type=='vill'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <option value="">請選擇</option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!--  申請項目 -->
+                <th:block th:if="${pa.type=='etd_apply_items'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <option value="1">稅款繳納資料 (最近5年資料)</option>
+                                    <option value="2">退稅資料及退稅資料抵欠明細 (最近5年資料)</option>
+                                    <option value="3">欠稅資料查詢 (截至查詢日之欠稅資料)</option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- 查調身分 -->
+                <th:block th:if="${pa.type=='INQ_ID'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <option value="0">本國個人</option>
+                                    <option value="1">事業團體</option>
+                                    <option value="3">外僑</option>
+                                    <option value="5">大陸地區個人</option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- 土地現值類別 -->
+                <th:block th:if="${pa.type=='PR_VAL_TP'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <option value="1">公告地價</option>
+                                    <option value="2">公告現值</option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- 年度代號 -->
+                <th:block th:if="${pa.type=='year'}"> <!-- 往前五年 -->
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <option
+                                            th:each="year : ${#numbers.sequence(#dates.year(#dates.createNow()) + pa.yearParam.start, #dates.year(#dates.createNow()) - pa.yearParam.end, -1)}"
+                                            th:value="${year - 1911}" th:text="${year - 1911} + '年度'">
+                                    </option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- 考試年度代號 92年起，不顯示 94,95-->
+                <th:block th:if="${pa.type=='year1'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <th:block th:each="year : ${#numbers.sequence(#dates.year(#dates.createNow()), 2003, -1)}" th:if="${year!=2005&&year!= 2006}">
+                                        <option th:value="${year - 1911}" th:text="${year - 1911} + '年度'"></option>
+                                    </th:block>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- cartype -->
+                <th:block th:if="${pa.type=='cartype'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:data-msg="'請選擇' + ${pa.desc}">
+                                    <option value="CAR">汽車</option>
+                                    <option value="TRAILER">拖車</option>
+                                    <option value="MOTOR">機車</option>
+                                    <option value="MACHINE">機械車</option>
+                                    <option value="TEMP">臨時牌</option>
+                                    <option value="TEST">試車牌</option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- lic -->
+                <th:block th:if="${pa.type=='lic'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <select th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:data-msg="'請輸入' + ${pa.desc}">
+                                    <option value="1">汽車</option>
+                                    <option value="2">機車</option>
+                                </select>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- date -->
+                <th:block th:if="${pa.type=='date'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <input th:id="${pa.name}+${id}" class="form-control param mt-1" type="date" th:name="${pa.name}" th:data-msg="'請輸入' + ${pa.desc}" th:placeholder="${pa.desc}" autocomplete="off">
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- enctext -->
+                <th:block th:if="${pa.type=='enctext'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100 eyes-switch-loca" for="startdate" th:for="'enc'+${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <input th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" type="password" th:name="${pa.name}" th:data-msg="'請輸入' + ${pa.desc}" th:placeholder="'請輸入'+${pa.desc}" autocomplete="off">
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                            <a href="https://www.einvoice.nat.gov.tw/APCONSUMER/BTC511W/" target="_blank" title="忘記驗證碼(密碼)(另開新頁)" th:if="${pa.name == 'verifycode'}">
+                                <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+                                <small class="link">忘記驗證碼(密碼)</small>
+                            </a>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- mobile -->
+                <th:block th:if="${pa.type=='mobile'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100 eyes-switch-loca" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <input th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:placeholder="'請輸入'+${pa.desc}" th:data-msg="'請輸入' + ${pa.desc}"
+                                       th:if="!${(session.SignedInUser==null||session.SignedInUser.maskMember.mobile==null||session.SignedInUser.roleType=='0.5')}"
+                                       th:data-value="${(session.SignedInUser==null||member.mobile==null||session.SignedInUser.roleType=='0.5')?'':member.mobile}"
+                                       th:value="${(session.SignedInUser==null||session.SignedInUser.maskMember.mobile==null||session.SignedInUser.roleType=='0.5')?'': session.SignedInUser.maskMember.mobile}"
+                                       th:disabled="${(session.SignedInUser!=null&&session.SignedInUser.member.mobile!=null&&session.SignedInUser.roleType!='0.5') ? 'true':'false'}"
+                                       data-type="mobile" type="text" maxLength="10" autocomplete="off">
+                                <input th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" th:name="${pa.name}" th:placeholder="'請輸入'+${pa.desc}" th:data-msg="'請輸入' + ${pa.desc}"
+                                       th:if="${(session.SignedInUser==null||session.SignedInUser.maskMember.mobile==null||session.SignedInUser.roleType=='0.5')}"
+                                       th:data-value="${(session.SignedInUser==null||member.mobile==null||session.SignedInUser.roleType=='0.5')?'':member.mobile}"
+                                       th:disabled="${(session.SignedInUser!=null&&session.SignedInUser.member.mobile!=null&&session.SignedInUser.roleType!='0.5') ? 'true':'false'}"
+                                       data-type="mobile" type="text" maxLength="10" autocomplete="off">
+                                <i onclick="maskOrUnmask(this)" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+                <!-- text -->
+                <th:block th:if="${pa.type=='text'}">
+                    <div class="col-md-6">
+                        <div class="pt-3 text-left">
+                            <label class="w-100" for="startdate" th:for="${pa.name}+${id}"> <span><th:block th:text="${pa.desc}"></th:block><th:block th:if="${pa.isOption==null||pa.isOption==0}"><small class="alert">(必填)</small> </th:block></span>
+                                <input th:id="${pa.name}+${id}" class="form-control param" th:data-option="${pa.isOption==null||pa.isOption==0}?'0':'1'" type="text" th:name="${pa.name}" th:placeholder="'請輸入'+${pa.desc}" autocomplete="off" th:data-msg="'請輸入' + ${pa.desc}">
+                            </label>
+                            <small th:if="${pa.nameDesc}"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px"><th:block th:text="${pa.nameDesc}"></th:block></small>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+</th:block>
+<th:block th:fragment="dp-param-script">
+    <script type="text/javascript" th:inline="javascript">
+        function changeLocation(obj){
+            var hsnCd = $(obj).val();
+            var tempName = $(obj).attr('name');
+            var tempId = $(obj).attr('id');
+            var tempNo = tempId.replace(tempName,'');
+            //console.log(tempNo);
+            var tempSel = $('#etd_location_town_cd'+tempNo);
+            if(typeof hsnCd!='undefined'&&hsnCd!=''&&typeof tempSel!='undefined'&&tempSel!=''){
+                var p = {
+                    "hsnCd": hsnCd,
+                    "taxType":"L"
+                }
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/option/town',
+                    data : p,
+                    loadSpin : true,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        } else {
+                            //成功
+                            //console.log('town length :'+resp.data.length);
+                            if(typeof tempSel!='undefined'){
+                                $(tempSel).empty();
+                                var str = '<option value="">請選擇</option>';
+                                if(typeof resp.data!='undefined'&&resp.data.length>0){
+                                    for(var i=0;i<resp.data.length;i++){
+                                        str += '<option value="'+ resp.data[i].townCd +'">'+ resp.data[i].townNm +'</option>';
+                                    }
+                                }
+                                $(tempSel).append(str);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function changeTown(obj){
+            var townCd = $(obj).val();
+            var tempName = $(obj).attr('name');
+            var tempId = $(obj).attr('id');
+            var tempNo = tempId.replace(tempName,'');
+            if(typeof townCd!='undefined'&&townCd!=''){
+                var p1 = {
+                    "hsnCd": $('#etd_location_hsn_cd'+tempNo).val(),
+                    "taxType":"L",
+                    "townCd": townCd
+                }
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/option/vill',
+                    data : p1,
+                    loadSpin : true,
+                    success : function(resp1) {
+                        if (resp1.code < 0) {
+                            $('#message-text').text(resp1.text);
+                            $('#pop-message').modal('show');
+                        } else {
+                            //成功
+                            //console.log('vill length :'+resp1.data.length);
+                            var tempSel = $('#etd_location_vill_cd'+tempNo);
+                            if(typeof tempSel!='undefined'){
+                                $(tempSel).empty();
+                                var str = '<option value="">請選擇</option>';
+                                if(typeof resp1.data!='undefined'&&resp1.data.length>0){
+                                    for(var i=0;i<resp1.data.length;i++){
+                                        str += '<option value="'+ resp1.data[i].villCd +'">'+ resp1.data[i].villNm +'</option>';
+                                    }
+                                }
+                                $(tempSel).append(str);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</th:block>
+</html>

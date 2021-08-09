@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.MemberPrivacyMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.MemberPrivacy">
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="agree_date" jdbcType="TIMESTAMP" property="agreeDate" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    member_id, agree_date, version
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from member_privacy
+    where 1 = 1
+    <if test="memberId != null">
+      and member_id = #{memberId,jdbcType=INTEGER}
+    </if>
+  </select>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.MemberPrivacy">
+    insert into member_privacy
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="agreeDate != null">
+        agree_date,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="agreeDate != null">
+        #{agreeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByMemberIdSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.MemberPrivacy">
+
+    update member_privacy
+    <set>
+      <if test="record.memberId != null">
+        member_id = #{record.memberId,jdbcType=INTEGER},
+      </if>
+      <if test="record.agreeDate != null">
+        agree_date = #{record.agreeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.version != null">
+        version = #{record.version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where
+        member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from member_privacy
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </delete>
+</mapper>

@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<!--
+    id
+    level 驗證等級
+    uidType 身分證/居留證
+    type 中央(0) 地方(1) 國營(2) 民營(3)
+    showTwca 是否使用金融卡
+-->
+<th:block th:fragment="identify-verify(id, level, uidType, type, showTwca, showMobile)">
+    <div id='identify-verify' th:id="'identify-verify' + ${id}">
+        <div class="m-0 p-0" th:id="'personal-verify'+${id}">
+            <ul class="nav nav-tabs nav-fill mt-3 mb-3 flex-center w-100 hidden-mobile">
+                <!-- tab personal -->
+                <li>
+                    <a class="nav-item active" href="#use-card" th:href="'#use-card'+${id}" data-toggle="tab">插卡驗證
+                        <div class="twingle-down"></div>
+                    </a>
+                </li>
+                <!-- tab company -->
+                <li th:if="${level>=1}">
+                    <a class="nav-item" href="#no-card" th:href="'#no-card'+${id}" data-toggle="tab">免插卡驗證(行動化運用)
+                        <div class="twingle-down"></div>
+                    </a>
+                </li>
+            </ul>
+            <!-- tab 內容容器 -->
+            <!-- 只有可使用工商憑證下載的資料集會有 tab-show。有 .tab-show，表示內容區塊有灰底。若想移除內容區塊的灰底，則可移除 tab-show。  -->
+            <div class="tab-content tab-show flex-center w-100">
+                <!-- tab personal內容 -->
+                <div class="tab-pane active" id="use-card" th:id="'use-card'+${id}" style="width: 100%">
+                    <div class="form verification-level text-center mt-4 mb-4" th:id="'verification-level' + ${id}" >
+                        <div class="text-left" style="width: fit-content; margin: 0 auto; width: -moz-fit-content;">
+                            <div class="form-group digital-id-card radio" data-type="digital"
+                                 th:if="${level>=0}"
+                                 onclick="javascript:addClassChecked(this);" th:data-id="${id}">
+                                <input type="radio" th:id="'digital-id-card'+${id}" name="verification-level" value="0">
+                                <label class="flex-middle" th:for="'digital-id-card'+${id}" tabindex="0" title="選擇自然人憑證驗證身份">
+                                    <div class="bg-img"></div> <span class="text">自然人憑證 </span>
+                                </label>
+                            </div>
+                            <div class="form-group digital-id-card radio" data-type="fic"
+                                 th:if="${twcaVerifyVer==1 && level>=0 && type<=1 && showTwca=='true'}"
+                                 onclick="javascript:addClassChecked(this);" th:data-id="${id}">
+                                <input type="radio" th:id="'fic'+${id}" name="verification-level" value="0.1">
+                                <label class="flex-middle" th:for="'fic'+${id}" tabindex="0" title="選擇晶片金融卡驗證身份">
+                                    <div class="bg-img"></div> <span class="text">晶片金融卡 </span>
+                                </label>
+                            </div>
+                            <div class="form-group digital-id-card radio" data-type="fch"
+                                 th:if="${twcaVerifyVer==1 && level>=0 && type<=1 && showTwca=='true'}"
+                                 onclick="javascript:addClassChecked(this);" th:data-id="${id}">
+                                <input type="radio" th:id="'fch'+${id}" name="verification-level" value="0.2">
+                                <label class="flex-middle" th:for="'fch'+${id}" tabindex="0" title="選擇硬體金融憑證驗證身份">
+                                    <div class="bg-img"></div> <span class="text">硬體金融憑證 </span>
+                                </label>
+                            </div>
+                            <div class="form-group health-id-card radio" data-type="health"
+                                 th:if="${level>=2}"
+                                 onclick="javascript:addClassChecked(this);" th:data-id="${id}">
+                                <input type="radio" th:id="'health-id-card'+${id}" name="verification-level" value="2">
+                                <label class="flex-middle" th:for="'health-id-card'+${id}" tabindex="0" title="選擇健保卡驗證身份">
+                                    <div class="bg-img"></div> <span class="text">健保卡 </span>
+                                </label>
+                            </div>
+                            <div class="form-group health-id-card radio" data-type="fcs"
+                                 th:if="${twcaVerifyVer==1 && level>=2 && type<=1 && showTwca=='true'}"
+                                 onclick="javascript:addClassChecked(this);" th:data-id="${id}">
+                                <input type="radio" th:id="'fcs'+${id}" name="verification-level" value="2.1">
+                                <label class="flex-middle" th:for="'fcs'+${id}" tabindex="0" title="選擇軟體金融憑證驗證身份">
+                                    <div class="bg-img"></div> <span class="text">軟體金融憑證 </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="digital" th:if="${level>=0}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="text-left">
+                                        <label class="w-100 mb-0">
+                                            <span>請插入您的自然人憑證，並輸入PIN碼<small class="alert">(必填)</small></span>
+                                            <input type="password" pattern="[0-9]*" inputmode="numeric" th:id="'digital-pin'+${id}" class="form-control" placeholder="請輸入您的PIN碼" autocomplete="off">
+                                            <div class="text-right verify-tag-wrap ">
+                                                <a href="https://moica.nat.gov.tw/unblockcard.html" target="_blank" title="忘記 PIN 碼(另開新頁)"><small class="link">忘記 PIN 碼？</small></a>
+                                            </div>
+                                            <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+                                            <small style="display: initial;">PIN碼輸入累計錯誤3次，將會自動鎖卡，如需解鎖，請洽<a href="https://moica.nat.gov.tw/faq_in_c_21_22.html" target="_blank" title="內政部憑證管理中心"><small class="link">內政部憑證管理中心</small></a></small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-left note-wrap">
+                                    <p class="mb-0 bold">初次使用自然人憑證驗證嗎？</p>
+                                    <p class="mb-2">請備妥晶片讀卡機並安裝<a class="link" href="https://moica.nat.gov.tw/download_1.html" target="_blank" title="HiCOS卡片管理工具(另開新頁)">HiCOS卡片管理工具</a>，插卡輸入 PIN 碼即可完成驗證。
+                                        <br>
+                                        <a class="link" href="https://moica.nat.gov.tw/ShowCardInfo.html" target="_blank" title="憑證IC卡檢測(另開新頁)">憑證IC卡檢測</a>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="fic" th:if="${twcaVerifyVer==1 && level>=0}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="text-left">
+                                        <label class="w-100 mb-0">
+                                            <span>請插入您的晶片金融卡，並輸入密碼<small class="alert">(必填)</small></span>
+                                            <input type="password" pattern="[0-9]*" inputmode="numeric" th:id="'fic-pin'+${id}" class="form-control" placeholder="請輸入您的密碼" autocomplete="off">
+                                            <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+                                            <small style="display: initial;">密碼連續3次錯誤後，將會鎖卡，如需解鎖卡片請洽原發卡銀行</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-left note-wrap">
+                                    <p class="mb-0 bold">初次使用晶片金融卡驗證嗎？</p>
+                                    <p class="mb-2">
+                                        Windows作業系統：請備妥晶片讀卡機並安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.exe}" target="_blank" title="Windows版TWCA金融憑證元件.exe">Windows版TWCA金融憑證元件</a>。<br>
+                                        Mac作業系統：請備妥晶片讀卡機並安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.pkg}" target="_blank" title="Mac版TWCA金融憑證元件.pkg">Mac版TWCA金融憑證元件</a>。
+                                    <div class="learning-wrap inline">
+                                        <div class="absolute-center shadow-sm" style="width: 264px;top: -185px;z-index:99;">
+                                            <p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援銀行列表</p>
+                                            <div>臺灣銀行、臺灣土地銀行、合作金庫商業銀行、第一商業銀行、華南商業銀行、彰化商業銀行、上海商業儲蓄銀行、台北富邦商業銀行、國泰世華商業銀行、兆豐國際商業銀行、王道商業銀行、臺灣中小企業銀行、臺灣新光商業銀行、聯邦商業銀行、遠東國際商業銀行、元大商業銀行、永豐商業銀行、凱基商業銀行、台新國際商業銀行、日盛國際商業銀行、中國信託商業銀行。</div>
+                                            <div class="twingle-down"></div>
+                                        </div>
+                                        <a href="javascript:showLearning(this);" style="color: #0c7eb1;text-decoration: underline;">可以用哪些銀行的晶片金融卡</a>
+                                    </div>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="fch" th:if="${twcaVerifyVer==1 && level>=0}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="text-left">
+                                        <label class="w-100 mb-0">
+                                            <span>請插入您的硬體金融憑證，並輸入PIN碼<small class="alert">(必填)</small></span>
+                                            <input type="password" th:id="'fch-pin'+${id}" class="form-control" placeholder="請輸入您的PIN碼" autocomplete="off">
+                                            <!-- <div class="text-right verify-tag-wrap">
+                                                <a href="https://moica.nat.gov.tw/unblockcard.html" target="_blank" title="忘記 PIN 碼(另開新頁)"><small class="link">忘記 PIN 碼？</small></a>
+                                            </div> -->
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-left note-wrap">
+                                    <p class="mb-0 bold">初次使用硬體金融憑證驗證嗎？</p>
+                                    <p class="mb-2">
+                                        Windows作業系統：請備妥晶片讀卡機並安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.exe}" target="_blank" title="Windows版TWCA金融憑證元件.exe">Windows版TWCA金融憑證元件</a>。<br>
+                                        Mac作業系統：請備妥晶片讀卡機並安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.pkg}" target="_blank" title="Mac版TWCA金融憑證元件.pkg">Mac版TWCA金融憑證元件</a>。
+                                    <div class="learning-wrap inline">
+                                        <div class="absolute-center shadow-sm" style="width: 264px;top: -165px;z-index:99;">
+                                            <p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援銀行列表</p>
+                                            <div>玉山銀行、日商三菱日聯銀行、日盛國際商業銀行、王道商業銀行、台中商業銀行、永豐商業銀行、兆豐國際商業銀行、合作金庫商業銀行、京城商業銀行、板信商業銀行、國泰世華銀行、華泰商業銀行、陽信商業銀行、滙豐(台灣)商業銀行、臺灣土地銀行、臺灣新光商業銀行、臺灣銀行、聯邦商業銀行。</div>
+                                            <div class="twingle-down"></div>
+                                        </div>
+                                        <a href="javascript:showLearning(this);" style="color: #0c7eb1;text-decoration: underline;">可以用哪些銀行的硬體金融憑證</a>
+                                    </div>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="health" th:if="${level>=2}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="text-left">
+                                        <label class="w-100 mb-0">
+                                            <span>請插入您的健保卡，並輸入註冊密碼<small class="alert">(必填)</small></span>
+                                            <input type="password" th:id="'health-pwd'+${id}" class="form-control" placeholder="請輸入您的註冊密碼" autocomplete="off">
+                                            <div class="text-right verify-tag-wrap ">
+                                                <a href="https://cloudicweb.nhi.gov.tw/cloudic/system/mUserForget.aspx" target="_blank" title="忘記註冊密碼(另開新頁)"><small class="link">忘記註冊密碼？</small></a>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="text-left mt-2">
+                                        <label for="captcha" th:for="'captcha'+${id}" class="w-100 mb-0">
+                                            <span>驗證碼<small class="alert">(必填)</small></span>
+                                        </label>
+                                        <input type="text" id="captcha" th:id="'captcha'+${id}" name="captcha" class="w-100" autocomplete="off">
+                                        <br>
+                                        <img id="captchaImg" th:id="'captchaImg'+${id}" alt="captcha" th:src="@{/captcha.jpg}+'?prId='+${id}" class="mt-1">
+                                        <button class="btn p-0 speaker" title="語音播放驗證碼" th:onclick="'javascript:captchaGoogleSounfPlay(\''+${id}+'\');'">
+                                            <img th:src="@{/resources/dist/image/speaker-icon.svg}" alt="語音播放">
+                                        </button>
+                                        <a href="javascript:void(0);" class="link" th:onclick="'javascript:refreshCaptchaImage(\''+${id}+'\');'">
+                                            <small class=" link m-0 mt-3 ml-1">刷新驗證碼</small>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-left note-wrap">
+                                    <p class="mb-0 bold">初次使用健保卡驗證嗎？</p>
+                                    <p class="mb-2">請備妥健保卡、晶片讀卡機，並請依照您的作業系統版本(OS)選擇元件安裝檔下載<a class="link" href="https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/mEventesting.htm" target="_blank" title="安裝元件(另開新頁)">安裝元件</a>，插卡輸入註冊密碼就可以完成驗證，請詳<a class="link" target="_blank" href="https://cloudicweb.nhi.gov.tw/cloudic/system/mlogin.aspx" title="健保卡網路服務註冊(另開新頁)">健保卡網路服務註冊</a>。
+                                        <br>
+                                        <a class="link" target="_blank" href="https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/webtesting/SampleY.aspx" title="健保卡檢測(另開新頁)">健保卡檢測</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="fcs" th:if="${twcaVerifyVer==1 && level>=2}">
+                            <div class="row">
+                                <div class="col-md-6 text-left">
+                                    <div class="text-left mt-3">
+                                        <button th:id="'fcs-btn'+${id}" class="btn theme-btn" style="background-color:transparent;color:#138909;border: 2px solid #138909;" onmouseover="this.style.backgroundColor='#0f7b06';this.style.color='#fff';" onmouseout="this.style.backgroundColor='transparent';this.style.color='#138909'" th:onclick="'javascript:iWantApply(\''+ ${id} +'\');'">
+                                            選擇憑證
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-left note-wrap">
+                                    <p class="mb-0 bold">初次使用軟體金融憑證驗證嗎？</p>
+                                    <p class="mb-2">
+                                        Windows作業系統：請安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.exe}" target="_blank" title="Windows版TWCA金融憑證元件.exe">Windows版TWCA金融憑證元件</a>。<br>
+                                        Mac作業系統：請安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.pkg}" target="_blank" title="Mac版TWCA金融憑證元件.pkg">Mac版TWCA金融憑證元件</a>。
+                                    <div class="learning-wrap inline">
+                                        <div class="absolute-center shadow-sm" style="width: 264px;top:-235px;z-index:99;">
+                                            <p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援金融機構列表</p>
+                                            <div>大展證券、大慶證券、元大證券金融、元富證券、日盛證券、台中銀證券、台新綜合證券、台灣土地銀行證券部、永全證券、永興證券、永豐金證券、玉山綜合證券、兆豐證券、光和證券、合作金庫證券、宏遠證券、亞東證券、致和證券、國泰綜合證券、國票綜合證券、康和綜合證券、第一金證、統一綜合證券、凱基證券、富邦綜合證券、犇亞證券網路公司、華南永昌綜合證券、陽信證券、新百王證券、群益金鼎證券、福邦證券、福勝證券、臺銀綜合證券、臺灣中小企業銀行證券部、遠智證券、德信綜合證券、聯邦商業銀行證券部。</div>
+                                            <div class="twingle-down"></div>
+                                        </div>
+                                        <a href="javascript:showLearning(this);" style="color: #0c7eb1;text-decoration: underline;">可以用哪些銀行的軟體金融憑證</a>
+                                    </div>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- tab company內容 -->
+                <div class="tab-pane no-card" id="no-card" th:id="'no-card'+${id}" style="width: 100%">
+                    <!--                    <p class="description secondary bold mt-2">您可以選用下列其中一種方式驗證身分：</p>-->
+                    <div class="form verification-level text-center mt-4 mb-4" th:id="'verification-level' + ${id}">
+                        <div class="text-left" style="width: fit-content; margin: 0 auto; width: -moz-fit-content;">
+                            <div class="form-group mobile-id radio" data-type="mobile-id"
+                                 th:if="${showMobile}" th:id="'mobile-id' + ${id}"
+                                 onclick="javascript:addClassChecked(this);" th:data-id="${id}">
+                                <input type="radio" th:id="'mobile-id'+${id}" name="verification-level" value="5">
+                                <label class="flex-middle" th:for="'mobile-id'+${id}" tabindex="0" title="選擇手機號碼驗證身份">
+                                    <div class="bg-img"></div> <span class="text">手機號碼</span>
+                                </label>
+                            </div>
+                            <div class="form-group t-fido radio" data-type="t-fido"
+                                 th:if="${level>=1}" th:id="'t-fido' + ${id}"
+                                 onclick="javascript:createTFidoQRcode(this);" th:data-id="${id}">
+                                <input type="radio" th:id="'t-fido'+${id}" name="verification-level" value="1">
+                                <label class="flex-middle" th:for="'t-fido'+${id}" tabindex="0" title="選擇TW FidO驗證身份">
+                                    <div class="bg-img"></div> <span class="text">TW FidO</span>
+                                </label>
+                            </div>
+                            <div class="form-group multifactor radio"
+                                 th:if="${level>=3}"
+                                 data-type="multifactor"
+                                 onclick="javascript:addClassChecked(this);" th:data-id="${id}">
+                                <input type="radio" th:id="'multifactor'+${id}" name="verification-level" value="3">
+                                <label class="flex-middle" th:for="'multifactor'+${id}" tabindex="0" title="選擇雙證件驗證身份">
+                                    <div class="bg-img"></div> <span class="text">雙證件驗證 </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="mobile-id" th:if="${showMobile}">
+                            <div class="row">
+                                <div class="policy-wrap text-left m-3" th:id="'ATMmutifactor-mobile-div2'+${id}">
+                                    <p class="text-left">為確保您的權益，請詳細閱讀此行動身分識別使用者約定條款及隱私權告知條款。</p>
+                                    <div class="policy-box policy-page shadow-sm p-0 mb-3">
+                                        <div class="content p-4 double-verify-content" th:data-id="${id}">
+                                            <h5 style="text-align: center;">行動身分識別服務使用者約定條款及隱私權告知條款</h5><small>修訂日期: 109年6月2日</small><p>臺灣網路認證股份有限公司（以下簡稱本公司）所提供的「行動身分識別服務」（以下簡稱本服務）是透過五大電信公司(中華電信股份有限公司、台灣大哥大股份有限公司、台灣之星電信股份有限公司、亞太電信股份有限公司、遠傳電信股份有限公司)之行動網路進行用戶身分識別，當您點選同意或使用本服務後，即表示您同意並遵守以下條款：</p>        <p>壹、行動身分識別服務使用者約定條款</p>        <p>一、使用者限制：            <br/>本服務限具中華民國國籍之自然人申請使用，您的行動門號(排除預付卡、親子類型門號及企業門號等)須為正常使用狀態且開通「行動數據服務」，使用時須關閉Wi-Fi，並利用具「行動數據服務」之智慧型終端連網以使用本服務。若您未達法定成年年齡，須取得法定代理人同意本服務條款始得使用本服務。<br/>若您為該未成年人之法定代理人，您必須代表該未成年人同意本服務條款，並為所有使用本服務之行為負責，不論該未成年人是否在您的監督下使用本服務。        </p>        <p>二、服務使用限制：            <br/>您僅可於法律允許之範圍內使用本服務，如果您違背法令或違規使用，本公司有權暫停或終止您的使用。        </p>        <p>三、使用者責任：            <br/>本服務限您本人(本門號租用人)使用，不得轉由他人使用，否則因此所產生之糾紛或損失，概由您自行負責。不得有複製或更改本服務之行為；一經發現，本公司得報請相關機關追究其偽造、變造或行使之刑責，並得請求本服務使用者賠償本公司因而招致之損失。<br/>若有發生手機或SIM卡遺失之情況，應盡速聯絡您的電信公司進行手機號碼掛失，以維護您的權益。        </p>        <p>四、軟體：            <br/>除另有授權合約約定外，我們於本服務提供給您的任何軟體均受本服務條款規範，我們保留在此未明確授予的所有其他權利。任何本服務連結或引用的第三方指令碼或程式碼，係由擁有該指令碼或程式碼的第三方 (而非本公司) 授權給您使用。        </p>        <p>五、擔保責任免除及責任限制：            <br/>1.本公司就本服務不負擔任何明示或默示之擔保責任，亦不保證各項服務之穩定、安全、無誤、及不中斷。            <br/>2.本公司不保證使用本服務之結果或經由本公司獲得之資訊符合用戶之期望，亦不保證用戶不會因此接觸到不適當之內容。            <br/>3.您如無法使用本服務時，其所致之任何直接、間接、衍生、或特別損害等，本公司均不負任何賠償責任。前述賠償責任限制，若依法不得限制者，則限制規定將不予適用。            <br/>4.當您在服務提供商(例如:臺灣網路認證公司或其合作廠商)使用其內容服務，由服務提供商網站中所提供您使用之商品或服務，有關商品或服務瑕疵擔保或適法性等法律上責任，仍由提供商品或服務之廠商負責。            <br/>5.對於服務提供商所提供之商品或服務之使用以及售後服務等規定，請您洽詢服務提供商。        </p>        <p>六、服務之暫停、終止或取消使用：            <br/>1.若您違反本服務條款之任一條款時，我們有權不待通知，立即暫停、終止或取消您使用本服務資格，並拒絕您現在或未來使用本服務，此為本公司為維護全體用戶利益所必要，後續會利用您註冊的門號或電子郵件通知您，您不得因此要求補償。情節嚴重者或有違法之虞或已違法者，我們有權交由主管機關或司法機關處理；您同意本公司就用戶之行為是否符合本條款之規定，及是否必須採行何等之因應措施，有視違反之情形加以裁量決定之權利。            <br/>2.本服務如發生下列情形之一時，本公司有權不經通知逕行停止或中斷提供服務，如因此致您或第三人產生困擾、不便或損害，均不負任何法律責任：                <br/>(1)對電子通信設備進行必要之保養及施工時。                <br/>(2)發生突發性之電子通信設備故障時。                <br/>(3)由於所申請之電子通信服務因任何原因被停止，無法提供服務時。                <br/>(4)由於天災等不可抗力之因素致無法提供服務時。                <br/>(5)對於本相關系統設備進行遷移、更換或維護時。                <br/>(6)因不可歸責於本公司事由所造成服務之停止或中斷。                <br/>(7)因不可抗力所造成服務之停止或中斷。            <br/>3.基於網際網路之特性，您瞭解並同意於使用本公司服務時，應自行採取防護措施，如因本公司、協力廠商或相關電信業者網路系統軟硬體設備之故障、失靈或人為操作上之疏失而致服務全部或一部中斷、暫時無法使用、遲延、或造成資料傳輸或儲存上之漏誤、或遭第三人侵入系統篡改偽造資料時，本公司不負任何賠償責任。如您有違反本條款或相關法令或有其他不當使用之情形發生時，本公司得不經催告逕行加以限制或終止其使用服務之權利，您不得因此要求補償或賠償。            <br/>4.如您有門號停話、退租、被銷號、過戶或其他門號服務契約終止之情事發生時，本公司得不經催告逕行加以限制或終止其使用服務之權利，您不得因此要求補償或賠償。        </p>        <p>七、準據法及管轄法院：            <br/>本服務條款之準據法為中華民國法律。因本服務所生之一切爭議，如因此而涉訟，除法律另有強制規定外，應以臺灣臺北地方法院為第一審管轄法院。        </p>        <br/>        <p>貳、隱私權告知條款</p>        <p>個人資料蒐集、處理及利用告知暨同意事項：本公司為辦理本服務，需蒐集、處理及利用您的個人資料，為保障您的正當權益，請務必詳閱以下所述事項：</p>        <p>。蒐集之目的：行動身分識別服務（包括但不限於○六九-契約、類似契約或其他法律關係事務、○九○消費者、客戶管理與服務、一三三-經營電信業務與電信加值網路業務、一三五-資（通）訊服務、一三七-資通安全與管理、一四八-網路購物及其他電子商務服務）。</p>        <p>。個人資料之類別：            <br/>(1) 辨識個人者：手機號碼、裝置資訊 (例如您的硬體型號、作業系統版本、裝置的唯一識別碼，以及包括手機號碼在內的行動網路資訊)、SIM卡資訊、出生年月日、行動電話門號電信服務資訊(包括但不限於輔以辨識個人之相關內容如：門號申辦方式、門號持有時間超過某固定期間等)。            <br/>(2) 政府資料中之辨識者：國民身分證字號。        </p>        <p>。個人資料利用之期間、地區、對象及方式：            <br/>(1) 期間：本服務執行期間。            <br/>(2) 地區：中華民國境內。            <br/>(3) 對象：本公司及五大電信公司，或依法令規定提供予本公司目的事業主管機關或其他第三方。。            <br/>(4) 方式：            <br/>I.本公司將透過數位形式蒐集、處理及利用您所提供的個人資料進行身分核實，並將您提供的個人資料傳輸予您的電信公司進行線上即時身分認證。            <br/>II.您同意授權您的電信公司得就前述個人資料與您留存於您的電信公司之個人資料進行比對後，傳輸認證結果正確與否予本公司。        </p>        <p>。當事人得行使之權利及方式：            <br/>您可透過攜帶本人證件親臨本公司，行使個人資料保護法第三條當事人權利規定，包含：(1)查詢或閱覽(2)製給複製本(3)補充或更正(4)停止蒐集、處理或利用(5)刪除。惟因執行業務所必需、特定目的消失前或未逾保存年限者，得不予刪除。其行使方式依法令及本公司相關規定（www.twca.com.tw）。        </p>        <p>。當事人拒絕提供對其權益之影響：            <br/>若您未能或無法提供以上個人資料予本公司，將無法辦理本服務。        </p>        <br/>        <p>參、其他約定</p>        <p>一、本服務條款與隱私權條款如有未盡事宜，依本服務網站及各服務提供商之約定條款辦理；若無相關規定或非所適用者，依誠信原則處理之。</p>        <p>二、本公司得隨時修改本服務條款，修改後內容將於本服務相關網頁公告，不另作個別通知，一經公告即視為生效且您已受到合法通知，您繼續使用本服務的行為，應被視為接受該修改內容。如本公司未進行公告，該修改內容無效。</p>
+                                        </div>
+                                        <input type="hidden" th:id="'clauseVer'+${id}" name="clauseVer">
+                                        <input type="hidden" th:id="'clauseVerTime'+${id}" name="clauseVerTime">
+                                    </div>
+                                    <p class="text-left">請務必閱讀完畢上述行動身分識別服務使用者約定條款及隱私權告知條款內容。</p>
+                                    <div class="form-group mb-0" style="text-align: left">
+                                        <input type="checkbox" class="agree-policy" th:id="'double_verify'+${id}" th:name="'double_verify'+${id}" th:data-id="${id}" disabled>
+                                        <label class="flex-middle mb-0" th:for="'double_verify'+${id}" tabindex="0" title="勾選同意上述服務條款">
+                                            <strong>我已了解並同意</strong>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="text-left" th:id="'mobile-id-div1'+${id}">
+                                    <label class="w-100 mt-1 mb-0" th:id="'mobile-id'+${id}" th:for="'msisdn'+${id}">
+                                        <span>手機號碼<span class="alert">(必填)</span>，須為本人名下之門號</span>
+                                        <div class="learning-wrap inline" style="margin-left:-5px;margin-right:-5px;">
+                                            <div class="absolute-center shadow-sm" style="width: 264px; top: -84px;">
+                                                <p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">門號限制說明</p>
+                                                <div>親子卡、預付卡、外國人、企業門號、虛擬行動網路業者申請之門號無法使用。</div>
+                                                <div class="twingle-down"></div>
+                                            </div>
+                                            <button class="btn" style="margin-bottom: 5px;" title="健保卡卡號位置說明">
+                                                <!-- <i class="bg-img"></i> -->
+                                                <img src="/resources/dist/image/faq-mini-yellow.svg" th:src="@{/resources/dist/image/faq-mini-yellow.svg}" alt="前往說明圖">
+                                            </button>
+                                        </div>
+                                        <input th:id="'msisdn'+${id}" type="text" pattern="[0-9]*" inputmode="numeric" name="msisdn" class="form-control" placeholder="請輸入手機號碼，共10碼" autocomplete="off" maxlength="10">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="t-fido" th:if="${level>=1}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="text-left hidden-mobile">
+                                        <p class="w-100 mb-0">請掃描／點擊您的 TW FidO 驗證 QRcode</p>
+                                        <div class="text-center qr-code-wrap m-3">
+                                            <div th:id="'tfido-QRcode'+${id}" style="text-align: -webkit-center;"></div>
+                                        </div>
+                                        <a href="javascript:void(0);" th:href="'javascript:refreshTFidoQRcode(\''+ ${id} +'\');'" class="link"><small class="link">點此重新產生QRcode</small></a>
+                                        <input type="hidden" th:id="'qrid'+${id}"/>
+                                    </div>
+                                    <div class="text-left note-wrap hidden-desktop">
+                                        <p class="mb-0 bold alert">MyData 已發送驗證通知至您的 TW FidO</p>
+                                        <p class="mb-0">(1) 請確認您有開啟 TW FidO APP 的通知功能。</p>
+                                        <p class="mb-0">(2) 請點擊 TW FidO APP，並完成身分驗證。</p>
+                                        <a th:href="'javascript:refreshTFidoQRcode(\''+ ${id} +'\');'" class="link mt-3 block">點此重新推播</a>
+                                        <input type="hidden" th:id="'qrid'+${id}"/>
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-left note-wrap">
+                                        <p class="mb-0 bold">初次使用TW FidO驗證嗎？</p>
+                                        <p class="mb-0">
+                                            ＊不知道怎麼操作嗎？請點擊<a href="https://fido.moi.gov.tw/qa" target="_blank" title="常見問題(另開新頁)" class="link">常見問題</a>。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray m-0 mt-2 mb-4 p-3 verify" th:if="${level>=3}" data-type="multifactor" style="display:none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="text-left form-group multifactor radio" style="display:none;">
+                                        <span class="mul-title">請選擇本次的雙證件驗證方式</span>
+                                        <div class="tooltips">
+                                            <div th:id="'multifactor-div' + ${id}" class="tooltips-conteiner text-left" >
+                                                <label class="flex-middle active" for="multifactor-type-2" th:for="'multifactor-type-2-'+${id}"
+                                                       th:multi-id="${id}"
+                                                       onclick="javascript:selectLabelThis(this);"
+                                                       tabindex="0" title="健保卡卡號+選擇設籍戶口名簿戶號">
+                                                    <input type="radio" id="multifactor-type-2" th:id="'multifactor-type-2-'+${id}" th:name="'multifactor-type'+${id}" value="10" checked>健保卡卡號+戶口名簿戶號</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-left">
+                                        <label class="w-100 mt-1 mb-0" th:id="'mutifactor-hid'+${id}" th:for="'mutifactor-hid1'+${id}">
+                                            <span>健保卡卡號<small class="alert">(必填)</small></span>
+                                            <!-- .learning-wrap 為完整的提示訊息。若使用者點擊問號，則在 .learning-wrap 旁加上 .active。若使用者再次點擊「問號」、或點擊網頁的其他地方。則移除 .active。 -->
+                                            <div class="learning-wrap inline" style="margin-left:-5px;margin-right:-5px;">
+                                                <div class="absolute-center shadow-sm">
+                                                    <p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">健保卡卡號位置</p>
+                                                    <img src="./images/h-number.png" th:src="@{/resources/dist/image/h-number.png}" alt="在您的健保卡正面的左下方，可找到健保卡卡號">
+                                                    <div class="twingle-down"></div>
+                                                </div>
+                                                <button class="btn" style="margin-bottom: 5px;" title="健保卡卡號位置說明">
+                                                    <!-- <i class="bg-img"></i> -->
+                                                    <img src="/resources/dist/image/faq-mini-yellow.svg" th:src="@{/resources/dist/image/faq-mini-yellow.svg}" alt="前往說明圖">
+                                                </button>
+                                            </div>
+                                            <input th:id="'mutifactor-hid1'+${id}" type="text" pattern="[0-9]*" inputmode="numeric" name="multifactor-type" class="form-control" placeholder="請輸入健保卡卡號，共12碼" oninput="inputTypingEvent(this, MaskType.NHI)" onfocus="inputFocusinEvent_1(this)" onblur="inputFocusoutEvent_1(this, MaskType.NHI)" data-value="" autocomplete="off">
+                                            <i onclick="maskorUnMask_v2(this)" th:id="'eye_mutifactor-hid1'+${id}" class="fas fa-eye eye-switch pen-edit eye-switch-login eye-switch-login1" alt="點擊輸入框即可開始編輯"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-left">
+                                        <label class="w-100 mb-0" th:id="'mutifactor-houseHoldId'+${id}" th:for="'houseHoldId'+${id}">
+                                            <span>戶口名簿戶號<small class="alert">(必填)</small></span>
+                                            <div class="learning-wrap inline home-number" style="margin-left:-5px;margin-right:-5px;">
+                                                <div class="absolute-center shadow-sm">
+                                                    <p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">戶口名簿戶號位置</p>
+                                                    <img src="./images/home-number.png" th:src="@{/resources/dist/image/home-number.png}" alt="在您的戶口名簿左側，可找到名為戶號的欄位">
+                                                    <div class="twingle-down"></div>
+                                                </div>
+                                                <button class="btn" style="margin-bottom: 5px;" title="戶口名簿戶號位置說明">
+                                                    <!-- <i class="bg-img"></i> -->
+                                                    <img src="/resources/dist/image/faq-mini-yellow.svg" th:src="@{/resources/dist/image/faq-mini-yellow.svg}" alt="前往說明圖">
+                                                </button>
+                                            </div>
+                                            <input type="text" name="multifactor-type" th:id="'houseHoldId'+${id}" class="form-control" placeholder="請輸入戶口名簿戶號，共8碼" oninput="inputTypingEvent(this, MaskType.domicile)" onfocus="inputFocusinEvent_1(this)" onblur="inputFocusoutEvent_1(this, MaskType.domicile)" data-value="" autocomplete="off">
+                                            <i onclick="maskorUnMask_v2(this)" th:id="'eye_houseHoldId'+${id}" class="fas fa-eye eye-switch pen-edit eye-switch-login eye-switch-login1" alt="點擊輸入框即可開始編輯"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container m-0 p-0" th:id="'company-verify'+${id}" style="display: none;">
+            <div class="tab-content">
+                <div class="tab-pane active" style="width: 100%">
+                    <!--                    <p class="description secondary bold mt-2">您可以選用下列其中一種方式驗證身分：</p>-->
+                    <div class="form verification-level text-center mt-4 mb-4">
+                        <div class="form-group business-id-card radio" data-type="business"
+                             onclick="javascript:addClassChecked(this);" th:data-id="${id}">
+                            <input type="radio" th:id="'moeca-card'+${id}"
+                                   name="verification-level" value="0.5"> <label
+                                class="flex-middle" th:for="'moeca-card'+${id}">
+                            <div class="bg-img"></div> <span class="text">工商憑證 </span>
+                        </label>
+                        </div>
+                    </div>
+                    <div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="business">
+                        <div	 class="row">
+                            <div class="col-md-6">
+                                <div class="text-left">
+                                    <label class="w-100 mb-0">
+                                        <span>請插入您的工商憑證，並輸入PIN碼<small class="alert">(必填)</small></span>
+                                        <input type="password" th:id="'business-pin'+${id}" class="form-control" placeholder="請輸入您的PIN碼" autocomplete="off">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-left note-wrap">
+                                <p class="mb-0 bold">初次使用工商憑證驗證嗎？</p>
+                                <p class="mb-2">
+                                    備妥晶片讀卡機及<a class="link" href="http://moica.nat.gov.tw/download_1.html" target="_blank" title="安裝元件(另開新頁)">安裝元件</a>，插卡輸入 PIN 碼就可以完成驗證，完整說明請參考<a class="link" href="http://moica.nat.gov.tw/download/File/HiCOS.pdf" target="_blank" title="內政部憑證管理中心說明(另開新頁)">內政部憑證管理中心說明</a>。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+<th:block th:fragment="identify-verify-script">
+    <script type="text/javascript" th:inline="javascript">
+        var tfidos = [];
+        var tmpId = null;
+        var qrcodeIntervalObj;
+        var isDoubleVerify;
+        var tmpMember;
+
+        $(document).mouseup(function (e) {
+            var container =$(".learning-wrap"); // 這邊放你想要排除的區塊
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                container.removeClass('active');
+            }
+        });
+        $(window).scroll(function() {
+            $(".learning-wrap").removeClass('active');
+        });
+        function checkTwcaLibIsAlive(){
+            mydataTWCALib.IsAlive(twcaIsAliveCallback);
+        }
+        function twcaIsAliveCallback(code, msg, reserved, data){
+            if(code!=0){
+                showPopMessage('請下載並安裝TWCA金融憑證元件，再重新操作。');
+            }
+        }
+
+        $('.double-verify-content').scroll(function() {
+            var objDivs = document.getElementsByClassName("double-verify-content");
+            var id = $(this).attr('data-id');
+            Array.from(objDivs).forEach(function(obj) {
+                var elt = $(obj)[0];
+
+                //console.log(elt.scrollTop + elt.offsetHeight, elt.scrollHeight);
+                if((elt.scrollTop + elt.offsetHeight >= elt.scrollHeight - 10) && elt.scrollTop > 0) {
+                    $('#double_verify' + id).prop('disabled', false);
+                }
+            });
+        });
+
+        // 同一條款是否已勾選
+        function isDoubleVerifyCheckBox(id) {
+            return $('#double_verify' + id).prop('checked');
+        }
+
+        function checkDoubleVerify(id) {
+            var checkboxCheck = isDoubleVerifyCheckBox(id);
+
+            if(!checkboxCheck) {
+                showPopMessage(' 請務必閱讀完畢上述資料下載及線上服務條款，並勾選同意', $('#double_verify' + id));
+                return false;
+            }
+
+            return true;
+        }
+
+        function getVerificationLevel(id) {
+            return $('#identify-verify' + id).find('input[name=verification-level]:checked').val();
+        }
+
+        function getMultifactorType(id) {
+            //return $('#multifactor-div' + id).find('input[name=multifactor-type]:checked').val();
+            return 10;
+        }
+
+        function addClassChecked(obj){
+            var $this = $(obj);
+            var dataId = $(obj).attr('data-id');
+            clearInterval(qrcodeIntervalObj);
+
+            // 申請按鈕
+            $('#apply'+dataId).removeAttr('disabled');
+            $('#apply'+dataId).show();
+            $('div.form-group').removeClass('checked');
+            $this.addClass('checked');
+            $this.find('input[name=verification-level]').prop('checked','checked');
+
+            $('div.verify').hide();
+            var type = $this.data('type');
+            if(type != null && type != ''){
+                $this.parent().parent().find('div.verify[data-type='+type+']').show();
+            }
+            if(type=='digital'||type=='business'){
+                checkHiCOSCardPlugin();
+            }
+            if(type=='health'){
+                checkNHICardPlugin();
+                refreshCaptchaImage(dataId);
+            }
+            if(type=='fic'){
+                checkTwcaLibIsAlive();
+            }
+            if(type=='fch'){
+                checkTwcaLibIsAlive();
+            }
+            if(type=='fcs'){
+                checkTwcaLibIsAlive();
+                $('#apply'+dataId).hide();
+            }
+        }
+
+        function verify(id, isDouble) {
+            var verificationlevel = getVerificationLevel(id);
+            tmpId = id;
+            console.log('verify', tmpId);
+            isDoubleVerify = isDouble;
+            if(checkDp()) {
+                showPopMessage('資料暫時無法下載，請稍後再試')
+            } else {
+                if(typeof verificationlevel!='undefined'&&verificationlevel!=''){
+                    if(isMobile()&&(verificationlevel==0||verificationlevel==0.5||verificationlevel==2)){
+                        showPopMessage('提醒您，如欲使用自然人憑證驗證須安裝相關元件並搭配讀卡機，建議改用電腦操作');
+                    }else{
+                        if(verificationlevel == 0) {
+                            verifyCer(id);
+                        } else if(verificationlevel == 0.1){
+                            verifyFic(id);
+                        } else if(verificationlevel == 0.2){
+                            verifyFch(id);
+                        } else if(verificationlevel == 0.5){
+                            verifyMoeca(id);
+                        } else if(verificationlevel == 2) {
+                            verifyHealthCard(id);
+                        } else if(verificationlevel == 2.1) {
+                            verifyfcs(id);
+                        } else if(verificationlevel == 3) {
+                            verifyMulti(id);
+                        } else if(verificationlevel == 5) {
+                            verifyMobile(id);
+                        } else{
+                            showPopMessage('請選擇身分驗證');
+                        }
+                    }
+                }else{
+                    showPopMessage('您尚未選擇身分驗證方式。');
+                }
+            }
+        }
+
+        function verifyCer(id) {
+            var pin =  $('#digital-pin'+id).val();
+            if(pin == null || pin == ''){
+                showPopMessage('請輸入PIN碼', $('#digital-pin'+id));
+                return;
+            }
+            makeSignature(pin, function(ret){
+                if(ret.ret_code!=0){
+                    showPopMessage(ret.errorMsg);
+                    return;
+                }
+                var pkcs7 = ret.signature;
+                var p = {
+                    "uid" : getPid(),
+                    "birthdate" : getBirthdate(),
+                    "prId" : getScopeStr(),
+                    "pkcs7" : pkcs7,
+                    "isDoubleVerify": isDoubleVerify
+                };
+
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/verifyCert',
+                    loadSpin : true,
+                    data : p,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            //登入失敗
+                            showPopMessage('自然人憑證驗證失敗，請重新操作。');
+                        } else {
+                            updataMemberInfo(resp, getVerificationLevel(id));
+                        }
+                    },
+                    error : function() {
+                        showPopMessage('自然人憑證功能暫時無法使用，請改用其他驗證方式。');
+                    }
+                });
+            });
+
+        }
+
+        function verifyFic(id) {
+            var pin =  $('#fic-pin'+id).val();
+            if(pin == null || pin == ''){
+                showPopMessage('請輸入密碼', $('#fic-pin'+id));
+                return;
+            }
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/ficAtmLogin',
+                loadSpin : true,
+                data : {
+                    "uid" : getPid()
+                },
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        showPopMessage('晶片金融卡驗證失敗，請重新操作。');
+                    } else {
+                        mydataTWCALib.ATMVerifyInvoke(
+                            pin,
+                            resp.data.BusinessNo,
+                            resp.data.ApiVersion,
+                            resp.data.HashKeyNo,
+                            resp.data.VerifyNo,
+                            resp.data.Token,
+                            resp.data.IdentifyNo,
+                            resp.data.proxyURL,
+                            ATMVerifyInvokeCallback);
+                    }
+                },
+                error : function() {
+                    showPopMessage('晶片金融卡功能暫時無法使用，請改用其他驗證方式。');
+                }
+            });
+        }
+
+        //硬體金融憑證
+        function verifyFch(id) {
+            var pin =  $('#fch-pin' + id).val();
+            if(pin == null || pin == ''){
+                showPopMessage('請輸入PIN碼', $('#fch-pin' + id));
+                return;
+            }
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/fchInitParam',
+                loadSpin : true,
+                data : {
+                    "uid" : getPid()
+                },
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        showPopMessage('硬體金融憑證驗證失敗，請重新操作。');
+                    } else {
+                        mydataTWCALib.HWSignPKCS7(
+                            resp.data.VerifyNo,
+                            pin,
+                            resp.data.proxyURL,
+                            HWSignPKCS7Callback);
+                    }
+                },
+                error : function() {
+                    showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                }
+            });
+        }
+
+        function verifyMoeca(id) {
+            //工商憑證
+            var pin =  $('#business-pin' + id).val();
+            if(pin == null || pin == ''){
+                showPopMessage('請輸入PIN碼', $('#business-pin' + id));
+                return;
+            }
+            makeSignature(pin, function(ret){
+                if(ret.ret_code!=0){
+                    showPopMessage(ret.errorMsg);
+                    return;
+                }
+                var pkcs7 = ret.signature;
+                var p = {
+                    "prId" : getScopeStr(),
+                    "pkcs7" : pkcs7
+                };
+
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/verifyMOECA',
+                    loadSpin : true,
+                    data : p,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            showPopMessage('工商憑證驗證失敗，請重新操作。');
+                        } else {
+                            updataMemberInfo(resp, getVerificationLevel(id), false);
+                        }
+                    },
+                    error : function() {
+                        showPopMessage('工商憑證功能暫時無法使用，請改用其他驗證方式。');
+                    }
+                });
+            });
+        }
+
+        function verifyHealthCard(id) {
+            var pwd =  $('#health-pwd' + id).val();
+            if(pwd == null || pwd == ''){
+                showPopMessage('請輸入註冊密碼', $('#health-pwd' + id));
+                return;
+            }
+
+            var captcha = $('#captcha' + id).val();
+            if(captcha == null || captcha.length == 0) {
+                showPopMessage('請輸入驗證碼', $('#captcha' + id));
+                return;
+            }
+
+            if(healthCardCanVerify){
+                verifyHealth(pwd, function(ret){
+                    var p = {
+                        "uid" : getPid(),
+                        "birthdate" : getBirthdate(),
+                        "prId" : getScopeStr(),
+                        "captcha" : captcha.toUpperCase(),
+                        "captchaKeyVal" : id,
+                        "isDoubleVerify": isDoubleVerify
+                    };
+                    p.health = ret;
+                    RiAPI.run({
+                        type : 'POST',
+                        url : '/rest/user/verifyNHICard',
+                        loadSpin : true,
+                        data : p,
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                refreshCaptchaImage(id);
+                                showPopMessage(resp.text);
+                            } else {
+                                updataMemberInfo(resp, getVerificationLevel(id));
+                            }
+                        },
+                        error : function() {
+                            showPopMessage('健保卡功能暫時無法使用，請改用其他驗證方式。');
+                        }
+                    });
+                });
+            }else{
+                showPopMessage('未安裝健保卡檢測元件，請重新確認或安裝');
+                return;
+            }
+        }
+
+        function verifyfcs(id) {
+            var pin ='';
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/fcsInitParam',
+                loadSpin : true,
+                data : {
+                    "uid" : getPid()
+                },
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        showPopMessage('軟體金融憑證驗證失敗，請重新操作。');
+                    } else {
+                        mydataTWCALib.SWSignPKCS7(
+                            resp.data.VerifyNo,
+                            pin,
+                            resp.data.MemberNo,
+                            SWSignPKCS7Callback);
+                    }
+                },
+                error : function() {
+                    showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                }
+            });
+        }
+
+        function verifyMulti(id) {
+            //雙證件驗證
+            var checkFlag = true;
+            // 身分證發證日期+健保卡卡號 12
+            // 設籍戶口名簿戶號+健保卡卡號 10
+            var multifactorType = getMultifactorType(id)
+            var p = {
+                "uid" :getPid(),
+                "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+                "prId" : getScopeStr()
+            };
+            var $inputhouseHoldId = $('#mutifactor-houseHoldId'+ id).find('input[name=multifactor-type]');
+            var $inputHid = $('#mutifactor-hid'+ id).find('input[name=multifactor-type]');
+            var hid = getUnmaskValue($inputHid);
+
+            p.nhiCardNumber = hid;
+            p.houseHoldId = getUnmaskValue($inputhouseHoldId);
+
+            if(hid == null || hid == ''){
+                showPopMessage('請輸入健保卡卡號，共12碼', $inputHid)
+                return;
+            }
+
+            // 使用新的mydata驗證流程取代gsp
+            if(checkFlag){
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/piiVerifyUrl/mydata/' + multifactorType,
+                    loadSpin : true,
+                    data : p,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            //登入失敗
+                            if(resp.text === '戶口名簿戶號錯誤'){
+                                $inputhouseHoldId.val('');
+                                showPopMessage(resp.text, $inputhouseHoldId);
+                            }else if(resp.text === '健保卡卡號錯誤'){
+                                $inputHid.val('');
+                                showPopMessage(resp.text, $inputHid);
+                            }
+                        } else {
+                            // 驗證通過
+                            if (typeof resp.data.uuidcheck != 'undefined') {
+                                var uuidcheck = resp.data.uuidcheck;
+                                forPIIVerifyUrlCheckLoginWindowClosure(uuidcheck,multifactorType);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function verifyMobile(id) {
+            // 手機號碼
+            var checkFlag = true;
+            var $inputMsisdn = $('#msisdn'+id);
+            var msisdn =  $('#msisdn'+id).val();
+            var clauseVer =  $('#clauseVer'+id).val();
+            var clauseVerTime =  $('#clauseVerTime'+id).val();
+            var p = {
+                "uid" :getPid(),
+                "birthdate" : getBirthdate(),
+                "prId" : getScopeStr(),
+                "msisdn": msisdn,
+                "clauseVer": clauseVer,
+                "clauseVerTime": clauseVerTime,
+                "isDoubleVerify": isDoubleVerify
+            };
+
+            if(!checkDoubleVerify(id)) {
+                return;
+            }
+
+            if(msisdn == null || msisdn == ''){
+                showPopMessage('請輸入手機號碼，共10碼', $inputMsisdn)
+                return;
+            }
+            if(checkFlag){
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/verifyMobileId',
+                    loadSpin : true,
+                    data : p,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            $('#message-text').text('此手機號碼非登記於您本人名下。如無本人名下之門號，請選擇其他驗證方式。');
+                            $('#pop-message').modal('show');
+                        } else {
+                            updataMemberInfo(resp, getVerificationLevel(id));
+                        }
+                    },
+                    error : function() {
+                        $('#message-text').text('此手機號碼非登記於您本人名下。如無本人名下之門號，請選擇其他驗證方式。');
+                        $('#pop-message').modal('show');
+                    }
+                });
+            }
+        }
+        function ATMVerifyInvokeCallback(code, msg, reserved, data){
+            if(code==0){
+                var dataObj = JSON.parse(data);
+                var strContent = mydataTWCALib.verifyNo + dataObj.atm_sn;
+                mydataTWCALib.ATMSignPKCS7(strContent,ATMSignPKCS7Callback);
+            }else{
+                var check = true;
+                if(code=='2038001'){
+                    showPopMessage('未偵測到讀卡機或晶片卡。');
+                    check = false;
+                }
+                if(code=='2038002'){
+                    showPopMessage('晶片卡密碼錯誤。');
+                    check = false;
+                }
+                if(code=='2038005'){
+                    showPopMessage('晶片卡已鎖住。');
+                    check = false;
+                }
+                if(check){
+                    showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+                }
+            }
+        }
+
+        function ATMSignPKCS7Callback(code, msg, reserved, data){
+            console.log('--ATMSignPKCS7Callback--');
+            if(code==0){
+                //上傳server登入驗證
+                var p = {
+                    "uid" : getPid(),
+                    "birthdate" : getBirthdate(),
+                    "prId" : getScopeStr(),
+                    "signCer" : data,
+                    "verifyNo" : mydataTWCALib.verifyNo,
+                    "token" : mydataTWCALib.token,
+                    "isDoubleVerify": isDoubleVerify
+                };
+
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/verifyFic',
+                    loadSpin : true,
+                    data : p,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+                        } else {
+                            updataMemberInfo(resp, 0.1);
+                        }
+                    },
+                    error : function() {
+                        showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+                    }
+                });
+            }else{
+                showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+            }
+        }
+
+        function HWSignPKCS7Callback(code, msg, reserved, data){
+            if(code==0){
+                //上傳server登入驗證
+                var p = {
+                    "uid" : getPid(),
+                    "birthdate" : getBirthdate(),
+                    "prId" : getScopeStr(),
+                    "signCer" : data,
+                    "isDoubleVerify": isDoubleVerify
+                };
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/verifyFch',
+                    loadSpin : true,
+                    data : p,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            showPopMessage('硬體金融憑證驗證失敗，請重新操作。');
+                        } else {
+                            updataMemberInfo(resp, 0.2);
+                        }
+                    },
+                    error : function() {
+                        showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                    }
+                });
+            }else{
+                showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+            }
+        }
+
+        function SWSignPKCS7Callback(code, msg, reserved, data){
+            if(code==0){
+                //上傳server登入驗證
+                var p = {
+                    "uid" : getPid(),
+                    "birthdate" : getBirthdate(),
+                    "prId" : getScopeStr(),
+                    "signCer" : data,
+                    "isDoubleVerify": isDoubleVerify
+                };
+
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/verifyFcs',
+                    loadSpin : true,
+                    data : p,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            showPopMessage('軟體金融憑證驗證失敗，請重新操作。');
+                        } else {
+                            updataMemberInfo(resp, 2.1);
+                        }
+                    },
+                    error : function() {
+                        showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                    }
+                });
+            }else{
+                if(code!='1002'){
+                    showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                }
+            }
+        }
+
+        //雙證件驗證檢測
+        function forPIIVerifyUrlCheckLoginWindowClosure(uuid,multifactorType) {
+            var p = {
+                "uid" : getPid(),
+                "birthdate" : getBirthdate(),
+                "prId" : getScopeStr(),
+                "multifactorType" : multifactorType,
+                "isDoubleVerify": isDoubleVerify
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/newPiiVerifyUrl/check',
+                data : p,
+                loadSpin : true,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        showPopMessage('雙證件驗證未完成，請重新操作。');
+                    } else {
+                        updataMemberInfo(resp, 3, false);
+                    }
+                },
+                error : function() {
+                    hideLoadSpinner();
+                    showPopMessage('雙證件驗證未完成，請重新操作。');
+                }
+            });
+        }
+
+        function refreshCaptchaImage(id) {
+            var url = /*[[@{/captcha.jpg}]]*/"";
+            url += "?" + "ctime=" + new Date().getTime() + '&prId=' + id;
+            $('#captchaImg'+id).attr('src', url);
+            $('#captcha'+id).val('');
+        }
+
+        /* TWFido */
+
+        function refreshTFidoQRcode(dataId){
+            $('#tfido-overtime-message').modal('hide');
+            var uid = getPid();
+            var data = {
+                uid: uid
+            };
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/notifyTFido',
+                data: data,
+                loadSpin : true,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        }
+                        $('#tfido-message-text').text(resp.text);
+                        $('#tfido-message').modal('show');
+                        $('div.verify').hide();
+                        $('#apply'+dataId).prop('disabled', true);
+                    }else{
+                        var qc = tfidos.find(e => e.dataId == dataId);
+                        //清除舊的計時器
+                        clearInterval(qrcodeIntervalObj);
+                        //產生新的QRcode
+                        qc.qrcode.makeCode(resp.data.TFidoResp);
+                        $('#qrid'+dataId).val(resp.data.qrid);
+                        //產生新的計時器
+                        qc.countId = countQRcodeSecond($('#tfido-second'+dataId));
+                        $('#tfido-QRcode'+dataId).attr('title','請掃描 QRcode');
+                        $('#apply'+dataId).attr('disabled','disabled');
+                        autoCheckQRcode(dataId);
+                    }
+                },
+                error : function() {
+                    $('#message-text').text('TW FidO認證失敗。');
+                    $('#pop-message').modal('show');
+                }
+            });
+        }
+
+        function createTFidoQRcode(obj){
+            var dataId = $(obj).attr('data-id');
+            tmpId = dataId;
+
+            if(dataId.indexOf('double')>-1){
+                isDoubleVerify = true;
+            }
+
+            //若已有生成QRcode，則直接顯示
+            if($('#tfido-QRcode'+dataId).find('img').length > 0){
+                addClassChecked(obj);
+                return;
+            }
+
+            var data = {
+                uid: getPid()
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/notifyTFido',
+                data: data,
+                loadSpin : true,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        }
+                        $('#tfido-message-text').text(resp.text);
+                        $('#tfido-message').modal('show');
+                    }else{
+                        //產生QRcode
+                        var qc = new QRCode(document.getElementById('tfido-QRcode'+dataId), {
+                            text: resp.data.TFidoResp,
+                            width : 190,
+                            height : 190
+                        });
+                        $('#qrid'+dataId).val(resp.data.qrid);
+                        //計時一分鐘
+                        var countId = countQRcodeSecond($('#tfido-second'+dataId));
+                        // 將QRcode及計時器存入陣列，以便重新產生
+                        tfidos.push({
+                            dataId: dataId,
+                            qrcode: qc,
+                            countId: countId
+                        });
+                        addClassChecked(obj);
+                        $('#uid'+dataId+', #birthdate'+dataId).attr('disabled','disabled');
+                        $('#tfido-QRcode'+dataId).attr('title','請掃描 QRcode');
+                        autoCheckQRcode(dataId);
+                        $('#apply'+dataId).attr('disabled','disabled');
+                        $('#tfido-overtime-btn').attr('onclick','javascript:refreshTFidoQRcode("'+ dataId +'");');
+                    }
+                }
+            });
+        }
+
+        //120秒失敗，每5秒檢查
+        function autoCheckQRcode(id){
+            console.log('autoCheckQRcode', isDoubleVerify);
+            var countConfirmTFido = 0; // 120 sec / 5sec = 24 times
+            qrcodeIntervalObj = window.setInterval(function(){
+                var qrid =  $('#qrid'+id).val();
+                var p = {
+                    "uid" : getPid(),
+                    "birthdate" : getBirthdate(),
+                    "prId" : getScopeStr(),
+                    "qrid" : qrid,
+                    "isDoubleVerify": isDoubleVerify
+                };
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/user/confirmTFido',
+                    data: p,
+                    loadSpin : false,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            countConfirmTFido = countConfirmTFido + 1;
+                            if(countConfirmTFido>=24){
+                                clearInterval(qrcodeIntervalObj);
+                                $('#tfido-overtime-message-text').text('TW FidO認證已逾兩分鐘，請重新操作。');
+                                $('#tfido-overtime-message').modal('show');
+                            }
+                        }else{
+                            clearInterval(qrcodeIntervalObj);
+                            updataMemberInfo(resp, getVerificationLevel(id));
+                        }
+                    }
+                });
+            },5000);
+        }
+
+        //倒數60秒
+        function countQRcodeSecond(obj){
+            var second = 59;
+            var countId;
+            return countId = window.setInterval(function(){
+                obj.html(second);
+                if (second == 0){
+                    clearInterval(countId);
+                }
+                second--;
+            },1000);
+        }
+
+        function showNotDoubleVerifyModal(member, check) {
+            if(check) {
+                if(member != null && (member.isOld ==null || member.isOld == false) && (member.isDoubleVerify == null || member.isDoubleVerify == false)) {
+                    //更新條款
+                    getMidClause();
+                    showUpdateMember(true);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function updataMemberInfo(resp, verificationlevel, check = true) {
+            var member = resp.data.member;
+
+            if(showMultiMemberModal(resp.data.member)) {
+                return;
+            }
+
+            tmpMember = member;
+            if(showNotDoubleVerifyModal(resp.data.member, check)){
+                if(verificationlevel==0){
+                    $('#use-carddouble'+tmpId).find('div[data-type=digital]').hide();
+                    $('#no-carddouble'+tmpId).find('div[data-type=t-fido]').hide();
+                }
+                if(verificationlevel==0.1){
+                    $('#use-carddouble'+tmpId).find('div[data-type=fic]').hide();
+                }
+                if(verificationlevel==0.2){
+                    $('#use-carddouble'+tmpId).find('div[data-type=fch]').hide();
+                }
+                if(verificationlevel==1){
+                    $('#use-carddouble'+tmpId).find('div[data-type=digital]').hide();
+                    $('#no-carddouble'+tmpId).find('div[data-type=t-fido]').hide();
+                }
+                if(verificationlevel==2){
+                    $('#use-carddouble'+tmpId).find('div[data-type=health]').hide();
+                }
+                if(verificationlevel==2.1){
+                    $('#use-carddouble'+tmpId).find('div[data-type=fcs]').hide();
+                }
+                return;
+            }
+
+            //顯示已登入
+            if(typeof member.name!='undefined'&& member.name!=null){
+            	$('body').addClass('after-login');
+            }
+            if(typeof member.informMethod!='undefined' && member.informMethod == null || member.informMethod == ''){
+                if(typeof member.name!='undefined' && member.name != null){
+                    $('#name').val(maskName(member.name));
+                    $('#name').attr('data-value', member.name);
+                }
+                if(typeof member.email!='undefined' && member.email != null){
+                    $('#email').val(maskEmailAddress(member.email));
+                    $('#email').attr('data-value', member.email);
+                }
+                if(typeof member.mobile!='undefined' && member.mobile != null){
+                    $('#mobile').val(maskPhoneNumber(member.mobile));
+                    $('#mobile').attr('data-value', member.mobile);
+                }
+                showUpdateMember(false);
+            }else{
+                //不進行補登直接申請
+                showLoadSpinner();
+                checkYesApply();
+            }
+        }
+
+        function getMidClause(){
+            RiAPI.run({
+                type : 'GET',
+                url : '/rest/user/midClause',
+                loadSpin : false,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        }
+                        $('#message-text').text(resp.text);
+                        $('#pop-message').modal('show');
+                    } else {
+                        //成功
+                        //clause_ver
+                        $('div.double-verify-content').empty().append(resp.data.clause.html);
+                        $('input[name=clauseVer]').val(resp.data.clause.clausever);
+                        $('input[name=clauseVerTime]').val(resp.data.clause.rspTime);
+                    }
+                }
+            });
+        }
+
+        function showLevel(level, id) {
+            if(level==0){
+                $('#personal-verify'+id).find('ul').attr("style", "display: none !important;");
+                $('#no-card'+id).find('div[data-type=t-fido]').hide(); //1
+                $('#use-card'+id).find('div[data-type=health]').hide(); //2
+                $('#use-card'+id).find('div[data-type=fcs]').hide(); //2.1
+                $('#no-card'+id).find('div[data-type=multifactor]').hide(); //3
+            }
+            if(level==1){
+                $('#use-card'+id).find('div[data-type=health]').hide(); //2
+                $('#use-card'+id).find('div[data-type=fcs]').hide(); //2.1
+                $('#no-card'+id).find('div[data-type=multifactor]').hide(); //3
+            }
+            if(level==2){
+                $('#no-card'+id).find('div[data-type=multifactor]').hide(); //3
+            }
+        }
+
+        function captchaGoogleSounfPlay(captchaKeyVal){
+            var m = '連線失敗';
+            ///rest/user/captchainfo
+            var p = {"captchaKeyVal":captchaKeyVal};
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/captchainfo',
+                data : p,
+                loadSpin : false,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //$('#message-text').text(resp.text);
+                        //$('#pop-message').modal('show');
+                        m = '連線失敗';
+                        var msg = new SpeechSynthesisUtterance();
+                        var synth = window.speechSynthesis;
+                        setVoices();
+                        msg.voiceURI = "native";
+                        msg.volume = 1;
+                        msg.rate = 1;
+                        msg.pitch = 0.8;
+                        msg.text = m;
+                        msg.lang = 'zh-TW';
+                        speechSynthesis.speak(msg);
+                    } else {
+                        //成功
+                        m=resp.data;
+                        var msg = new SpeechSynthesisUtterance();
+                        var synth = window.speechSynthesis;
+                        setVoices();
+                        msg.voiceURI = "native";
+                        msg.volume = 1;
+                        msg.rate = 1;
+                        msg.pitch = 0.8;
+                        msg.text = m;
+                        msg.lang = 'zh-TW';
+                        speechSynthesis.speak(msg);
+                    }
+                },
+                error:function(resp) {
+                    m = '連線失敗';
+                    var msg = new SpeechSynthesisUtterance();
+                    var synth = window.speechSynthesis;
+                    setVoices();
+                    msg.voiceURI = "native";
+                    msg.volume = 1;
+                    msg.rate = 1;
+                    msg.pitch = 0.8;
+                    msg.text = m;
+                    msg.lang = 'zh-TW';
+                    speechSynthesis.speak(msg);
+                }
+            });
+        }
+
+        function setVoices() {
+            var synth = window.speechSynthesis;
+            return new Promise((resolve, reject) => {
+                let timer;
+                timer = setInterval(() => {
+                    if(synth.getVoices().length !== 0) {
+                        resolve(synth.getVoices());
+                        clearInterval(timer);
+                    }
+                }, 10);
+            })
+        }
+    </script>
+</th:block>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<title>MyData | 隱私權保護政策</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<a href="#main_area" id="main_area" title="主要內容區塊"
+				class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item"><a href="#" th:href="@{/}"
+				title="回到MyData首頁"> <img src="images/breadcrumb-home.png"
+					th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+			</a></li>
+			<li class="breadcrumb-item">隱私權保護政策</li>
+		</ol>
+	</nav>
+
+	<div class="content-wrap policy-page privacy-policy">
+		<h2 class="text-center alert m-0">個人化資料自主運用(MyData)平臺</h2>
+		<p class="text-center sub-title alert m-1 mb-4">隱私權保護政策</p>
+		<!-- <p class="m-0">
+			國家發展委員會（以下簡稱本會）配合行政院推動優質電子化政府服務，提供個人化資料自主運用（MyData）平臺（以下簡稱本服務）。本會基於尊重及保護用戶的個人隱私權，為協助您清楚地瞭解本服務如何蒐集、應用及保護您所提供的個人資料，請您詳細閱讀本服務隱私權保護及資訊安全政策。
+		</p> -->
+		<ul>
+			<li>
+				<h3 class="alert">個人資料權益宣告：</h3>
+				<ol>
+					國家發展委員會（以下簡稱本會）配合行政院推動優質電子化政府服務，提供個人化資料自主運用(MyData)平臺（以下簡稱MyData平臺）。本會基於尊重及保護用戶的個人隱私權，為協助您清楚地瞭解本平臺如何蒐集、處理及利用您所提供的個人資料，請您詳細閱讀隱私權保護政策。
+					下列政策內容不適用於與本平臺資料集連結與介接至各政府機關網站或其他網站。凡經由本平臺連結與介接至其他網站，均適用各該網站專屬之隱私權保護政策，本平臺不負任何連帶責任。
+				</ol>
+				<ol>
+					<li>平臺會員資料：
+						<ol>
+							<li>蒐集目的：<br>本平臺為進行會員身分驗證、會員管理、服務使用分析與系統維運，依個人資料保護法之特定目的「資(通)訊服務」、「資（通）訊與資料庫管理」、「資通安全與管理」、「調查、統計與研究分析」等蒐集您的個人資料。
+							</li>
+							<li>蒐集之個人資料類別：<br>辨識個人者，例如姓名、身分證字號、生日、電子郵件地址、行動電話號碼、網站連線位址(IP)。
+							</li>
+							<li>個人資料利用之期間、地區、對象及方式：
+								<ol>
+									<li>期間：個人資料蒐集之特定目的存續期間、依相關法令規定或契約約定之保存年限及本平臺因執行職務或業務所必須之保存期間。</li>
+									<li>地區：中華民國行政區域內。</li>
+									<li>對象：本平臺營運管理機關，以及營運相關事務之必要第三方機關(構)(如：資料提供者、服務提供者)。</li>
+									<li>方式：電子文件、紙本，或以自動化機器或其他非自動化之利用方式。</li>
+								</ol>
+							</li>
+							<li>您可以向本平臺行使下列權利：
+								<ol>
+									<li>查詢或請求閱覽。</li>
+									<li>請求製給複製本。</li>
+									<li>請求補充或更正。</li>
+									<li>請求停止蒐集、處理或利用。</li>
+									<li>請求刪除。</li>
+								</ol>若您欲行使上述權利，應填具申請文件及提供您的身分證明文件；若委託他人代為申請者，並應出具委任書，且提供您本人及代理人之身分證明文件，向本平臺諮詢服務信箱<a
+								href="mailto:mydata@ndc.gov.tw">mydata@ndc.gov.tw</a> 提出申請。
+							</li>
+							<li>您可以自由選擇提供您之個人資料予本平臺，惟若不提供完整資料，則無法使用本平臺。</li>
+							<li>您於本平臺之操作紀錄僅保留近兩年資料。</li>
+							<li>若您提出退出平臺會員時，本平臺將於確認您個人身份後，刪除您的會員資訊，但近兩年之操作紀錄仍將留存兩年後，再逕行刪除作業。</li>
+						</ol>
+					</li>
+					<li>向他機關(構)間接蒐集資料：
+						<ol>
+							<li>蒐集目的：<br>本平臺經由驗證您的身分與線上同意後，單次即時提供您個人資料自行下載或提供給第三方機關(構)進行線上服務或臨櫃服務作業。
+							</li>
+							<li>蒐集之個人資料類別：<br>經由驗證您的身分與線上同意後，單次即時提供您個人資料自行下載或提供給第三方機關(構)進行線上服務或臨櫃服務作業所需之資料。
+							</li>
+							<li>個人資料利用之期間、地區、對象及方式：
+								<ol>
+									<li>
+										期間：本平臺單次即時提供您取得個人資料之功能，包含個人資料自行下載或提供給第三方機關(構)進行線上服務或臨櫃服務作業，資料一旦取用後，系統將立即刪除該取得之個人資料。若您未取用該個人資料或未提供給第三方機關(構)進行線上服務或臨櫃核驗作業，本平臺將於八小時後自動刪除該個人資料。
+									</li>
+									<li>地區：第三方機關(構)可提供服務之地區。</li>
+									<li>對象：提供線上服務或臨櫃核驗作業之第三方機關(構)。</li>
+									<li>方式：電子文件、紙本，或以自動化機器或其他非自動化之利用方式。</li>
+								</ol>
+							</li>
+							<li>您可以自由選擇提供本平臺身分驗證並同意資料取用，惟若不提供驗證並同意，則無法使用本平臺。</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+			<li>
+				<h3 class="alert">資訊安全管理</h3>
+				<ol>為維護本平臺資訊安全，以確保本平臺能夠持續為您服務，本平臺提供下列安全保護措施：
+				</ol>
+				<ol>
+					<li>使用網路入侵偵測機制，監控網路流量，以確認未經授權而企圖上載或更改、網頁資訊或蓄意破壞者。</li>
+					<li>裝設防火牆防止非法入侵、破壞或竊取資料，以避免平臺遭到非法使用，以保障您的權益。</li>
+					<li>裝設掃毒軟體，定期掃毒，以提供您更安全的網頁瀏覽環境。</li>
+					<li>不定期模擬駭客攻擊，演練發生安全事件時的系統回復程序，並提供適當的安全防禦等級。</li>
+					<li>定期進行備份作業，將所有資料備份到備援主機。</li>
+				</ol>
+			</li>
+			<li>
+				<h3 class="alert">本平臺絕不會任意出售、交換、或出租任何您的會員基本資料給其他團體、個人或私人企業，於利用您的會員基本資料時，均與蒐集之特定目的相符，但有下列情形之一者，得為特定目的外之利用：</h3>
+				<ol>
+					<li>法律明文規定。</li>
+					<li>為維護國家安全或增進公共利益之必要。</li>
+					<li>為免除當事人之生命、身體、自由或財產上之危險。</li>
+					<li>為防止他人權益之重大危害。</li>
+					<li>公務機關或學術研究機構基於公共利益為統計或學術研究而有必要，且資料經過提供者處理後或蒐集者依其揭露方式無從識別特定之當事人。</li>
+					<li>有利於當事人權益。</li>
+					<li>經當事人同意。</li>
+				</ol>
+			</li>
+			<li>
+				<h3 class="alert">Cookie運用</h3>
+				<ol>
+					Cookie是伺服端為區別使用者喜好，經由瀏覽器寫入使用者硬碟的一些簡短資訊。本平臺會在您瀏覽器中寫入並讀取Cookie，您可以在瀏覽器設定項目中，拒絕Cookie的執行，並不會影響您使用本平臺之服務。上述之Cookie僅會對個別連線者的瀏覽器予以標示，記錄瀏覽器在本平臺內部所瀏覽的網頁，進行瀏覽人數統計及瀏覽模式分析，做為本平臺改善服務的參考，但不會識別特定當事人。
+				</ol>
+			</li>
+			<li>
+				<h3 class="alert">本平臺蒐集、處理或利用個資，除有其他法律特定規定外，皆依個人資料保護法規定辦理。</h3>
+			</li>
+			<li>
+				<h3 class="alert">自我資料安全保護措施</h3>
+				<ol>請妥善保管您個人資料，切勿將個人資料提供給任何第三人，以保障您的權益。若您是與他人共享電腦或使用公共電腦，使用完畢請務必記得登出帳號，並關閉瀏覽器視窗。
+				</ol>
+			</li>
+			<li>
+				<h3 class="alert">隱私權保護政策修訂</h3>
+				<ol>
+					本隱私權保護政策條款如有修訂，將公告於本平臺，請您隨時注意修訂之公告訊息。若您對於修訂內容有表示反對等任何意見，請利用本平臺諮詢服務信箱
+					<a href="mailto:mydata@ndc.gov.tw">mydata@ndc.gov.tw</a>
+					聯繫我們，如未經表示反對仍繼續使用本平臺，則視為您已閱讀、瞭解並同意接受修訂內容。
+				</ol>
+			</li>
+		</ul>
+	</div>
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂" data-toggle="tooltip" data-placement="left"
+		style="display: inline;"> <img class="arrow-position"
+		src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+</body>
+</html>

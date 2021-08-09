@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalServiceMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalService">
+    <id column="ps_id" jdbcType="INTEGER" property="psId" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="client_secret" jdbcType="VARCHAR" property="clientSecret" />
+    <result column="redirect_uri" jdbcType="VARCHAR" property="redirectUri" />
+    <result column="logout_redirect_uri" jdbcType="VARCHAR" property="logoutRedirectUri" />
+    <result column="response_type" jdbcType="VARCHAR" property="responseType" />
+    <result column="response_mode" jdbcType="VARCHAR" property="responseMode" />
+    <result column="scope" jdbcType="VARCHAR" property="scope" />
+    <result column="brief" jdbcType="VARCHAR" property="brief" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="page_url" jdbcType="VARCHAR" property="pageUrl" />
+    <result column="agreement" jdbcType="VARCHAR" property="agreement" />
+    <result column="cate_id" jdbcType="INTEGER" property="cateId" />
+    <result column="provider_id" jdbcType="INTEGER" property="providerId" />
+    <result column="target_url" jdbcType="VARCHAR" property="targetUrl" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+    <result column="cuser" jdbcType="VARCHAR" property="cuser" />
+    <result column="service_url" jdbcType="VARCHAR" property="serviceUrl" />
+    <result column="agree_uri" jdbcType="VARCHAR" property="agreeUri" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="is_period" jdbcType="INTEGER" property="isPeriod" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="uuser" jdbcType="VARCHAR" property="uuser" />
+    <result column="check_stat" jdbcType="INTEGER" property="checkStat" />
+    <result column="check_time" jdbcType="TIMESTAMP" property="checkTime" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+    <result column="tested" jdbcType="INTEGER" property="tested" />
+    <result column="cbc_iv" jdbcType="VARCHAR" property="cbcIv" />
+    <result column="is_rsa" jdbcType="INTEGER" property="isRsa" />
+    <result column="oriname" jdbcType="VARCHAR" property="oriname" />
+    <result column="customer_user" jdbcType="VARCHAR" property="customerUser" />
+    <result column="prepared_document" jdbcType="VARCHAR" property="preparedDocument" />
+    <result column="is_counter" jdbcType="INTEGER" property="isCounter" />
+    <result column="counter_description" jdbcType="VARCHAR" property="counterDescription" />
+    <result column="counter_prepared_document" jdbcType="VARCHAR" property="counterPreparedDocument" />
+    <result column="counter_brief" jdbcType="VARCHAR" property="counterBrief" />
+    <result column="cert_edate" jdbcType="TIMESTAMP" property="certEdate" />
+    <result column="is_open_agent" jdbcType="INTEGER" property="isOpenAgent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ps_id, client_id, name, client_secret, redirect_uri, logout_redirect_uri, response_type, 
+    response_mode, scope, brief, description, status, page_url, agreement, cate_id, provider_id, 
+    target_url, ctime, etime, cuser, service_url, agree_uri, level, is_period, period, 
+    uuser, check_stat, check_time, is_show, tested, cbc_iv, is_rsa, oriname, customer_user, 
+    prepared_document, is_counter, counter_description, counter_prepared_document, counter_brief,
+    cert_edate, is_open_agent
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_service
+    where 1=1
+    <if test="clientId != null">
+      and client_id = #{clientId,jdbcType=VARCHAR}
+    </if>
+    <if test="cateId != null">
+      and cate_id = #{cateId,jdbcType=INTEGER}
+    </if>
+    <if test="isShow != null">
+      and is_show = #{isShow,jdbcType=INTEGER}
+    </if>
+    <if test="isCounter != null">
+      and is_counter = #{isCounter,jdbcType=INTEGER}
+    </if>
+    <if test="isOpenAgent != null">
+      and is_open_agent = #{isOpenAgent,jdbcType=INTEGER}
+    </if>
+    <if test="ctimeAsc != null">
+      order by ctime asc
+    </if>
+    <if test="providerIdAndPsIdAsc != null">
+      order by provider_id asc,ps_id asc
+    </if>
+    <if test="cateIdProviderIdNameAsc">
+    	order by cate_id asc,provider_id asc,name asc
+    </if>
+  </select>
+  <select id="selectForFrontByExample" resultMap="BaseResultMap">
+    select
+    ps.ps_id, ps.client_id, ps.name, ps.client_secret, ps.redirect_uri, ps.logout_redirect_uri, ps.response_type, 
+    ps.response_mode, ps.scope, ps.brief, ps.description, ps.status, ps.page_url, ps.agreement, ps.cate_id, ps.provider_id, 
+    ps.target_url, ps.ctime, ps.etime, ps.cuser, ps.service_url, ps.agree_uri, ps.level, ps.is_period, ps.period, 
+    ps.uuser, ps.check_stat, ps.check_time, ps.is_show, ps.tested, ps.cbc_iv, ps.prepared_document, ps.is_counter , ps.counter_description,
+    ps.counter_prepared_document, ps.counter_brief, ps.cert_edate, ps.is_open_agent
+    from portal_service ps 
+    left join portal_provider pp on  ps.provider_id = pp.provider_id
+    left join portal_service_category psc on  ps.cate_id = psc.cate_id
+    where 1=1
+    <if test="clientId != null">
+      and ps.client_id = #{clientId,jdbcType=VARCHAR}
+    </if>
+    <if test="cateId != null">
+      and ps.cate_id = #{cateId,jdbcType=INTEGER}
+    </if>
+    <if test="cateIdList != null">
+      and ps.cate_id in <foreach collection="cateIdList" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+    </if>
+    <if test="isShow != null">
+      and ps.is_show = #{isShow,jdbcType=INTEGER}
+    </if>
+    <if test="isCounter != null">
+      and ps.is_counter = #{isCounter,jdbcType=INTEGER}
+    </if>
+    <if test="type != null">
+      and pp.type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="serviceCity != null">
+      and (ps.name like '%'||#{serviceCity,jdbcType=VARCHAR}||'%' or pp.name like '%'||#{serviceCity,jdbcType=VARCHAR}||'%')
+    </if>
+    <if test="serviceKeyword != null">
+      and (ps.name like '%'||#{serviceKeyword,jdbcType=VARCHAR}||'%' or pp.name like '%'||#{serviceKeyword,jdbcType=VARCHAR}||'%')
+    </if>
+    <if test="isOpenAgent != null">
+      and ps.is_open_agent = #{isOpenAgent,jdbcType=INTEGER}
+    </if>
+    <if test="ctimeAsc != null">
+      order by ps.ctime asc
+    </if>
+    <if test="providerIdAndPsIdAsc != null">
+      order by ps.provider_id asc,ps.ps_id asc
+    </if>
+    <if test="cateIdProviderIdNameAsc">
+      order by ps.cate_id asc,ps.provider_id asc,ps.name asc
+    </if>
+    <if test="ProviderNameAndNameAsc">
+      order by psc.seq asc,pp.seq asc,pp.name asc,ps.name asc
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_service
+    where ps_id = #{psId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_service
+    where ps_id = #{psId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalService">
+    insert into portal_service (ps_id, client_id, name, 
+      client_secret, redirect_uri, logout_redirect_uri, 
+      response_type, response_mode, scope, 
+      brief, description, status, 
+      page_url, agreement, cate_id, 
+      provider_id, target_url, ctime, 
+      etime, cuser, service_url, 
+      agree_uri, level, is_period, 
+      period, uuser, check_stat, 
+      check_time, is_show, tested, 
+      cbc_iv, is_rsa, oriname, 
+      customer_user, prepared_document, is_counter, 
+      counter_description, counter_prepared_document, 
+      counter_brief, cert_edate, is_open_agent)
+    values (#{psId,jdbcType=INTEGER}, #{clientId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{clientSecret,jdbcType=VARCHAR}, #{redirectUri,jdbcType=VARCHAR}, #{logoutRedirectUri,jdbcType=VARCHAR}, 
+      #{responseType,jdbcType=VARCHAR}, #{responseMode,jdbcType=VARCHAR}, #{scope,jdbcType=VARCHAR}, 
+      #{brief,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{pageUrl,jdbcType=VARCHAR}, #{agreement,jdbcType=VARCHAR}, #{cateId,jdbcType=INTEGER}, 
+      #{providerId,jdbcType=INTEGER}, #{targetUrl,jdbcType=VARCHAR}, #{ctime,jdbcType=TIMESTAMP}, 
+      #{etime,jdbcType=TIMESTAMP}, #{cuser,jdbcType=VARCHAR}, #{serviceUrl,jdbcType=VARCHAR}, 
+      #{agreeUri,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, #{isPeriod,jdbcType=INTEGER}, 
+      #{period,jdbcType=INTEGER}, #{uuser,jdbcType=VARCHAR}, #{checkStat,jdbcType=INTEGER}, 
+      #{checkTime,jdbcType=TIMESTAMP}, #{isShow,jdbcType=INTEGER}, #{tested,jdbcType=INTEGER}, 
+      #{cbcIv,jdbcType=VARCHAR}, #{isRsa,jdbcType=INTEGER}, #{oriname,jdbcType=VARCHAR}, 
+      #{customerUser,jdbcType=VARCHAR}, #{preparedDocument,jdbcType=VARCHAR}, #{isCounter,jdbcType=INTEGER}, 
+      #{counterDescription,jdbcType=VARCHAR}, #{counterPreparedDocument,jdbcType=VARCHAR}, 
+      #{counterBrief,jdbcType=VARCHAR}, #{certEdate,jdbcType=TIMESTAMP}, #{isOpenAgent,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalService">
+    insert into portal_service
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="psId != null">
+        ps_id,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="clientSecret != null">
+        client_secret,
+      </if>
+      <if test="redirectUri != null">
+        redirect_uri,
+      </if>
+      <if test="logoutRedirectUri != null">
+        logout_redirect_uri,
+      </if>
+      <if test="responseType != null">
+        response_type,
+      </if>
+      <if test="responseMode != null">
+        response_mode,
+      </if>
+      <if test="scope != null">
+        scope,
+      </if>
+      <if test="brief != null">
+        brief,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="pageUrl != null">
+        page_url,
+      </if>
+      <if test="agreement != null">
+        agreement,
+      </if>
+      <if test="cateId != null">
+        cate_id,
+      </if>
+      <if test="providerId != null">
+        provider_id,
+      </if>
+      <if test="targetUrl != null">
+        target_url,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+      <if test="cuser != null">
+        cuser,
+      </if>
+      <if test="serviceUrl != null">
+        service_url,
+      </if>
+      <if test="agreeUri != null">
+        agree_uri,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="isPeriod != null">
+        is_period,
+      </if>
+      <if test="period != null">
+        period,
+      </if>
+      <if test="uuser != null">
+        uuser,
+      </if>
+      <if test="checkStat != null">
+        check_stat,
+      </if>
+      <if test="checkTime != null">
+        check_time,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+      <if test="tested != null">
+        tested,
+      </if>
+      <if test="cbcIv != null">
+        cbc_iv,
+      </if>
+      <if test="isRsa != null">
+        is_rsa,
+      </if>
+      <if test="oriname != null">
+        oriname,
+      </if>
+      <if test="customerUser != null">
+        customer_user,
+      </if>
+      <if test="preparedDocument != null">
+        prepared_document,
+      </if>
+      <if test="isCounter != null">
+        is_counter,
+      </if>
+      <if test="counterDescription != null">
+        counter_description,
+      </if>
+      <if test="counterPreparedDocument != null">
+        counter_prepared_document,
+      </if>
+      <if test="counterBrief != null">
+        counter_brief,
+      </if>
+      <if test="certEdate != null">
+        cert_edate,
+      </if>
+      <if test="isOpenAgent != null">
+      	is_open_agent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="psId != null">
+        #{psId,jdbcType=INTEGER},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="clientSecret != null">
+        #{clientSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="redirectUri != null">
+        #{redirectUri,jdbcType=VARCHAR},
+      </if>
+      <if test="logoutRedirectUri != null">
+        #{logoutRedirectUri,jdbcType=VARCHAR},
+      </if>
+      <if test="responseType != null">
+        #{responseType,jdbcType=VARCHAR},
+      </if>
+      <if test="responseMode != null">
+        #{responseMode,jdbcType=VARCHAR},
+      </if>
+      <if test="scope != null">
+        #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null">
+        #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="pageUrl != null">
+        #{pageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="agreement != null">
+        #{agreement,jdbcType=VARCHAR},
+      </if>
+      <if test="cateId != null">
+        #{cateId,jdbcType=INTEGER},
+      </if>
+      <if test="providerId != null">
+        #{providerId,jdbcType=INTEGER},
+      </if>
+      <if test="targetUrl != null">
+        #{targetUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cuser != null">
+        #{cuser,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceUrl != null">
+        #{serviceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="agreeUri != null">
+        #{agreeUri,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="isPeriod != null">
+        #{isPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="uuser != null">
+        #{uuser,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStat != null">
+        #{checkStat,jdbcType=INTEGER},
+      </if>
+      <if test="checkTime != null">
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="tested != null">
+        #{tested,jdbcType=INTEGER},
+      </if>
+      <if test="cbcIv != null">
+        #{cbcIv,jdbcType=VARCHAR},
+      </if>
+      <if test="isRsa != null">
+        #{isRsa,jdbcType=INTEGER},
+      </if>
+      <if test="oriname != null">
+        #{oriname,jdbcType=VARCHAR},
+      </if>
+      <if test="customerUser != null">
+        #{customerUser,jdbcType=VARCHAR},
+      </if>
+      <if test="preparedDocument != null">
+        #{preparedDocument,jdbcType=VARCHAR},
+      </if>
+      <if test="isCounter != null">
+        #{isCounter,jdbcType=INTEGER},
+      </if>
+      <if test="counterDescription != null">
+        #{counterDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="counterPreparedDocument != null">
+        #{counterPreparedDocument,jdbcType=VARCHAR},
+      </if>
+      <if test="counterBrief != null">
+        #{counterBrief,jdbcType=VARCHAR},
+      </if>
+      <if test="certEdate != null">
+        #{certEdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isOpenAgent != null">
+      	#{isOpenAgent,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalService">
+    update portal_service
+    <set>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="clientSecret != null">
+        client_secret = #{clientSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="redirectUri != null">
+        redirect_uri = #{redirectUri,jdbcType=VARCHAR},
+      </if>
+      <if test="logoutRedirectUri != null">
+        logout_redirect_uri = #{logoutRedirectUri,jdbcType=VARCHAR},
+      </if>
+      <if test="responseType != null">
+        response_type = #{responseType,jdbcType=VARCHAR},
+      </if>
+      <if test="responseMode != null">
+        response_mode = #{responseMode,jdbcType=VARCHAR},
+      </if>
+      <if test="scope != null">
+        scope = #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null">
+        brief = #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="pageUrl != null">
+        page_url = #{pageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="agreement != null">
+        agreement = #{agreement,jdbcType=VARCHAR},
+      </if>
+      <if test="cateId != null">
+        cate_id = #{cateId,jdbcType=INTEGER},
+      </if>
+      <if test="providerId != null">
+        provider_id = #{providerId,jdbcType=INTEGER},
+      </if>
+      <if test="targetUrl != null">
+        target_url = #{targetUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cuser != null">
+        cuser = #{cuser,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceUrl != null">
+        service_url = #{serviceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="agreeUri != null">
+        agree_uri = #{agreeUri,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="isPeriod != null">
+        is_period = #{isPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="uuser != null">
+        uuser = #{uuser,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStat != null">
+        check_stat = #{checkStat,jdbcType=INTEGER},
+      </if>
+      <if test="checkTime != null">
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="tested != null">
+        tested = #{tested,jdbcType=INTEGER},
+      </if>
+      <if test="cbcIv != null">
+        cbc_iv = #{cbcIv,jdbcType=VARCHAR},
+      </if>
+      <if test="isRsa != null">
+        is_rsa = #{isRsa,jdbcType=INTEGER},
+      </if>
+      <if test="oriname != null">
+        oriname = #{oriname,jdbcType=VARCHAR},
+      </if>
+      <if test="customerUser != null">
+        customer_user = #{customerUser,jdbcType=VARCHAR},
+      </if>
+      <if test="preparedDocument != null">
+        prepared_document = #{preparedDocument,jdbcType=VARCHAR},
+      </if>
+      <if test="isCounter != null">
+        is_counter = #{isCounter,jdbcType=INTEGER},
+      </if>
+      <if test="counterDescription != null">
+        counter_description = #{counterDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="counterPreparedDocument != null">
+        counter_prepared_document = #{counterPreparedDocument,jdbcType=VARCHAR},
+      </if>
+      <if test="counterBrief != null">
+        counter_brief = #{counterBrief,jdbcType=VARCHAR},
+      </if>
+      <if test="certEdate != null">
+        cert_edate = #{certEdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isOpenAgent != null">
+        is_open_agent = #{isOpenAgent,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ps_id = #{psId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalService">
+    update portal_service
+    set client_id = #{clientId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      client_secret = #{clientSecret,jdbcType=VARCHAR},
+      redirect_uri = #{redirectUri,jdbcType=VARCHAR},
+      logout_redirect_uri = #{logoutRedirectUri,jdbcType=VARCHAR},
+      response_type = #{responseType,jdbcType=VARCHAR},
+      response_mode = #{responseMode,jdbcType=VARCHAR},
+      scope = #{scope,jdbcType=VARCHAR},
+      brief = #{brief,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      page_url = #{pageUrl,jdbcType=VARCHAR},
+      agreement = #{agreement,jdbcType=VARCHAR},
+      cate_id = #{cateId,jdbcType=INTEGER},
+      provider_id = #{providerId,jdbcType=INTEGER},
+      target_url = #{targetUrl,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      etime = #{etime,jdbcType=TIMESTAMP},
+      cuser = #{cuser,jdbcType=VARCHAR},
+      service_url = #{serviceUrl,jdbcType=VARCHAR},
+      agree_uri = #{agreeUri,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      is_period = #{isPeriod,jdbcType=INTEGER},
+      period = #{period,jdbcType=INTEGER},
+      uuser = #{uuser,jdbcType=VARCHAR},
+      check_stat = #{checkStat,jdbcType=INTEGER},
+      check_time = #{checkTime,jdbcType=TIMESTAMP},
+      is_show = #{isShow,jdbcType=INTEGER},
+      tested = #{tested,jdbcType=INTEGER},
+      cbc_iv = #{cbcIv,jdbcType=VARCHAR},
+      is_rsa = #{isRsa,jdbcType=INTEGER},
+      oriname = #{oriname,jdbcType=VARCHAR},
+      customer_user = #{customerUser,jdbcType=VARCHAR},
+      prepared_document = #{preparedDocument,jdbcType=VARCHAR},
+      is_counter = #{isCounter,jdbcType=INTEGER},
+      counter_description = #{counterDescription,jdbcType=VARCHAR},
+      counter_prepared_document = #{counterPreparedDocument,jdbcType=VARCHAR},
+      counter_brief = #{counterBrief,jdbcType=VARCHAR},
+      cert_edate = #{certEdate,jdbcType=TIMESTAMP},
+      is_open_agent = #{isOpenAgent,jdbcType=INTEGER}
+    where ps_id = #{psId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalBatchDownloadMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalBatchDownload">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pr_id_list" jdbcType="VARCHAR" property="prIdList" />
+    <result column="download_sn_list" jdbcType="VARCHAR" property="downloadSnList" />
+    <result column="files" jdbcType="VARCHAR" property="files" />
+    <result column="wait_time" jdbcType="INTEGER" property="waitTime" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+    <result column="dtime" jdbcType="TIMESTAMP" property="dtime" />
+    <result column="stat" jdbcType="INTEGER" property="stat" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pr_id_list, download_sn_list, files, wait_time, ctime, etime, dtime, stat
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_batch_download
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_batch_download
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBatchDownload" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into portal_batch_download (id, pr_id_list, download_sn_list, 
+      files, wait_time, ctime, 
+      etime, dtime, stat
+      )
+    values (#{id,jdbcType=INTEGER}, #{prIdList,jdbcType=VARCHAR}, #{downloadSnList,jdbcType=VARCHAR}, 
+      #{files,jdbcType=VARCHAR}, #{waitTime,jdbcType=INTEGER}, #{ctime,jdbcType=TIMESTAMP}, 
+      #{etime,jdbcType=TIMESTAMP}, #{dtime,jdbcType=TIMESTAMP}, #{stat,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBatchDownload" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into portal_batch_download
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="prIdList != null">
+        pr_id_list,
+      </if>
+      <if test="downloadSnList != null">
+        download_sn_list,
+      </if>
+      <if test="files != null">
+        files,
+      </if>
+      <if test="waitTime != null">
+        wait_time,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+      <if test="dtime != null">
+        dtime,
+      </if>
+      <if test="stat != null">
+        stat,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="prIdList != null">
+        #{prIdList,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadSnList != null">
+        #{downloadSnList,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null">
+        #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="waitTime != null">
+        #{waitTime,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dtime != null">
+        #{dtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        #{stat,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBatchDownload">
+    update portal_batch_download
+    <set>
+      <if test="prIdList != null">
+        pr_id_list = #{prIdList,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadSnList != null">
+        download_sn_list = #{downloadSnList,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null">
+        files = #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="waitTime != null">
+        wait_time = #{waitTime,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dtime != null">
+        dtime = #{dtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        stat = #{stat,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBatchDownload">
+    update portal_batch_download
+    set pr_id_list = #{prIdList,jdbcType=VARCHAR},
+      download_sn_list = #{downloadSnList,jdbcType=VARCHAR},
+      files = #{files,jdbcType=VARCHAR},
+      wait_time = #{waitTime,jdbcType=INTEGER},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      etime = #{etime,jdbcType=TIMESTAMP},
+      dtime = #{dtime,jdbcType=TIMESTAMP},
+      stat = #{stat,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

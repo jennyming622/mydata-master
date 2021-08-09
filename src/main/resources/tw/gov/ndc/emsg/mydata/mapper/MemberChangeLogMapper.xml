@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.MemberChangeLogMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.MemberChangeLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="before_data" jdbcType="VARCHAR" property="beforeData" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="after_data" jdbcType="VARCHAR" property="afterData" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="verification_type" jdbcType="VARCHAR" property="verificationType" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, before_data, after_data, verification_type, ctime
+  </sql>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.MemberChangeLog" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into member_change_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="beforeData != null">
+        before_data,
+      </if>
+      <if test="afterData != null">
+        after_data,
+      </if>
+      <if test="verificationType != null">
+        verification_type,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeData != null">
+        #{beforeData,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="afterData != null">
+        #{afterData,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="verificationType != null">
+        #{verificationType,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+		SELECT currval('member_change_log_id_seq');
+  	</selectKey>
+  </insert>
+</mapper>

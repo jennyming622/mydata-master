@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:if="${_csrf}"
+          th:content="${_csrf.headerName}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MyData | 測試資料集</title>
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="image/smydatalogo.png"
+          th:href="@{/resources/dist/image/smydatalogo.png}">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet"
+          th:href="@{/resources/dist/css/bootstrap.css}">
+    <link href="css/style.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/dist/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.5.1.min.js"
+            th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"
+            th:src="@{/resources/dist/js/popper.min.js}"></script>
+    <script src="js/bootstrap.js"
+            th:src="@{/resources/dist/js/bootstrap.js}"></script>
+    <script src="js/scrollreveal.js"
+            th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+<div>
+    <p>test dp</p>
+    <div class="input-group">
+        <input type="file" id="files-input-upload3" >
+        <input type="text" id="fake-file-input-name3" disabled="disabled" placeholder="File not selected" class="form-control" style="display: none">
+
+        <span class="input-group-btn"  style="display: none">
+						  <button id="fake-file-button-browse3" type="button" class="btn btn-default"
+                          onclick="unzip()">
+						    <span class="glyphicon glyphicon-file">unzip</span>
+						  </button>
+					  </span>
+    </div>
+
+    <form id="file-form">
+
+    </form>
+
+    <div id="verify-result">
+
+    </div>
+</div>
+<script>
+
+
+    function testHeartbeat(){
+
+        fetchHeartBeat('GET','https://edesk.bli.gov.tw/na/ws/mydata/inqLIBf?heartbeat=true')
+        .then(data => {
+            console.log('json...' + JSON.stringify(data));
+        })
+        .catch(error => console.log('err -> ' + error));
+    }
+
+
+    function fetchHeartBeat(method,url) {
+
+        return fetch(url, {
+            // body: JSON.stringify(body), // must match 'Content-Type' header
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, same-origin, *omit
+            headers: {},
+            method: method, // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // *client, no-referrer,
+        })
+            .then(function (response) {
+                console.log('response status -> ' + response.status);
+                return response.json()
+            });
+
+    }
+
+    function fetchDpData(method,url,header) {
+        // Default options are marked with *
+        return fetch(url, {
+            // body: JSON.stringify(body), // must match 'Content-Type' header
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, same-origin, *omit
+            headers: header,
+            method: method, // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // *client, no-referrer,
+        })
+            .then(function (response) {
+                if (response.status >= 200 && response.status < 300) {
+                    console.log('response status -> ' + response.status);
+                    // 也可以blob產生成file
+                    // return response.json()
+
+                    return response.arrayBuffer()
+                } else {
+                    var error = new Error(response.statusText);
+                    error.response = response;
+                    console.log('error resp -> '+ response.statusText);
+                    throw error
+                }
+            });
+
+
+
+
+    }
+
+    function passDataToController(){
+        var form = $('#file-form');
+        var data = new FormData(form);
+    }
+
+    $(function(){
+        var header = new Headers({ 'X-IBM-Client-Id' : '2935e20b-89b6-44fd-a069-2c38128c0d62',
+            'Content-Type' : 'application/json',
+            'lprNumber' : 'AYH-1075',
+            'idNo' : 'H120983053',
+            'token' : 'mydata::bvftw3zsoad1cnwlsqlnppd6n9qg6hptpqcfr32lqb6xef05zclm5rtb6pesbn8h'});
+
+        fetchDpData('POST','https://apis.fetc.net.tw/basic/sb/getTotalAmount/byLprAndID', header)
+            .then(data => {
+
+                var file  = new File([data],'test.zip')
+                console.log('file size -> ' + file.size);
+
+
+                var p = {};
+                // p.file ={
+                //     fname:$('#files-input-upload3').attr('data-name'),
+                //     data:$('#files-input-upload3').attr('data-src')
+                // };
+
+                // p.file = file;
+                //
+                // console.log('flle name -> ' + p.file.name );
+                // RiAPI.run({
+                //     type : 'POST',
+                //     url : '/rest/dp/unzip2',
+                //     data:p,
+                //     loadSpin : true,
+                //     success : function(resp) {
+                //         console.log("success... " + JSON.stringify(resp));
+                //     }
+                // });
+                // console.log('data .... ' + data);
+            })
+            .catch(error => console.log('err -> ' + error));
+
+
+
+        // testHeartbeat()
+
+        $(document).delegate(
+            '#fake-file-button-browse3',
+            'click',
+            function() {
+                $('#files-input-upload3').click();
+            });
+
+        $(document).delegate(
+            '#files-input-upload3',
+            'change',
+            function(event) {
+                document.getElementById('fake-file-input-name3').value = this.value;
+                var filename = this.value.substring(this.value
+                    .lastIndexOf('\\') + 1);
+                var input = event.target;
+                var reader = new FileReader();
+                reader.onload = function(file) {
+                    var dataURL = reader.result;
+                    $('#files-input-upload3').attr('data-name',
+                        filename);
+                    $('#files-input-upload3').attr('data-src',
+                        dataURL);
+                    unzip()
+                };
+                reader.readAsDataURL(input.files[0]);
+            });
+        
+    });
+
+    function unzip() {
+        var p = {};
+        if(typeof $('#files-input-upload3').attr('data-name')!='undefined'&&$('#files-input-upload3').attr('data-name')!=null&&$('#files-input-upload3').attr('data-name')!=''
+            &&typeof $('#files-input-upload3').attr('data-src')!='undefined'&&$('#files-input-upload3').attr('data-src')!=null&&$('#files-input-upload3').attr('data-src')!=''){
+            p.file ={
+                fname:$('#files-input-upload3').attr('data-name'),
+                data:$('#files-input-upload3').attr('data-src')
+            }
+
+        }
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/dp/unzip',
+                data:p,
+                loadSpin : true,
+                success : function(resp) {
+                   console.log("success... " + JSON.stringify(resp))
+
+                    var $verifyDiv = $('#verify-result');
+                    $verifyDiv.html('');
+                    var strResult = resp.data.result;
+
+                    var rs = strResult.split("\n");
+                    console.log('rs length -> ' + rs.length);
+                    rs.forEach(r => {
+                        $verifyDiv.append('<p>' + r + '</p>');
+                    });
+
+                }
+            });
+    }
+
+
+
+</script>
+</body>
+</html>

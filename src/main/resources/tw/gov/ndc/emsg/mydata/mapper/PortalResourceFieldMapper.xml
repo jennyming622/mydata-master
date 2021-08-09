@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalResourceFieldMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalResourceField">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pr_id" jdbcType="INTEGER" property="prId" />
+    <result column="field_name" jdbcType="VARCHAR" property="fieldName" />
+    <result column="field_desc" jdbcType="VARCHAR" property="fieldDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pr_id, field_name, field_desc
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_resource_field
+    where 1=1
+    <if test="prId != null">
+      and pr_id = #{prId,jdbcType=INTEGER}
+    </if>
+    order by id asc
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_resource_field
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_resource_field
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceField">
+    insert into portal_resource_field (id, pr_id, field_name, 
+      field_desc)
+    values (#{id,jdbcType=INTEGER}, #{prId,jdbcType=INTEGER}, #{fieldName,jdbcType=VARCHAR}, 
+      #{fieldDesc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceField">
+    insert into portal_resource_field
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="prId != null">
+        pr_id,
+      </if>
+      <if test="fieldName != null">
+        field_name,
+      </if>
+      <if test="fieldDesc != null">
+        field_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="prId != null">
+        #{prId,jdbcType=INTEGER},
+      </if>
+      <if test="fieldName != null">
+        #{fieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null">
+        #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceField">
+    update portal_resource_field
+    <set>
+      <if test="prId != null">
+        pr_id = #{prId,jdbcType=INTEGER},
+      </if>
+      <if test="fieldName != null">
+        field_name = #{fieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null">
+        field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceField">
+    update portal_resource_field
+    set pr_id = #{prId,jdbcType=INTEGER},
+      field_name = #{fieldName,jdbcType=VARCHAR},
+      field_desc = #{fieldDesc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

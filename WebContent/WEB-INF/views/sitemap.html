@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<title>MyData | 網站導覽</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item">
+				<a href="#" th:href="@{/}" title="回到MyData首頁">
+					<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">網站導覽</li>
+		</ol>
+	</nav>
+	<div class="content-wrap landing-page faq-page sitemap-page">
+		<section class="contact-us-wrap">
+			<div class="text-center title-wrap">
+				<h2>
+					網站導覽
+					<hr>
+				</h2>
+				<div class="description text-left">
+					<p>本網站依無障礙網頁設計原則建置，網站的主要內容分為二大區塊：</p>
+					<p>1. 上方功能區塊、2. 中央內容區塊</p>
+				</div>
+			</div>
+			<h3 class="mt-5 alert">本網站的定位點(Accesskey)設定如下：</h3>
+			<ul class="mt-3 tab-map">
+				<li><span class="mr-4">Alt + U</span>移至網頁上方主要導覽連結區，此區塊列有本網站的導覽列連結。</li>
+				<li><span class="mr-4">Alt + C</span>移至網頁中段主要導覽連結區，此區塊列有本網站的內容。</li>
+				<li><span class="mr-4">Alt + B</span>移至網頁下方快速連結區，此區塊列有本網站的重點連結。</li>
+			</ul>
+			<div class="link-map">
+				<ul class="mt-4">
+					<p><a href="javascript:void(0)" title="1. 歡迎使用 MyData">1. 歡迎使用 MyData</a></p>
+					<li><a href="about-us.html" th:href="@{/sp/about}" title="關於 MyData">1.1 關於 MyData</a></li>
+					<li><a href="newsList.html" th:href="@{/news/list}" title="最新消息">1.2 最新消息</a></li>
+				</ul>
+				<ul class="mt-4">
+					<p><a href="javascript:void(0)" title="2. MyData 服務項目">2. MyData 服務項目</a></p>
+					<li><a href="services.html" th:href="@{/sp/service}" title="資料下載">2.1 資料下載</a></li>
+					<li><a href="services.html" th:href="@{/sp/service#package-service}" title="線上服務">2.2 線上服務</a></li>
+					<li><a href="services-counter.html" th:href="@{/sp/service/counter}" title="臨櫃服務">2.3 臨櫃服務</a></li>
+				</ul>
+				<ul class="mt-4">
+					<p><a href="javascript:void(0)" title="3. 外部連結">3. 外部連結</a></p>
+					<li><a href="https://www.gov.tw/" target="_blank" title="我的E政府(另開新頁)">3.1 我的E政府</a></li>
+					<li><a href="https://www.ndc.gov.tw/" target="_blank" title="國家發展委員會(另開新頁)">3.2 國家發展委員會</a></li>
+				</ul>
+			</div>
+		</section>
+	</div>
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" 
+		role="button" title="網頁置頂"
+		data-toggle="tooltip" data-placement="left" style="display: inline;">
+		<img class="arrow-position" src="images/top-arrow.png" th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+
+</body>
+</html>

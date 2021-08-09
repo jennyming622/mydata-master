@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="國家發展委員會">
+<meta name="description" content="沒時間到公家機關申請紙本個人資料嗎？快來使用 MyData 服務，讓您安全、方便、省時間，下載各項資料。" />
+<meta property="og:description" itemprop="description" content="沒時間到公家機關申請紙本個人資料嗎？快來使用 MyData 服務，讓您安全、方便、省時間，下載各項資料。" />
+<meta property="og:title" itemprop="name" content="MyData服務項目"/>
+<meta property="og:url" itemprop="url" content="https://mydata.nat.gov.tw/sp/service"/>
+<meta property="og:image" itemprop="image" content="https://mydata.nat.gov.tw/resources/dist/image/seo-img.jpg" />
+<title>MyData | 服務項目</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<style>
+.card-body p {
+text-align: left !important;
+}
+</style>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb bg-gray pb-0">
+			<a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item">
+				<a href="#" th:href="@{/}" title="回到MyData首頁">
+					<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">MyData 服務項目</li>
+		</ol>
+	</nav>
+	
+	<div class="landing-page">
+		<section id="personal-data"
+			class="personal-data-wrap text-center section-wrap bg-gray content-wrap">
+			<div class="title-wrap">
+				<h2>資料下載</h2>
+				<div class="description">
+					<p>選擇下列領域，再點選您所需要的個人資料集</p>
+				</div>
+				<div class="get-mul-data-wrap">
+					<button class="theme-btn-border" th:onclick="'javascript:window.location.href=\''+@{/mutipledownload/list}+'\';'">我想一次下載多筆資料</button>
+				</div>
+			</div>
+			<div class="row mt-5 mb-1">
+				<!-- 如該分類有已下載完成之檔案，則在 Class " col-4 " 旁加上 " new-item-reminder " -->
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(1)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往戶役政頁"
+						th:href="@{/personal/cate/1/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/household-o.png"
+									th:src="@{/resources/dist/image/household-o.png}" alt="">
+								<p>戶役政</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(6)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往勞保頁"
+						th:href="@{/personal/cate/6/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/labor-o.png"
+									th:src="@{/resources/dist/image/labor-o.png}" alt="">
+								<p>勞保</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(2)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往地政頁"
+						th:href="@{/personal/cate/2/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/land-o.png"
+									th:src="@{/resources/dist/image/land-o.png}" alt="">
+								<p>地政</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(7)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往健保頁"
+						th:href="@{/personal/cate/7/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/health-insurance-o.png"
+									th:src="@{/resources/dist/image/health-insurance-o.png}" alt="">
+								<p>健保</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(3)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往財稅頁"
+						th:href="@{/personal/cate/3/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/fiscal-tax-o.png"
+									th:src="@{/resources/dist/image/fiscal-tax-o.png}" alt="">
+								<p>財稅金融</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(8)==1}">
+					<a href="javascript:void(0);" class="service-link" tle="前往醫療長照頁"
+						th:href="@{/personal/cate/8/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/medical-o.png"
+									th:src="@{/resources/dist/image/medical-o.png}" alt="">
+								<p>醫療</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(12)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往社福頁"
+						th:href="@{/personal/cate/12/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/welfare-o.png"
+									th:src="@{/resources/dist/image/welfare-o.png}" alt="">
+								<p>社福</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(4)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往商工頁"
+						th:href="@{/personal/cate/4/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/business-o.png"
+									th:src="@{/resources/dist/image/business-o.png}" alt="">
+								<p>商工</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(5)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往交通頁"
+						th:href="@{/personal/cate/5/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/highway-o.png"
+									th:src="@{/resources/dist/image/highway-o.png}" alt="">
+								<p>交通</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(9)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往能源頁"
+						th:href="@{/personal/cate/9/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/energy.png"
+									th:src="@{/resources/dist/image/energy.png}" alt="">
+								<p>能源</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(10)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往教育頁"
+						th:href="@{/personal/cate/10/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/education-o.png"
+									th:src="@{/resources/dist/image/education-o.png}" alt="">
+								<p>教育</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(11)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往法務頁"
+						th:href="@{/personal/cate/11/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/legal-o.png"
+									th:src="@{/resources/dist/image/legal-o.png}" alt="">
+								<p>法務</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-fifth col-md-3 col-4" th:if="${resourceCateStatList.get(13)==1}">
+					<a href="javascript:void(0);" class="service-link" title="前往其他類別頁"
+						th:href="@{/personal/cate/13/list}">
+						<div class="service-content">
+							<div class="inner">
+								<img src="./images/composite-service.png"
+									th:src="@{/resources/dist/image/composite-service.png}" alt="">
+								<p>綜合</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<section id="package-service" class="package-service-wrap text-center section-wrap content-wrap">
+			<div class="title-wrap">
+				<h2>線上服務</h2>
+				<div class="description">
+					<p>點選下列線上服務，系統將會自動連結到服務提供端(機關/機構)的網站服務</p>
+				</div>
+			</div>
+			<div class="text-left w-100 mt-4 flex-md-fix">
+		        <span class="flex-middle">
+		          <img class="service-type" src="./images/choose-seg.svg" th:src="@{/resources/dist/image/choose-seg.svg}" alt=""> 選擇領域：</span>
+		        <a href="javascript:void(0);" class="check-btn active choose-all btn form-group flex-middle">
+		          <input type="checkbox" id="choose-all" name="choose-service-area" value="0" checked  onclick="clickArea(this);">
+		          <label class="flex-middle mb-0" for="choose-all" title="勾選">
+		            <span class="ml-2 mb-0">全部領域</span>
+		          </label>
+		        </a>
+		        <a href="javascript:void(0);" class="check-btn active service-welfare btn form-group flex-middle">
+		          <input type="checkbox" id="service-welfare" name="choose-service-area" value="3" onclick="clickArea(this);">
+		          <label class="flex-middle mb-0" for="service-welfare" title="勾選">
+		            <span class="ml-2 mb-0">社會福利</span>
+		          </label>
+		        </a>
+		        <a href="javascript:void(0);" class="check-btn active service-education btn form-group flex-middle">
+		          <input type="checkbox" id="service-education" name="choose-service-area" value="2" onclick="clickArea(this);">
+		          <label class="flex-middle mb-0" for="service-education" title="勾選">
+		            <span class="ml-2 mb-0">教育學習</span>
+		          </label>
+		        </a>
+		        <a href="javascript:void(0);" class="check-btn active service-business btn form-group flex-middle">
+		          <input type="checkbox" id="service-business" name="choose-service-area" value="4" onclick="clickArea(this);">
+		          <label class="flex-middle mb-0" for="service-business" title="勾選">
+		            <span class="ml-2 mb-0">商工登記</span>
+		          </label>
+		        </a>
+		        <a href="javascript:void(0);" class="check-btn active service-finance btn form-group flex-middle">
+		          <input type="checkbox" id="service-finance" name="choose-service-area" value="1" onclick="clickArea(this);">
+		          <label class="flex-middle mb-0" for="service-finance" title="勾選">
+		            <span class="ml-2 mb-0">消費金融</span>
+		          </label>
+		        </a>
+		        <a href="javascript:void(0);" class="check-btn active service-multi-service btn form-group flex-middle">
+		          <input type="checkbox" id="service-multi-service" name="choose-service-area" value="5" onclick="clickArea(this);">
+		          <label class="flex-middle mb-0" for="service-multi-service" title="勾選">
+		            <span class="ml-2 mb-0">綜合服務</span>
+		          </label>
+		        </a>
+	      	</div>
+			<div class="text-left mt-1 mb-4 advance-wrap">
+		        <div class="row">
+		          <div class="col-md-6 col-xs-12 mb-0">
+		            <div class="form-group mb-0 flex-center w-100">
+		              <label class="w-100 flex-start" for="dep"> <span class="nowrap">機關單位：</span>
+		               	<select id="service-type" class="form-control" onchange="serviceFilterByCondition();">
+		                		<option value="">機關單位全部</option>
+		                		<option value="0">中央部會</option>
+		                  	<option value="1">地方政府</option>
+		                  	<option value="2">國營事業</option>
+		                  	<option value="3">民營企業</option>
+		                </select>
+		                <select id="service-city" class="form-control" name="city" onchange="serviceFilterByCondition();" style="display:none">
+		                		<option value="">縣市全部</option>
+							<option value="基隆市">基隆市</option>
+							<option value="臺北市">臺北市</option>
+							<option value="新北市">新北市</option>
+							<option value="桃園市">桃園市</option>
+							<option value="新竹市">新竹市</option>
+							<option value="新竹縣">新竹縣</option>
+							<option value="苗栗縣">苗栗縣</option>
+							<option value="臺中市">臺中市</option>
+							<option value="彰化縣">彰化縣</option>
+							<option value="南投縣">南投縣</option>
+							<option value="雲林縣">雲林縣</option>
+							<option value="嘉義市">嘉義市</option>
+							<option value="嘉義縣">嘉義縣</option>
+							<option value="臺南市">臺南市</option>
+							<option value="高雄市">高雄市</option>
+							<option value="屏東縣">屏東縣</option>
+							<option value="臺東縣">臺東縣</option>
+							<option value="花蓮縣">花蓮縣</option>
+							<option value="宜蘭縣">宜蘭縣</option>
+							<option value="澎湖縣">澎湖縣</option>
+							<option value="金門縣">金門縣</option>
+							<option value="連江縣">連江縣</option>
+		                </select>
+		              </label>
+		            </div>
+		          </div>
+		          <div class="col-md-4 col-xs-12">
+		            <div class="form-group mb-0 flex-center w-100">
+		              <label class="w-100 flex-start" for="etd_case_years121"> <span class="nowrap">搜尋服務：</span>
+		                <input type="text" id="service-keyword" name="service-keyword" class="service-keyword" placeholder="請輸入關鍵字" onchange="serviceFilterByCondition();">
+		              </label>
+		            </div>
+		          </div>
+		        </div>
+	      	</div>
+			<div class="mt-3">
+				<div id="collaspe-wrapper" class="w-100" th:prepare-id="${ps.psId}" th:id="'collaspe-wrapper'+${ps.psId}"  th:each="ps : ${psExtList}" th:if="${not #lists.isEmpty(psExtList)}">
+					<!-- 卡片展開時，在 Class 'card' 旁加上 'show' -->
+					<div class="card shadow-sm" onclick="javascript:toggleClass(this);" th:data-id="${ps.psId}" th:data-level="${ps.level}" th:data-maintain="${ps.maintain}">
+						<div class="card-header collapsed" data-toggle="collapse" th:href="'#list'+${ps.psId}" th:title="${ps.name}+'(Enter展開)'" tabindex="0">
+							<a class="card-link">
+								<h3 class="flex-start">
+									<img th:if="${ps.cateId==3}" class="service-type" src="./images/service-i-welfare.svg" th:src="@{/resources/dist/image/service-i-welfare.svg}" alt="社會福利">
+									<img th:if="${ps.cateId==2}" class="service-type" src="./images/service-i-education.svg" th:src="@{/resources/dist/image/service-i-education.svg}" alt="教育學習">
+									<img th:if="${ps.cateId==4}" class="service-type" src="./images/service-i-business.svg" th:src="@{/resources/dist/image/service-i-business.svg}" alt="商工登記">
+									<img th:if="${ps.cateId==1}" class="service-type" src="./images/service-i-finance.svg" th:src="@{/resources/dist/image/service-i-finance.svg}" alt="消費金融">
+									<img th:if="${ps.cateId==5}" class="service-type" src="./images/service-i-multi.svg" th:src="@{/resources/dist/image/service-i-multi.svg}" alt="綜合服務">
+								   <span th:text="${ps.providerName}+' - '+${ps.name}">◎ 第一銀行信用卡MyData介接</span>
+								</h3>
+								<i class="fa fa-chevron-up pull-right"></i>
+							</a>
+						</div>
+						<div id="list1" th:id="'list'+${ps.psId}" class="collapse" data-parent="#collaspe-wrapper" th:data-parent="'#collaspe-wrapper'+${ps.psId}">
+							<div class="card-body">
+								<h4>服務介紹</h4>
+								<p th:utext="${ps.description}">想要開戶又不想到銀行排隊等候嗎？玉山e指開戶讓您免出門，把珍貴的時間留給自己。</p>
+								<h4>應備文件</h4>
+								<p class="secondary mb-0" th:if="${not #lists.isEmpty(ps.prList)}">由MyData提供</p>
+								<!-- <p><th:block th:each="pr,iterStat : ${ps.prList}" th:if="${not #lists.isEmpty(ps.prList)}" th:text="!${iterStat.last} ? (${pr.name}+'、'):(${pr.name})"></th:block></p> -->
+								<div class="mb-0 cms-editor" th:if="${not #lists.isEmpty(ps.prList)}">
+									<ol>
+									<li th:each="pr,iterStat : ${ps.prList}" th:if="${not #lists.isEmpty(ps.prList)}" th:text="${pr.name}"></li>
+									</ol>
+								</div>
+								<p class="secondary mb-0" th:if="${ps.preparedDocument!=null and ps.preparedDocument!=''}">須自行提供</p>
+								<div class="mb-0 cms-editor" th:utext="${ps.preparedDocument}" th:if="${ps.preparedDocument!=null and ps.preparedDocument!=''}">應備文件說明</div>
+								<h4 th:if="${ps.brief!=null and ps.brief!=''}">申辦服務相關資訊</h4>
+								<div class="mb-0 cms-editor" th:utext="${ps.brief}" th:if="${ps.brief!=null and ps.brief!=''}">聯絡電話：02-27993839</div>
+								<p class="alert-box" th:if="${ps.isCounter==1}"><img th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">此服務支援臨櫃申請，若想變更申請方式，可點擊<a th:href="@{/sp/service/counter}+'?current='+${ps.psId}">臨櫃服務</a>。</p>
+								<img class="inregular-img" src="./images/fail-to-log-in-m.jpg" alt="" th:if="${ps.maintain} == true" th:src="@{/resources/dist/image/fail-to-log-in-m.jpg}">
+								<div class="mt-4 mb-1 p-3 bg-gray" th:if="${ps.maintain} == true">
+									<strong class="alert">
+										此服務目前維護中，暫時無法提供申請，請稍候再試，如需了解進一步資訊，請與客服聯繫!<br>
+										<!-- 							電子化政府客服中心：02-2192-7111。或 -->
+										請寫信至mydata@ndc.gov.tw，我們會在最快的時間處理。</strong>
+								</div>
+								<p class="bg-gray p-3 mb-4 alert-box" th:id="'showMsgMobile'+${ps.psId}" style="display: none;">
+									<img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+										 alt="注意事項：" style="width: 15px; margin-right: 3px"> 此服務暫時無法使用手機下載。
+								</p>
+								<p class="bg-gray p-3 mb-4 alert-box" th:id="'showMsgMobileOS'+${ps.psId}" style="display: none;">
+									<img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+										 alt="注意事項：" style="width: 15px; margin-right: 3px"> 你使用的載具作業系統版本不支援使用本系統，點擊連結<a th:href="@{/sp/about}" class="link" target="_blank" title="另開新頁前往關於Mydata">查看支援版本</a>。
+								</p>
+								<div class="text-center" th:if="${ps.maintain} == false" th:id="'apply'+${ps.psId}">
+									<a href="javascript:void(0);" th:data-src="${ps.serviceUrl}" onclick="javascript:toShowApplyToWarming(this);" class="btn theme-btn flex-middle" th:title="'前往申請'+${ps.name}+'服務'">
+										<p class="img">我要申請</p>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="no-data" class="no-data" th:style="${#lists.isEmpty(psExtList)}?'display:block':'display:none'">
+			        <p>此篩選條件查無資料，請改用其他查詢條件。</p>
+			    </div>
+			</div>
+		</section>
+	</div>
+
+	<!-- 申請提示-->
+	<div id="applyTo-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+					<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div id="applyTo-message-text" class="modal-body">系統將連結至服務網站，進行線上申辦作業</div>
+				<div class="modal-footer">
+					<button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+					<button id="applyTo-btn" class="theme-btn" data-src="" onclick="javascript:toServiceUri(this);">確定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂"
+		data-toggle="tooltip" data-placement="left" style="display: inline;">
+		<img class="arrow-position" src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+	
+	<script type="text/javascript" th:inline="javascript">
+		$(function(){
+			var currentid = /*[[${param.get('current')}]]*/'';
+			if(currentid!=null&&currentid!=''){
+				var $card = $('#collaspe-wrapper' + currentid).find('.card');
+				$card.addClass('show');
+				//card-header
+				$card.find('.card-header').removeClass('collapsed');
+				$('#list'+currentid).addClass('show');
+				$('#list'+currentid).attr('aria-expanded','true');
+				$('html, body').animate({scrollTop: $('#collaspe-wrapper' + currentid).offset().top - 100}, {duration: 100,easing: 'swing'});
+			}
+			
+			$('a.check-btn').keypress(function (event) {
+				event.preventDefault()
+				if (event.keyCode == 13) {
+					$(this).find('input[type=checkbox]').click();
+				}else if(event.keyCode == 32){
+					$(this).find('input[type=checkbox]').click();
+				}
+			});
+
+			var category = /*[[${param.get('category')}]]*/'';
+			if(category) {
+				var areaId = getIdByCategory(category[0]);
+				$('#service-welfare').prop('checked',false);
+				$('#service-education').prop('checked',false);
+				$('#service-business').prop('checked',false);
+				$('#service-finance').prop('checked',false);
+				$('#service-multi-service').prop('checked',false);
+				$('#choose-all').prop('checked',false);
+				$('#' + areaId).click();
+			}
+		});
+
+		function toggleClass(obj){
+			setTimeout(function(){
+				if($(obj).find('div.card-header').hasClass('collapsed')){
+					$(obj).removeClass('show');
+				}else{
+					showMsgMobileOS(obj);
+					$(obj).addClass('show');
+				}
+			}, 50);
+		}
+
+		function showMsgMobileOS(obj) {
+			var $this = $(obj);
+			var psId = $this.attr('data-id');
+
+			var $showMsgMobile = $('#showMsgMobile' + psId);
+			var $showMsgMobileOS = $('#showMsgMobileOS' + psId);
+			var $apply = $('#apply' + psId);
+
+			var level = $this.attr('data-level');
+			var maintain = $this.attr('data-maintain');
+			if (maintain == 'true') {
+				return;
+			}
+			if (isMobile() && checkMobileOs() == false) {
+				if (level == 0) {
+					$showMsgMobile.show();
+					$apply.hide();
+				} else if (level == 1){
+					$showMsgMobileOS.show();
+					$apply.hide();
+				}
+			} else if (isMobile() && checkMobileOs() == true) {
+				if (level == 0) {
+					$showMsgMobile.show();
+					$apply.hide();
+				}
+			}
+		}
+
+		function toShowApplyToWarming(obj){
+			var  serviceUri = $(obj).attr('data-src');
+			$('#applyTo-btn').attr('data-src',serviceUri);
+			$('#applyTo-pop-message').modal('show');
+		}
+		function toServiceUri(obj){
+			var  serviceUri = $(obj).attr('data-src');
+			//window.location.href = serviceUri;
+			window.open(serviceUri);
+			$('#applyTo-pop-message').modal('hide');
+		}
+		function clickArea(obj){
+			if($(obj).attr('id')=='choose-all'){
+				if($(obj).prop('checked')){
+					$('#service-welfare').prop('checked',false);
+					$('#service-education').prop('checked',false);
+					$('#service-business').prop('checked',false);
+					$('#service-finance').prop('checked',false);
+					$('#service-multi-service').prop('checked',false);
+				}else{
+					$('#service-welfare').prop('checked',false);
+					$('#service-education').prop('checked',false);
+					$('#service-business').prop('checked',false);
+					$('#service-finance').prop('checked',false);
+					$('#service-multi-service').prop('checked',false);
+				}
+			}else{
+				$('#choose-all').prop('checked',false);
+			}
+			serviceFilterByCondition();
+		}
+		function serviceFilterByCondition(){
+			var cateIdList = $('input[name=choose-service-area]:checked').map(function() { return parseInt($(this).val()); }).get();
+			var type = parseInt($('#service-type').val());
+			if(type!=1){
+				$('#service-city').val('');
+				//$('#service-city').attr('disabled', true);
+				$('#service-city').hide();
+			}else{
+				//$('#service-city').attr('disabled', false);
+				$('#service-city').show();
+			}
+			var serviceCity = $('#service-city').val();
+			var serviceKeyword = $('#service-keyword').val();
+			var p = {
+				cateIdList:cateIdList,
+				type:type,
+				serviceCity:serviceCity,
+				serviceKeyword:serviceKeyword
+			};
+			RiAPI.run({
+				type: 'POST',
+				url: '/rest/sp/service',
+				data: p,
+				loadSpin : true,
+				success: function(resp) {
+					if (typeof resp=='undefined'||resp.code < 0) {
+						//UNDO
+					} else {
+						//DO
+						var dataList = resp.data;
+						if(typeof dataList!='undefined'&&dataList.length>0){
+							$('#package-service div[id^=collaspe-wrapper]').hide();
+							for(var i=0;i<dataList.length;i++){
+								var psId = dataList[i].psId;
+								$('#collaspe-wrapper'+psId).show();
+							}
+							$('#no-data').hide();
+						}else{
+							$('#package-service div[id^=collaspe-wrapper]').hide();
+							$('#no-data').show();
+						}
+					}
+				}
+			});
+		}
+
+		function getIdByCategory(category) {
+			var id = '';
+			switch (category) {
+				case '1':
+					id = 'service-finance';
+					break;
+				case '2':
+					id = 'service-education';
+					break;
+				case '3':
+					id = 'service-welfare';
+					break;
+				case '4':
+					id = 'service-business';
+					break;
+				case '5':
+					id = 'service-multi-service';
+					break;
+			}
+			return id;
+		}
+	</script>
+</body>
+</html>

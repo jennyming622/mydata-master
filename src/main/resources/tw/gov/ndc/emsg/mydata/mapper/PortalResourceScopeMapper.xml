@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalResourceScopeMapper">
+    <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalResourceScope">
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="scope" jdbcType="VARCHAR" property="scope"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="pr_id" jdbcType="INTEGER" property="prId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, scope, description, pr_id
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from portal_resource_scope
+        where 1=1
+        <if test="scope != null">
+            and scope = #{scope,jdbcType=VARCHAR}
+        </if>
+        <if test="prId != null">
+            and pr_id = #{prId,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
+    <select id="selectByExampleLike" resultMap="BaseResultMap">
+      select prs.* from portal_resource_scope prs
+      where prs.pr_id in (
+          select pr_id from portal_resource
+          where name similar to #{scopes,jdbcType=VARCHAR}
+);
+
+
+  </select>
+
+    <select id="selectByProviderId" resultMap="BaseResultMap">
+
+    select prs.* from portal_resource_scope prs
+        where prs.pr_id in (
+            select pr_id from portal_resource
+            where provider_id = #{prId, jdbcType=INTEGER}
+    );
+
+  </select>
+
+
+    <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceScope">
+    insert into portal_resource_scope (id, scope, description, 
+      pr_id)
+    values (#{id,jdbcType=INTEGER}, #{scope,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{prId,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceScope">
+        insert into portal_resource_scope
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="scope != null">
+                scope,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="prId != null">
+                pr_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="scope != null">
+                #{scope,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="prId != null">
+                #{prId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+</mapper>

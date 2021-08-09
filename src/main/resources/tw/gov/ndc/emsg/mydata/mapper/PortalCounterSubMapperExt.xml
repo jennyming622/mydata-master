@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalCounterSubMapperExt">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalCounterSub">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ps_id" jdbcType="INTEGER" property="psId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="is_open_agent" jdbcType="INTEGER" property="isOpenAgent" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="enable" jdbcType="INTEGER" property="enable" />
+    <result column="prepared_document" jdbcType="VARCHAR" property="preparedDocument" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+  </resultMap>
+
+  <resultMap id="withSubScopeMap" type="tw.gov.ndc.emsg.mydata.entity.ext.PortalCounterSubExt" extends="BaseResultMap">
+    <collection  property="subScopeExtList"
+                 ofType="tw.gov.ndc.emsg.mydata.entity.ext.PortalCounterSubScopeExt"
+                 javaType="ArrayList"
+                 column="id"
+                 select="tw.gov.ndc.emsg.mydata.mapper.PortalCounterSubScopeMapperExt.selectByPcsId">
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, ps_id, name, is_open_agent, type, enable, prepared_document, ctime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from portal_counter_sub
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_counter_sub
+    where deleted = 0
+      and enable = 1
+    <if test="psId != null">
+      and ps_id = #{psId,jdbcType=INTEGER}
+    </if>
+    <if test="psId != null">
+      and ps_id in <foreach collection="psIdList" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+    </if>
+    order by ctime asc;
+  </select>
+  <select id="selectExt" resultMap="withSubScopeMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_counter_sub
+    where deleted = 0
+      and enable = 1
+    <if test="psId != null">
+      and ps_id = #{psId,jdbcType=INTEGER}
+    </if>
+    order by ctime asc;
+  </select>
+</mapper>

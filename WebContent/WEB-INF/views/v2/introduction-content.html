@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<!-- 服務簡介Modal -->
+<th:block id="introduction-content" th:fragment="introduction-content">
+<div class="modal fade" id="counterModal" tabindex="-1" aria-labelledby="counterModal"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">服務簡介</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="scrollTest" class="modal-body">
+            </div>
+            <div class="modal-scoller-layer">
+                <span class="modal-scoller-down">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;可繼續向下滾動
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn theme-btn"
+                        onclick="javascript:goPage(this)"
+                >我要下載</button>
+            </div>
+        </div>
+    </div>
+</div>
+</th:block>
+<th:block id="introduction-content-copy" th:fragment="introduction-content-copy">
+    <div id="counterCopy" class="hidden">
+        <div class="maintain">
+            <img class="inregular-img" src="./images/fail-to-log-in-m.jpg" alt="" th:src="@{/resources/dist/image/fail-to-log-in-m.jpg}">
+            <div class="mt-4 mb-1 p-3 bg-gray" >
+                <strong class="alert">
+                    此服務目前維護中，暫時無法提供申請，請稍候再試，如需了解進一步資訊，請與客服聯繫!<br>
+                    <!-- 							電子化政府客服中心：02-2192-7111。或 -->
+                    請寫信至mydata@ndc.gov.tw，我們會在最快的時間處理。</strong>
+            </div>
+        </div>
+        <p class="bg-gray p-3 mb-4 alert-box" id="showMsgMobile">
+            <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+                 alt="注意事項：" style="width: 15px; margin-right: 3px"> 此服務暫時無法使用手機下載。
+        </p>
+        <p class="bg-gray p-3 mb-4 alert-box" id="showMsgMobileOS">
+            <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+                 alt="注意事項：" style="width: 15px; margin-right: 3px"> 你使用的載具作業系統版本不支援使用本系統，點擊連結<a th:href="@{/sp/about}" class="link" target="_blank" title="另開新頁前往關於Mydata">查看支援版本</a>。
+        </p>
+    </div>
+</th:block>
+<th:block th:fragment="introduction-content-script">
+    <script type="text/javascript" th:inline="javascript">
+        var psExtList = /*[[${psExtList}]]*/'';
+        $('#scrollTest').scroll(function() {
+            showScollerAlert();
+        });
+
+        $(document).on('show.bs.modal', '#counterModal', function () {
+            $('body').css('overflow', 'hidden');
+            setTimeout(showScollerAlert, 250);
+        });
+
+        $(document).on('hidden.bs.modal', '#counterModal', function () {
+            $('body').css('overflow', 'auto');
+        });
+
+        function goPage(obj) {
+            var $this = $(obj);
+            var src = $this.attr('data-src');
+            window.location.href = src;
+        }
+
+        function showScollerAlert() {
+            var objDivs = document.getElementById("scrollTest");
+            var elt = $(objDivs)[0];
+
+            if(elt.scrollHeight <= 360) {
+                $('.modal-scoller-layer').addClass('hidden');
+            }
+
+            if((elt.scrollTop + elt.offsetHeight >= elt.scrollHeight - 10) && elt.scrollTop > 0) {
+                $('.modal-scoller-layer').addClass('hidden');
+            }
+        }
+
+        function showIntroduction(obj) {
+            $('.modal-scoller-layer').removeClass('hidden');
+
+            var $this = $(obj);
+            var id = $this.attr('data-id');
+            var portalService = _.find(psExtList, function(sp) {
+                return sp.psId == id;
+            });
+
+            var $elt = $('#counterModal').find('#scrollTest');
+            $elt.empty();
+
+            $elt.append('<h5>服務介紹</h5>');
+            $elt.append(portalService.counterDescription);
+            _.forEach(portalService.counterSubExtList, function(subExt) {
+                var title = (subExt.name != null && subExt.name != '') ? subExt.name + ' - 應備文件' : '應備文件';
+                $elt.append('<h5>' + title + '</h5>');
+                $elt.append('<p class="secondary mb-0">由MyData提供</p>')
+                var $div = $('<div class="mb-0 cms-editor take-file-wrap"></div>')
+                _.forEach(subExt.subScopeExtList, function(subScopeExt) {
+                    if(subScopeExt.type == 'required') {
+                        $div.append('<h6>必要文件</h6>');
+                        var $ol = $('<ol class="listNum-wrap"></ol>');
+                        _.forEach(subScopeExt.dpList, function(dp) {
+                            $ol.append('<li>' + dp.name + '</li>');
+                        });
+                        $div.append($ol);
+                    } else {
+                        $div.append('<h6>多選文件(最少選擇' + subScopeExt.selectCount + '項)</h6>');
+                        var $ol = $('<ol class="listNum-wrap"></ol>');
+                        _.forEach(subScopeExt.dpList, function(dp) {
+                            $ol.append('<li>' + dp.name + '</li>');
+                        });
+                        $div.append($ol);
+                    }
+                });
+                $elt.append($div);
+                if(subExt.preparedDocument !=null && subExt.preparedDocument != '') {
+                    $elt.append('<p class="secondary mb-0">須自行提供</p>');
+                    $elt.append(subExt.preparedDocument);
+                }
+            });
+
+            if(portalService.counterBrief != null && portalService.counterBrief != '') {
+                $elt.append('<h5>申辦服務相關資訊</h5>');
+                $elt.append(portalService.counterBrief);
+            }
+
+            var $copy = $('#counterCopy');
+            var $apply = $('#counterModal').find('.btn');
+            $apply.removeAttr('disabled');
+            var url = /*[[@{/service/counter}]]*/'';
+            $apply.attr("data-src", url + "/" + portalService.clientId);
+            $apply.attr("title", '前往下載'+ portalService.name +'服務');
+
+            if(portalService.maintain == true) {
+                $elt.append($copy.find('.maintain').clone());
+                $apply.attr('disabled', 'disabled');
+                $('#counterModal').modal('show');
+                return;
+            }
+
+            if (isMobile() && checkMobileOs() == false) {
+                if (portalService.level == 0) {
+                    $elt.append($copy.find('#showMsgMobile').clone());
+                    $apply.attr('disabled', 'disabled');
+                } else if (portalService.level == 1){
+                    $elt.append($copy.find('#showMsgMobileOS').clone());
+                    $apply.attr('disabled', 'disabled');
+                }
+            } else if (isMobile() && checkMobileOs() == true) {
+                if (portalService.level == 0) {
+                    $elt.append($copy.find('#showMsgMobile').clone());
+                    $apply.attr('disabled', 'disabled');
+                }
+            }
+
+            $('#counterModal').modal('show');
+        }
+    </script>
+</th:block>
+</html>

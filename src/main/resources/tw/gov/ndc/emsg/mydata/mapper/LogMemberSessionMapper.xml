@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.LogMemberSessionMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.LogMemberSession">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="session_id" jdbcType="VARCHAR" property="sessionId" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, member_id, session_id, state, created_at, update_at
+  </sql>
+  <select id="findWithMemberId" parameterType="map" resultMap="BaseResultMap">
+    select
+      lms.*
+    from log_member_session lms
+    left join spring_session ss on lms.session_id = ss.session_id
+    where #{t1,jdbcType=INTEGER} = #{t1,jdbcType=INTEGER}
+    and member_id = #{memberId,jdbcType=INTEGER}
+    and state = #{state,jdbcType=VARCHAR}
+  </select>
+  <select id="findWithSessionId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from log_member_session
+    where 1=1
+    and session_id = #{sessionId,jdbcType=INTEGER}
+  </select>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.LogMemberSession">
+    insert into log_member_session
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="sessionId != null">
+        session_id,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="updateAt != null">
+        update_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="sessionId != null">
+        #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null">
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.LogMemberSession">
+    update log_member_session
+    <set>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="sessionId != null">
+        session_id = #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null">
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteExpiredSession">
+    Delete from log_member_session where session_id not in (
+      Select session_id from spring_session
+    )
+  </delete>
+  <delete id="deleteOtherMember" parameterType="map">
+    delete from spring_session where
+        session_id in (
+            select
+                session_id
+            from log_member_session
+            where 1=1
+              and member_id = #{memberId,jdbcType=INTEGER}
+              and session_id <![CDATA[<>]]> #{sessionId,jdbcType=INTEGER}
+              and state = 'Login'
+    );
+  </delete>
+</mapper>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>MyData | [[${news.title}]]</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<script th:src="@{/resources/dist/js/font-awesone.min.js}" ></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js" th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<script src="js/creative.js" th:src="@{/resources/dist/js/creative.js}"></script>
+<script type="text/javascript" th:src="@{/RiAPI.js}"></script>
+<script src="jquery-barcode.js" th:src="@{/resources/dist/js/jquery-barcode.js}"></script>
+<script src="js/functionkey.js" th:src="@{/resources/dist/js/functionkey.js}"></script>
+<!-- <script src="js/r_common.js" th:src="@{/resources/dist/js/r_common.js}"></script> -->
+<script src="js/certLogin.js" th:src="@{/resources/dist/js/certLogin.js}"></script>
+<script src="js/errorcode.js" th:src="@{/resources/dist/js/errorcode.js}"></script>
+<script src="js/qrcode.js" th:src="@{/resources/dist/js/qrcode.js}"></script>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<a href="#main_area" id="main_area" title="主要內容區塊"
+				class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item">
+				<a href="#" th:href="@{/}" title="回到MyData首頁"> 
+					<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+				</a>
+			</li>
+			<li class="breadcrumb-item" aria-current="page"><a href="#" th:href="@{/news/list}">最新消息</a></li>
+			<li class="breadcrumb-item active" aria-current="page">[[${news.title}]]</li>
+		</ol>
+	</nav>
+
+	<div class="content-wrap latest-news-detail pt-0">
+		<div class="section-wrap" th:object="${news}">
+			<h2 class="alert">
+				<th:block th:text="*{title}"></th:block>
+				<p class="block" th:if="*{publishDate != null}"><small th:text="*{publishDate == null} ? '更新日期：未定' : ('更新日期：'+*{#dates.format(publishDate, 'yyy/MM/dd')})" class="gray"></small></p>
+			</h2>
+
+			<div class="content" style="font-size: 1.3rem !important;">
+				<div th:remove="tag" th:utext="*{content}">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂" data-toggle="tooltip" data-placement="left"
+		style="display: inline;"> <img class="arrow-position"
+		src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+
+<script type="text/javascript" th:inline="javascript" >
+
+
+
+</script>
+
+</body>
+</html>

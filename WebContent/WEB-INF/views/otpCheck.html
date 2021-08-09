@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<title>MyData | 重複登入驗證</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<script src="jquery-barcode.js"
+	th:src="@{/resources/dist/js/jquery-barcode.js}"></script>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+	<!-- Breadcrumb -->
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<a href="#main_area" id="main_area" title="主要內容區塊"
+				class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item"><a href="#" th:href="@{/}"
+				title="回到MyData首頁"> <img src="images/breadcrumb-home.png"
+					th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="" />首頁
+			</a></li>
+			<li class="breadcrumb-item active" aria-current="page">重複登入驗證</li>
+		</ol>
+	</nav>
+
+	<!--======= content =======-->
+	<div class="content-wrap section-wrap organ-page landing-page">
+		<section>
+			<div class="text-center">
+				<h2 style="margin-left: 75px;">OTP 驗證</h2>
+			</div>
+			<div class="card-body">
+				<div class="disabled-mask"></div>
+				<!-- <h3 class="title">臨櫃核驗</h3>  -->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="flex-center w-100" style="display: inline-grid !important;">
+							<div class="text-left" >
+								<label for="mscheckCode">請輸入OTP密碼：</label>
+								<input type="text" id="mscheckCode" name="mscheckCode" value="" autocomplete="off">
+							</div>
+							<div class="text-left">
+								<small id="resendOtpText" class="text-left">驗證碼已傳送至...</small>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-center mt-4">
+					<button id="resend" class="btn theme-btn-border mt-3 g-recaptcha false" disabled onclick="javascript:resend();">重發驗證碼</button>
+					<button id="confirm" class="btn theme-btn-border mt-3 g-recaptcha" onclick="javascript:confirm();">確認</button>
+				</div>
+			</div>
+		</section>
+	</div>
+	<!--======= end content =======-->
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂" data-toggle="tooltip" data-placement="left"
+		style="display: inline;"> <img class="arrow-position"
+		src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+
+
+	<script type="text/javascript" th:inline="javascript">
+		var msuuidcheck = /*[[${msuuidcheck}]]*/'';
+		var msuuidcheckTime = /*[[${msuuidcheckTime}]]*/'';
+		var waitOTPsecInterval;
+
+		$(function() {
+			doOTPWaitTime();
+		});
+
+		function doOTPWaitTime() {
+
+			var now = new Date().getTime();
+			var diff = Math.round(((msuuidcheckTime + 120000) - now) / 1000);
+			console.log(diff);
+			if(diff > 0) {
+				$('#resend').addClass("false");
+				$('#resend').prop('disabled', true);
+				$('#resendOtpText').attr('data-time',diff);
+				waitOTPsecInterval = setInterval(function () {
+					checkOTPWaitTime();
+				}, 1000);
+			} else {
+				$('#resend').removeClass("false");
+				$('#resend').prop('disabled', false);
+			}
+		}
+
+		function checkOTPWaitTime(){
+			var waitsec = parseInt($('#resendOtpText').attr('data-time'));
+			waitsec =  parseInt(waitsec);
+			if(waitsec==0){
+				$('#resend').removeClass("false");
+				$('#resend').prop('disabled', false);
+				$('#resendOtpText').parent().hide();
+				clearInterval(waitOTPsecInterval);
+			}else{
+				$('#resendOtpText').parent().show();
+				$('#resendOtpText').empty().append('已發送驗證碼，請於 2 分鐘內輸入驗證碼<br> 2 分鐘後才能再次重新發送新驗證碼('+waitsec+'秒)');
+				waitsec = waitsec - 1;
+				$('#resendOtpText').attr('data-time',waitsec)
+			}
+		}
+
+		function resend() {
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/opt/resend',
+				loadSpin : true,
+				success : function(resp) {
+					if (resp.code < 0) {
+						showPopMessage('重新發送驗證碼失敗！');
+						return;
+					}
+					var member = resp.data;
+					if(member.logMemberSession.msuuidcheck != null) {
+						showPopMessage('已重新發送驗證碼！');
+						msuuidcheck = member.logMemberSession.msuuidcheck;
+						msuuidcheckTime = member.logMemberSession.msuuidcheckTime;
+						doOTPWaitTime();
+					} else {
+						showPopMessage('重新發送驗證碼失敗！');
+					}
+				},
+				error : function() {
+					showPopMessage('重新發送驗證碼失敗！');
+				}
+			});
+		}
+
+		function confirm() {
+			var mscheckCode = $('#mscheckCode').val();
+
+			if(mscheckCode == '') {
+				showPopMessage('請輸入驗證碼！');
+				return;
+			}
+
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/opt/check',
+				loadSpin : true,
+				data : {
+					msuuidcheck: msuuidcheck,
+					mscheckCode: $('#mscheckCode').val()
+				},
+				success : function(resp) {
+					if (resp.code < 0) {
+						showPopMessage('驗證失敗！');
+						return;
+					}
+					window.location.href = /*[[@{/sp/member}]]*/'';
+				},
+				error : function() {
+					showPopMessage('驗證失敗！');
+				}
+			});
+		}
+	</script>
+</body>
+</html>

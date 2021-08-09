@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+  <g id="Group_7135" data-name="Group 7135" transform="translate(-5885 -2029)">
+    <g id="Group_7127" data-name="Group 7127">
+      <rect id="Rectangle_4354" data-name="Rectangle 4354" width="30" height="30" transform="translate(5885 2029)" fill="none"/>
+      <g id="credit-card" transform="translate(5889 2037)">
+        <g id="Group_7102" data-name="Group 7102" transform="translate(0 5.452)">
+          <g id="Group_7101" data-name="Group 7101" transform="translate(0 0)">
+            <path id="Path_13975" data-name="Path 13975" d="M21.353,213.333H.454a.429.429,0,0,0-.454.454v6.361a2.25,2.25,0,0,0,2.272,2.272H19.536a2.25,2.25,0,0,0,2.272-2.272v-6.361A.429.429,0,0,0,21.353,213.333ZM3.18,216.968H6.815a.454.454,0,1,1,0,.909H3.18a.454.454,0,1,1,0-.909Zm6.361,2.726H3.18a.454.454,0,0,1,0-.909H9.541a.454.454,0,0,1,0,.909Zm7.724,0a1.535,1.535,0,0,1-.909-.273,1.535,1.535,0,0,1-.909.273,1.817,1.817,0,0,1,0-3.635,1.535,1.535,0,0,1,.909.273,1.535,1.535,0,0,1,.909-.273,1.817,1.817,0,0,1,0,3.635Z" transform="translate(0 -213.333)" fill="#db343a"/>
+          </g>
+        </g>
+        <g id="Group_7104" data-name="Group 7104" transform="translate(0 0)">
+          <g id="Group_7103" data-name="Group 7103">
+            <path id="Path_13976" data-name="Path 13976" d="M19.536,85.333H2.272A2.25,2.25,0,0,0,0,87.6v.909a.429.429,0,0,0,.454.454h20.9a.429.429,0,0,0,.454-.454V87.6A2.25,2.25,0,0,0,19.536,85.333Z" transform="translate(0 -85.333)" fill="#db343a"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

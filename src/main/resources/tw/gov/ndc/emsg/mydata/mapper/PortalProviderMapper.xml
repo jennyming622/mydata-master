@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalProviderMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalProvider">
+    <id column="provider_id" jdbcType="INTEGER" property="providerId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="telphone" jdbcType="VARCHAR" property="telphone" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="email" jdbcType="VARCHAR" property="email" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="contact_info" jdbcType="VARCHAR" property="contactInfo" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="egov_acc" jdbcType="VARCHAR" property="egovAcc" />
+    <result column="apply_name" jdbcType="VARCHAR" property="applyName" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="show_all" jdbcType="INTEGER" property="showAll" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="cuser" jdbcType="VARCHAR" property="cuser" />
+    <result column="uuser" jdbcType="VARCHAR" property="uuser" />
+    <result column="sp_agree_time" jdbcType="TIMESTAMP" property="spAgreeTime" />
+    <result column="dp_agree_time" jdbcType="TIMESTAMP" property="dpAgreeTime" />
+    <result column="oid" jdbcType="VARCHAR" property="oid" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    provider_id, name, address, telphone, email, contact_info, status, egov_acc, apply_name, 
+    show_all, ctime, utime, cuser, uuser, sp_agree_time, dp_agree_time, oid, type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_provider
+    where 1=1
+    <if test="name != null">
+      and name like '%'||#{name,jdbcType=VARCHAR}||'%'
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_provider
+    where provider_id = #{providerId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_provider
+    where provider_id = #{providerId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalProvider">
+    insert into portal_provider (provider_id, name, address, 
+      telphone, email, contact_info, 
+      status, egov_acc, apply_name, 
+      show_all, ctime, utime, 
+      cuser, uuser, sp_agree_time, 
+      dp_agree_time, oid, type)
+    values (#{providerId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{telphone,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, #{contactInfo,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{egovAcc,jdbcType=VARCHAR}, #{applyName,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{showAll,jdbcType=INTEGER}, #{ctime,jdbcType=TIMESTAMP}, #{utime,jdbcType=TIMESTAMP}, 
+      #{cuser,jdbcType=VARCHAR}, #{uuser,jdbcType=VARCHAR}, #{spAgreeTime,jdbcType=TIMESTAMP}, 
+      #{dpAgreeTime,jdbcType=TIMESTAMP}, #{oid,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalProvider">
+    insert into portal_provider
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="providerId != null">
+        provider_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="telphone != null">
+        telphone,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="contactInfo != null">
+        contact_info,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="egovAcc != null">
+        egov_acc,
+      </if>
+      <if test="applyName != null">
+        apply_name,
+      </if>
+      <if test="showAll != null">
+        show_all,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="utime != null">
+        utime,
+      </if>
+      <if test="cuser != null">
+        cuser,
+      </if>
+      <if test="uuser != null">
+        uuser,
+      </if>
+      <if test="spAgreeTime != null">
+        sp_agree_time,
+      </if>
+      <if test="dpAgreeTime != null">
+        dp_agree_time,
+      </if>
+      <if test="oid != null">
+        oid,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="providerId != null">
+        #{providerId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null">
+        #{telphone,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="contactInfo != null">
+        #{contactInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="egovAcc != null">
+        #{egovAcc,jdbcType=VARCHAR},
+      </if>
+      <if test="applyName != null">
+        #{applyName,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="showAll != null">
+        #{showAll,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="utime != null">
+        #{utime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cuser != null">
+        #{cuser,jdbcType=VARCHAR},
+      </if>
+      <if test="uuser != null">
+        #{uuser,jdbcType=VARCHAR},
+      </if>
+      <if test="spAgreeTime != null">
+        #{spAgreeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dpAgreeTime != null">
+        #{dpAgreeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oid != null">
+        #{oid,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalProvider">
+    update portal_provider
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null">
+        telphone = #{telphone,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="contactInfo != null">
+        contact_info = #{contactInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="egovAcc != null">
+        egov_acc = #{egovAcc,jdbcType=VARCHAR},
+      </if>
+      <if test="applyName != null">
+        apply_name = #{applyName,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="showAll != null">
+        show_all = #{showAll,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="utime != null">
+        utime = #{utime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cuser != null">
+        cuser = #{cuser,jdbcType=VARCHAR},
+      </if>
+      <if test="uuser != null">
+        uuser = #{uuser,jdbcType=VARCHAR},
+      </if>
+      <if test="spAgreeTime != null">
+        sp_agree_time = #{spAgreeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dpAgreeTime != null">
+        dp_agree_time = #{dpAgreeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oid != null">
+        oid = #{oid,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+    </set>
+    where provider_id = #{providerId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalProvider">
+    update portal_provider
+    set name = #{name,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      telphone = #{telphone,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      email = #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      contact_info = #{contactInfo,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      egov_acc = #{egovAcc,jdbcType=VARCHAR},
+      apply_name = #{applyName,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      show_all = #{showAll,jdbcType=INTEGER},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      utime = #{utime,jdbcType=TIMESTAMP},
+      cuser = #{cuser,jdbcType=VARCHAR},
+      uuser = #{uuser,jdbcType=VARCHAR},
+      sp_agree_time = #{spAgreeTime,jdbcType=TIMESTAMP},
+      dp_agree_time = #{dpAgreeTime,jdbcType=TIMESTAMP},
+      oid = #{oid,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER}
+    where provider_id = #{providerId,jdbcType=INTEGER}
+  </update>
+</mapper>

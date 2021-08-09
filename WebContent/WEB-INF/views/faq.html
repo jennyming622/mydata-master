@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<title>MyData | 常見問題</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<style type="text/css">
+    .faq-page ol ol { counter-reset: item }
+    .faq-page ol ol li { display: block ; counter-increment: item; }
+    .faq-page ol ol li:before { content: " ("counter(item,decimal)") "; }
+    .learning-wrap .fic-alert {top: -185px;}
+    .learning-wrap .fch-alert {top: -165px;}
+    .learning-wrap .fcs-alert {top: -235px;}
+</style>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item">
+				<a href="#" th:href="@{/}" title="回到MyData首頁">
+					<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">常見問題</li>
+		</ol>
+	</nav>
+
+	<div class="content-wrap landing-page faq-page ">
+		<section>
+			<div class="title-wrap">
+				<h2>
+					服務面
+					<hr>
+				</h2>
+			</div>
+			<div id="fag collaspe-wrapper">
+				<!-- 卡片展開時，在 Class 'card' 旁加上 'show' -->
+				<div id="card1" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list1"
+						title="何謂個人化資料自主運用(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q1：何謂個人化資料自主運用(MyData)？</h3> <i
+							class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list1" class="collapse" data-parent="#card1">
+						<div class="card-body">
+							「個人化資料自主運用(MyData)」平臺（以下簡稱MyData平臺）以「民眾自主同意、資料安全取得」為核心理念，提供民眾多元化資料下載、線上服務及臨櫃服務，讓原本就屬於民眾的資料，重新回歸於民，透過本人單次身分驗證及線上同意，便可在本平臺中取得政府機關單位所保存之個人資料，並可單次即時將這些資料提供給政府機關或您信賴的企業使用。
+						</div>
+					</div>
+				</div>
+				<div id="card2" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list2"
+						title="MyData平臺提供哪些服務(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q2：MyData平臺提供哪些服務？</h3> <i
+							class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list2" class="collapse" data-parent="#card2">
+						<div class="card-body">
+							<ol>
+								本平臺透過單次身分驗證及線上同意機制，打造精準化個人服務，目前提供3種服務模式如下：
+								<li><strong>資料下載：</strong>您可透過平臺經身分驗證後自行下載個人資料，包括下載個人戶籍、戶政國民身分證影像、地籍及實價、勞保投保、財產、個人所得、車駕籍等資料。</li>
+								<li><strong>臨櫃服務：</strong>您除了現有攜帶相關文件資料至機關臨櫃辦理業務外，亦可透過本平臺下載該臨櫃服務所需的個人資料後產生對應條碼，將條碼交付臨櫃人員，臨櫃人員即可取得對應之個人資料並辦理後續服務，俾利您可以MyData平臺下載之個人資料數位檔案取代原須檢附之紙本查驗資料，以達便民及無紙化服務目標。</li>
+								<li><strong>線上服務：</strong>您可於本平臺將資料提供機關之個人資料下載後，單次即時同意將資料線上傳送給其他機關(構)辦理個人化服務。</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<div id="card3" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list3"
+						 title="MyData平臺如何於行動裝置操作(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q3：如何成為MyData平臺會員？</h3> <i
+								class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list3" class="collapse" data-parent="#card3">
+						<div class="card-body">
+							您可於MyData平臺右上方點選「<a class="link" href="javascript:toLogin();">前往會員專區</a>」，完成身分驗證後即可成為會員；或是完成本平臺三項服務(資料下載、臨櫃服務、線上服務)之一後，即可成為本平臺會員。
+							<br>
+							成為會員或首次使用MyData平臺服務須透過雙重身分驗證，準備事項如下：
+							<ol>
+								<li>第一重身分驗證(下列方式擇一即可)：
+									<ol>
+										<li>自然人憑證/工商憑證：請備妥<a class="link" href="https://moica.nat.gov.tw/faq_in_c_18_1.html" target="_blank" title="自然人憑證(另開新頁)">自然人憑證</a>或<a class="link" href="https://moeacaweb.nat.gov.tw/MoeaeeWeb/apply/apply_1_1.aspx" target="_blank" title="工商憑證(另開新頁)">工商憑證</a>卡片、晶片讀卡機，並安裝<a class="link" href="https://moica.nat.gov.tw/download_1.html" target="_blank" title="HiCOS卡片管理工具(另開新頁)">HiCOS卡片管理工具</a>。</li>
+										<li>臺灣行動身分識別(簡稱TW FidO)行動驗證：首次使用請備妥<a class="link" href="https://moica.nat.gov.tw/faq_in_c_18_1.html" target="_blank" title="自然人憑證(另開新頁)">自然人憑證</a>、晶片讀卡機及<a class="link" href="https://fido.moi.gov.tw/qa" target="_blank" title="支援生物辨識之行動裝置(另開新頁)">支援生物辨識之行動裝置</a>後，依據<a class="link" href="https://fido.moi.gov.tw" target="_blank" title="臺灣行動身分識別網站(另開新頁)">臺灣行動身分識別網站</a>說明，完成註冊與綁定自然人憑證作業。</li>
+										<li>晶片金融卡
+											<div class="learning-wrap inline" style="margin-left:-5px;margin-right:-5px;">
+												<div class="absolute-center shadow-sm fic-alert" style="width: 264px">
+													<p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援銀行列表</p>
+													<div>臺灣銀行、臺灣土地銀行、合作金庫商業銀行、第一商業銀行、華南商業銀行、彰化商業銀行、上海商業儲蓄銀行、台北富邦商業銀行、國泰世華商業銀行、兆豐國際商業銀行、王道商業銀行、臺灣中小企業銀行、臺灣新光商業銀行、聯邦商業銀行、遠東國際商業銀行、元大商業銀行、永豐商業銀行、凱基商業銀行、台新國際商業銀行、日盛國際商業銀行、中國信託商業銀行。</div>
+													<div class="twingle-down"></div>
+												</div>
+												<button class="btn" title="晶片金融卡支援銀行列表說明" style="background-color: white; margin-bottom: 10px;" onclick="javascript:showLearning(this);">
+													<!-- <i class="bg-img"></i> -->
+													<img src="/resources/dist/image/faq-mini-yellow.svg" th:src="@{/resources/dist/image/faq-mini-yellow.svg}" alt="前往說明圖">
+												</button>
+											</div>
+										、硬體金融憑證
+											<div class="learning-wrap inline" style="margin-left:-5px;margin-right:-5px;">
+												<div class="absolute-center shadow-sm fch-alert" style="width: 264px">
+													<p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援銀行列表</p>
+													<div>玉山銀行、日商三菱日聯銀行、日盛國際商業銀行、王道商業銀行、台中商業銀行、永豐商業銀行、兆豐國際商業銀行、合作金庫商業銀行、京城商業銀行、板信商業銀行、國泰世華銀行、華泰商業銀行、陽信商業銀行、滙豐(台灣)商業銀行、臺灣土地銀行、臺灣新光商業銀行、臺灣銀行、聯邦商業銀行。</div>
+													<div class="twingle-down"></div>
+												</div>
+												<button class="btn" title="硬體金融憑證支援銀行列表說明" style="background-color: white; margin-bottom: 10px;" onclick="javascript:showLearning(this);">
+													<!-- <i class="bg-img"></i> -->
+													<img src="/resources/dist/image/faq-mini-yellow.svg" th:src="@{/resources/dist/image/faq-mini-yellow.svg}" alt="前往說明圖">
+												</button>
+											</div>
+										：請備妥晶片金融卡或硬體金融憑證、晶片讀卡機，並請依照您的作業系統版本(<a class="link" th:href="@{/resources/dist/twca/AgentSetup.pkg}" target="_blank" title="Mac版TWCA金融憑證元件.pkg">Mac OS</a>；<a class="link" th:href="@{/resources/dist/twca/AgentSetup.exe}" target="_blank" title="Windows版TWCA金融憑證元件.exe">Windows</a>)選擇元件安裝檔下載安裝元件，首次使用此驗證方式完成驗證後，需再使用雙證件驗證完成驗證。</li>
+										<li>健保卡：請備妥健保卡、晶片讀卡機，並請依照您的作業系統版本選擇元件安裝檔下載<a class="link" href="https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/mEventesting.htm" target="_blank" title="安裝元件(另開新頁)">安裝元件</a>，請詳<a class="link" target="_blank" href="https://cloudicweb.nhi.gov.tw/cloudic/system/mlogin.aspx" title="健保卡網路服務註冊使用說明(另開新頁)">健保卡網路服務註冊使用說明</a>。</li>
+										<li>軟體金融憑證
+											<div class="learning-wrap inline" style="margin-left:-5px;margin-right:-5px;">
+												<div class="absolute-center shadow-sm fcs-alert" style="width: 264px">
+													<p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援金融機構列表</p>
+													<div>大展證券、大慶證券、元大證券金融、元富證券、日盛證券、台中銀證券、台新綜合證券、台灣土地銀行證券部、永全證券、永興證券、永豐金證券、玉山綜合證券、兆豐證券、光和證券、合作金庫證券、宏遠證券、亞東證券、致和證券、國泰綜合證券、國票綜合證券、康和綜合證券、第一金證、統一綜合證券、凱基證券、富邦綜合證券、犇亞證券網路公司、華南永昌綜合證券、陽信證券、新百王證券、群益金鼎證券、福邦證券、福勝證券、臺銀綜合證券、臺灣中小企業銀行證券部、遠智證券、德信綜合證券、聯邦商業銀行證券部。</div>
+													<div class="twingle-down"></div>
+												</div>
+												<button class="btn" title="軟體金融憑證支援金融機構列表說明" style="background-color: white; margin-bottom: 10px;" onclick="javascript:showLearning(this);">
+													<!-- <i class="bg-img"></i> -->
+													<img src="/resources/dist/image/faq-mini-yellow.svg" th:src="@{/resources/dist/image/faq-mini-yellow.svg}" alt="前往說明圖">
+												</button>
+											</div>
+										：請備妥軟體金融憑證，並請依照您的作業系統版本(<a class="link" th:href="@{/resources/dist/twca/AgentSetup.pkg}" target="_blank" title="Mac版TWCA金融憑證元件.pkg">Mac OS</a>；<a class="link" th:href="@{/resources/dist/twca/AgentSetup.exe}" target="_blank" title="Windows版TWCA金融憑證元件.exe">Windows</a>)選擇元件安裝檔下載安裝元件，選擇軟體憑證檔案完成驗證。</li>
+										<li>雙證件驗證(無實體卡)：健保卡卡號
+											<div class="learning-wrap inline" style="margin-left:-5px;margin-right:-5px;">
+												<div class="absolute-center shadow-sm" style="width: 264px">
+													<p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">健保卡卡號位置</p>
+													<img src="./images/h-number.png" th:src="@{/resources/dist/image/h-number.png}" alt="在您的健保卡正面的左下方，可找到健保卡卡號">
+													<div class="twingle-down"></div>
+												</div>
+												<button class="btn" title="健保卡卡號位置說明" style="background-color: white; margin-bottom: 10px;" onclick="javascript:showLearning(this);">
+													<!-- <i class="bg-img"></i> -->
+													<img src="/resources/dist/image/faq-mini-yellow.svg" th:src="@{/resources/dist/image/faq-mini-yellow.svg}" alt="前往說明圖">
+												</button>
+											</div>
+											與設籍戶口名簿戶號
+											<div class="learning-wrap inline home-number" style="margin-left:-5px;margin-right:-5px;">
+												<div class="absolute-center shadow-sm">
+													<p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">戶口名簿戶號位置</p>
+													<img src="./images/home-number.png" th:src="@{/resources/dist/image/home-number.png}" alt="在您的戶口名簿左側，可找到名為戶號的欄位">
+													<div class="twingle-down"></div>
+												</div>
+												<button class="btn" title="戶口名簿戶號位置說明" style="background-color: white; margin-bottom: 10px;" onclick="javascript:showLearning(this);">
+													<!-- <i class="bg-img"></i> -->
+													<img src="/resources/dist/image/faq-mini-yellow.svg" th:src="@{/resources/dist/image/faq-mini-yellow.svg}" alt="前往說明圖">
+												</button>
+											</div>
+										</li>
+									</ol>
+								</li>
+								<li>第二重身分驗證(下列方式擇一即可)：
+									<ol>
+										<li>由系統依據第一重身分驗證選擇後，自動判斷可選擇之第二重驗證項目，包含：自然人憑證、TW FidO、健保卡、雙證件、晶片金融卡、軟硬體金融憑證。</li>
+										<li>行動電話：須為登記為本人(即申請會員者)之行動電話門號(親子卡、預付卡、外國人、企業門號、虛擬行動網路業者申請之門號無法使用)，待系統驗證通過後，再依系統指示完成註冊流程即可。</li>
+									</ol>
+								</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<div class="title-wrap mt-5">
+					<h2>
+						操作面
+						<hr>
+					</h2>
+				</div>
+				<div id="card5" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list5"
+						title="如何進行登入與驗證(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q1：如何查看我的個人資料與已下載之個人資料？</h3> <i class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list5" class="collapse" data-parent="#card5">
+						<div class="card-body">
+							您可於MyData平臺右上方點選「<a class="link" href="javascript:toLogin();">前往會員專區</a>」，完成身分驗證後即可查看資料。進入會員專區分之驗證方式分為「首次使用(非會員)」與「會員」兩種情況：
+			              <ol>
+			                <li>
+								「首次使用(非會員)」 請參考 <a id="open-card3" class="link" href="javascript:void(0);">「常見問題 / 服務面 / Q3如何成為MyData平臺會員」</a>。
+			                </li>
+			                <li>
+								若為「會員」可使用「動態密碼」驗證方式，透過手機簡訊或電子郵件方式進行驗證。<br>進入會員專區後，您可修改基本資料、查看使用紀錄，以及取用資料條碼
+			                  <ol>
+			                    <li>
+									基本資料：身分證字號與生日無法修改，可修正姓名與聯絡方式。
+			                    </li>
+			                    <li>
+									使用紀錄：點選後將顯示您曾下載過之個人資料項目與操作日期，展開後亦可查看詳細資訊，如：下載時間、類別及說明等。
+			                    </li>
+			                    <li>
+									資料條碼：點選欲下載之個人資料項目列，展開後即可線上預覽檔案、轉存至您的電腦或行動裝置，或將資料條碼提供給臨櫃核驗使用。
+			                    </li>
+			                  </ol>
+			                </li>
+							  由MyData平臺下載的檔案皆為壓縮檔，打開後可點選PDF或CSV檔查看您的個人資料，如開啟檔案需輸入密碼，則為個人身分證字號（第一碼英文大寫）。
+			              </ol>
+			            </div>
+					</div>
+				</div>
+				<div id="card4" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list4"
+						title="如何使用MyData線上服務(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q2：如何使用MyData平臺「線上服務」？</h3> <i
+							class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list4" class="collapse" data-parent="#card4">
+						<div class="card-body">
+							MyData平臺線上服務有兩種使用方式：
+			              <ol>
+			                <li>於本平臺功能項中點選「線上服務」，連結到服務提供者(機關/機構)的網站選擇指定服務頁面，輸入服務提供者(機關/機構)所需資料後，再經MyData平臺單次身分驗證與線上同意授權機制，取得個人資料後傳送給服務提供者進行個人化服務線上申辦。</li>
+			                <li>直接由服務提供者的網站選擇服務頁面，輸入服務提供者(機關/機構)所需資料後，再經MyData平臺單次身分驗證與線上同意授權機制，取得單次即時個人資料後傳送給服務提供者進行個人化線上申辦。</li>
+			              </ol>
+			            </div>
+					</div>
+				</div>
+				<div id="card10" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list10"
+						title="如何使用MyData進行臨櫃核驗(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q3：如何使用MyData平臺「臨櫃服務」？</h3> <i
+							class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list10" class="collapse" data-parent="#card10">
+						<div class="card-body">
+							使用MyData平臺進行臨櫃服務有兩種方式：
+							<ol>
+								<li>
+									點選「資料下載」並依流程完成資料下載後，您可點選「前往資料條碼區」或右上方並點選「會員專區/資料條碼」，即可瀏覽資料對應之條碼，條碼20分鐘內有效，過期後可點選「手動更新條碼」產生成新條碼。
+								</li>
+								<li>
+									點選「臨櫃服務」，選擇欲辦理的服務項目，並依流程完成資料下載後，您可點選「前往資料條碼區」或右上方並點選「會員專區/資料條碼」，即可瀏覽資料對應之條碼，條碼20分鐘內有效，過期後可點選「手動更新條碼」產生成新條碼。
+								</li>
+								您可將條碼交付臨櫃人員，系統將會透過簡訊(或電子郵件)發送動態密碼，再將此動態密碼提供臨櫃人員，臨櫃人員即可取得該條碼對應之已下載的個人資料，並繼續辦理後續業務申辦服務，以電子檔案取化紙本證明文件。操作流程可參考
+								<a href="https://mydata.nat.gov.tw/mydataurlres/images/7_%E8%A1%8C%E5%8B%95%E8%A3%9D%E7%BD%AE%E8%87%A8%E6%AB%83%E6%9C%8D%E5%8B%99-01_20210414115903.png" class="link" target="_blank" title="如何使用行動裝置操作MyData平臺完成臨櫃核驗(另開新頁)">如何使用行動裝置操作MyData平臺完成臨櫃核驗</a>。
+							</ol>
+			            </div>
+					</div>
+				</div>
+
+				<div id="card11" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list11"
+						title="MyData平臺提供哪些身分驗證方式(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q4：MyData平臺提供哪些身分驗證方式？</h3> <i
+							class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list11" class="collapse" data-parent="#card11">
+						<div class="card-body">
+							MyData平臺上各項資料下載與線上服務之身分驗證方式，係由保存民眾個人資料的權責機關決定身分驗證方式。目前提供驗證方式如下：
+			              <ol>
+			                <li>自然人憑證/工商憑證：須每次插卡驗證。</li>
+							<li>臺灣行動身分識別(TW FidO)：須綁定自然人憑證。</li>
+							<li>晶片金融卡/硬體金融憑證：須每次插卡驗證。</li>
+			                <li>健保卡：須每次插卡驗證。</li>
+			                <li>軟體金融憑證：須每次上傳憑證驗證。</li>
+			                <li>雙證件驗證(無實體卡)：使用身分證字號，搭配健保卡卡號＋設籍戶口名簿戶號。</li>
+			              </ol>
+			              <img class="mt-4 mb-3" src="/resources/dist/image/faq-valid-level.png" th:src= "@{/resources/dist/image/faq-valid-level.png}" alt="" width="800">
+			            </div>
+					</div>
+				</div>
+
+				<div id="card12" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list12"
+						 title="MyData平臺提供哪些身分驗證方式(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q5：MyData平臺如何於行動裝置操作？</h3> <i
+								class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list12" class="collapse" data-parent="#card12">
+						<div class="card-body">
+							<div class="card-body">
+								因本平臺身分驗證採用「臺灣行動身分識別(簡稱TW FidO)」機制，若欲透過行動裝置於MyData平臺取得個人資料，須事先於行動裝置下載TW FidO APP並使用「自然人憑證」綁定手機，以便後續行動裝置操作，詳細註冊與綁定作業，請參閱<a class="link" href="https://fido.moi.gov.tw/qa" target="_blank" title="臺灣行動身分識別網站(另開新頁)">臺灣行動身分識別網站</a>說明，本平臺行動裝置操作流程請參考
+								<a href="https://mydata.nat.gov.tw/mydataurlres/images/6_%E8%A1%8C%E5%8B%95%E8%A3%9D%E7%BD%AE%E5%80%8B%E4%BA%BA%E4%B8%8B%E8%BC%89-01_20210414115721.png" class="link" target="_blank" title="如何使用行動裝置操作MyData平臺下載個人資料(另開新頁)">如何使用行動裝置操作MyData平臺下載個人資料</a>。
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="card13" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list13" title="MyData平臺支援那些銀行之晶片金融卡與軟硬體憑證(新增)(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q6：MyData平臺支援哪些銀行之晶片金融卡與軟硬體憑證？</h3> <i class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list13" class="collapse" data-parent="#card13">
+						<div class="card-body">
+							<div class="card-body">
+								<ol>
+									<li>晶片金融卡</li>
+									<div class="container-ml about-us landing-page">
+										<section>
+											<table width="100%" style="table-layout:fixed">
+												<thead>
+													<tr>
+														<th colspan="3" id="ficsup">銀行名稱</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td style="white-space: normal;" headers="ficsup">臺灣銀行</td>
+														<td headers="ficsup">臺灣土地銀行</td>
+														<td headers="ficsup">合作金庫商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="ficsup">第一商業銀行</td>
+														<td headers="ficsup">華南商業銀行</td>
+														<td headers="ficsup">彰化商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="ficsup">上海商業儲蓄銀行</td>
+														<td headers="ficsup">台北富邦商業銀行</td>
+														<td headers="ficsup">國泰世華商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="ficsup">兆豐國際商業銀行</td>
+														<td headers="ficsup">王道商業銀行</td>
+														<td headers="ficsup">臺灣中小企業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="ficsup">臺灣新光商業銀行</td>
+														<td headers="ficsup">聯邦商業銀行</td>
+														<td headers="ficsup">遠東國際商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="ficsup">元大商業銀行</td>
+														<td headers="ficsup">永豐商業銀行</td>
+														<td headers="ficsup">凱基商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="ficsup">台新國際商業銀行</td>
+														<td headers="ficsup">日盛國際商業銀行</td>
+														<td headers="ficsup">中國信託商業銀行</td>
+													</tr>
+												</tbody>
+											</table>
+										</section>
+									</div>
+									<br>
+									<li>硬體金融憑證</li>
+									<div class="container-ml about-us landing-page">
+										<section>
+											<table width="100%" style="table-layout:fixed">
+												<thead>
+													<tr>
+														<th colspan="3" id="fchsup">銀行名稱</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td style="white-space: normal;" headers="fchsup">玉山銀行</td>
+														<td headers="fchsup">日商三菱日聯銀行</td>
+														<td headers="fchsup">日盛國際商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fchsup">王道商業銀行</td>
+														<td headers="fchsup">台中商業銀行</td>
+														<td headers="fchsup">永豐商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fchsup">兆豐國際商業銀行</td>
+														<td headers="fchsup">合作金庫商業銀行</td>
+														<td headers="fchsup">京城商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fchsup">板信商業銀行</td>
+														<td headers="fchsup">國泰世華銀行</td>
+														<td headers="fchsup">華泰商業銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fchsup">陽信商業銀行</td>
+														<td headers="fchsup">滙豐(台灣)商業銀行</td>
+														<td headers="fchsup">臺灣土地銀行</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fchsup">臺灣新光商業銀行</td>
+														<td headers="fchsup">臺灣銀行</td>
+														<td headers="fchsup">聯邦商業銀行</td>
+													</tr>
+												</tbody>
+											</table>
+										</section>
+									</div>
+									<br>
+									<li>軟體金融憑證</li>
+									<div class="container-ml about-us landing-page">
+										<section>
+											<table width="100%" style="table-layout:fixed">
+												<thead>
+													<tr>
+														<th colspan="3" id="fcssup">金融機構名稱</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">大展證券</td>
+														<td headers="fcssup">大慶證券</td>
+														<td headers="fcssup">元大證券金融</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">元富證券</td>
+														<td headers="fcssup">日盛證券</td>
+														<td headers="fcssup">台中銀證券</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">台新綜合證券</td>
+														<td headers="fcssup">台灣土地銀行證券部</td>
+														<td headers="fcssup">永全證券</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">永興證券</td>
+														<td headers="fcssup">永豐金證券</td>
+														<td headers="fcssup">玉山綜合證券</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">兆豐證券</td>
+														<td headers="fcssup">光和證券</td>
+														<td headers="fcssup">合作金庫證券</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">宏遠證券</td>
+														<td headers="fcssup">亞東證券</td>
+														<td headers="fcssup">致和證券</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">國泰綜合證券</td>
+														<td headers="fcssup">國票綜合證券</td>
+														<td headers="fcssup">第一金證</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">統一綜合證券</td>
+														<td headers="fcssup">凱基證券</td>
+														<td headers="fcssup">富邦綜合證券</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">犇亞證券網路公司</td>
+														<td headers="fcssup">華南永昌綜合證券</td>
+														<td headers="fcssup">陽信證券</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">新百王證券</td>
+														<td headers="fcssup">群益金鼎證券</td>
+														<td headers="fcssup">福邦證券</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">福勝證券</td>
+														<td headers="fcssup">臺銀綜合證券</td>
+														<td headers="fcssup">臺灣中小企業銀行證券部</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">遠智證券</td>
+														<td headers="fcssup">德信綜合證券</td>
+														<td headers="fcssup">聯邦商業銀行證券部</td>
+													</tr>
+													<tr>
+														<td style="white-space: normal;" headers="fcssup">康和綜合證券</td>
+														<td headers="fcssup"></td>
+														<td headers="fcssup"></td>
+													</tr>
+												</tbody>
+											</table>
+										</section>
+									</div>
+									<br>
+								</ol>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="title-wrap mt-5">
+					<h2>
+						資安面
+						<hr>
+					</h2>
+				</div>
+				<div id="card7" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list7"
+						title="MyData平臺有哪些資訊安全措施(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q1：MyData平臺有哪些保護個人隠私與資訊安全措施？</h3> <i
+							class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list7" class="collapse" data-parent="#card7">
+						<div class="card-body">
+							為保護個人隱私，本平臺無存留您個人資料，您授權同意下載僅單次有效，非永久同意資料取用，且您可於「會員專區/使用紀錄」查詢平臺操作與資料使用紀錄，讓您知道自己的個人資料運用流向。
+							<br>
+							同時為提昇資安防護，本平臺與機關(構)間個人資料在傳輸過程及資料檔案皆進行加密，以保護個人資料檔案，本平臺已經第三方透明與客觀稽核下通過ISO27001、ISO27701資安與隱私標準驗證，以確保平臺符合國際資訊安全標準要求，在資訊安全有嚴謹標準作業程序及規範。
+						</div>
+					</div>
+				</div>
+				<div id="card8" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list8"
+						title="MyData平臺處理個人資料依循哪些法規(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q2：MyData平臺處理個人資料依循哪些法規？</h3> <i
+							class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list8" class="collapse" data-parent="#card8">
+						<div class="card-body">
+							MyData服務平臺同意與蒐集處理遵循法規如下：
+							<ol>
+								<li>個人資料保護法第8條：蒐集個人資料時，應明確告知當事人相關事項，您可參考本平臺之<a class="link" href="member_service.html" th:href="@{/sp/servicepolicy}"> 服務條款&nbsp;</a>與<a class="link" href="privacy_policy.html" th:href="@{/sp/privacypolicy}">&nbsp;隱私權保護政策&nbsp;</a>。</li>
+								<li>個人資料保護法第15條1項第2款：對個人資料之蒐集與處理，應有特定目的並經當事人同意，本平臺係經由驗證您的身分與線上同意後，提供您個人資料自行下載或提供給第三方機關(構)進行線上服務或臨櫃服務作業。</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<div id="card9" class="card shadow-sm" onclick="javascript:toggleClass(this);">
+					<div class="card-header collapsed" data-toggle="collapse" href="#list9"
+						title="在MyData平臺中，我要如何取消同意呢(Enter展開)" tabindex="0">
+						<a class="card-link">
+							<h3>Q3：在MyData平臺中，我要如何取消同意呢？</h3> <i
+							class="fa fa-chevron-up pull-right"></i>
+						</a>
+					</div>
+					<div id="list9" class="collapse" data-parent="#card9">
+						<div class="card-body">
+							當您透過本平臺線上同意提供您的個人資料予服務提供者，以獲得金融、教育、社會福利等個人化服務，您須依服務提供者之服務條款與相關規定進行同意與取消作業。
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂"
+		data-toggle="tooltip" data-placement="left" style="display: inline;">
+		<img class="arrow-position" src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+
+
+	<script type="text/javascript" th:inline="javascript">
+		$(document).mouseup(function (e) {
+			var container =$(".learning-wrap"); // 這邊放你想要排除的區塊
+			if (!container.is(e.target) && container.has(e.target).length === 0) {
+				container.removeClass('active');
+			}
+		});
+		$(window).scroll(function() {
+			$(".learning-wrap").removeClass('active');
+		});
+
+		function showLearning(e) {
+			$(".learning-wrap").removeClass('active');
+			const elt = $(e).parent();
+			if(!elt.hasClass('active')) {
+				elt.addClass('active');
+			}
+		}
+
+		$(function(){
+			var currentid = /*[[${param.get('current')}]]*/'';
+			if(currentid!=null&&currentid!=''){
+				console.log($('#card'+currentid));
+				$('#card'+currentid).addClass('show');
+				//card-header
+				$('#card'+currentid).find('.card-header').removeClass('collapsed');
+				$('#list'+currentid).addClass('show');
+				$('#list'+currentid).attr('aria-expanded','true');
+			    $('html, body').animate({scrollTop: $('#card'+currentid).offset().top }, {duration: 100,easing: 'swing'});
+			}
+		});
+		
+		function onToggle(elem) {
+			var grandpa = elem.parentNode.parentNode;
+			//console.log(grandpa);
+			if ($(grandpa).hasClass('show'))
+				$(grandpa).removeClass('show');
+			else
+				$(grandpa).addClass('show');
+			//console.log($(grandpa).hasClass('show'));
+		}
+
+		function onTitle(elem) {
+			var arrow_down_up_url = /*[[@{/resources/dist/image/arrow_down_up.png}]]*/'';
+			var arrow_down_url = /*[[@{/resources/dist/image/arrow_down.png}]]*/'';
+			var arrow = $(elem).find('img').get(0);
+			if ($(arrow).hasClass('arrowdown')) {
+				$(arrow).removeClass('arrowdown').addClass('arrowup');
+				$(arrow).attr('src', arrow_down_up_url);
+			} else {
+				$(arrow).removeClass('arrowup').addClass('arrowdown');
+				$(arrow).attr('src', arrow_down_url);
+			}
+		}
+
+		function checkArrow(obj) {
+			if ($(obj).hasClass('show')) {
+				$(obj).removeClass('show');
+				$(obj).parent().parent().find('div.card').removeClass('show');
+			} else {
+				$(obj).addClass('show');
+				$(obj).parent().parent().find('div.card').addClass('show');
+			}
+		}
+
+		$('#open-card3').click(function(e) {
+		    e.stopPropagation();
+            $('#card3').find('div[data-toggle="collapse"]').click();
+        });
+
+		function toggleClass(obj) {
+			setTimeout(function() {
+				$('div.card').each(function() {
+					$(this).removeClass('show');
+				});
+				if ($(obj).find('div.card-header').hasClass('collapsed')) {
+					//$(obj).addClass('show');
+					$(obj).removeClass('show');
+				} else {
+					//$(obj).removeClass('show');
+					$(obj).addClass('show');
+				}
+			}, 100);
+		}
+		
+		$('div[data-toggle="collapse"]').keydown(function(e) {
+			if (e.keyCode == 13) {
+	    			$(this).trigger('click');
+	    		}
+		});
+	</script>
+</body>
+</html>

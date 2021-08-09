@@ -1,0 +1,32 @@
+<configuration>
+	
+	<property name="logdir" value="/home/mydata/logback" />
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level --- [%thread] %logger{30} : %msg %n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logdir}/mydata-prod.%d{yyyyMMdd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level --- [%thread] %logger{30} : %msg %n</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="sqllogcom" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="tw.gov.ndc.emsg" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+	
+</configuration>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.MobileIdLogMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.MobileIdLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="birthdate" jdbcType="DATE" property="birthdate" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler"/>
+    <result column="verify_no" jdbcType="VARCHAR" property="verifyNo" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, account, uid, birthdate, mobile, verify_no, version, ctime
+  </sql>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.MobileIdLog" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into mobile_id_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="birthdate != null">
+        birthdate,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="verifyNo != null">
+        verify_no,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="birthdate != null">
+        #{birthdate,jdbcType=DATE},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="verifyNo != null">
+        #{verifyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+		SELECT currval('mobile_id_log_id_seq');
+  	</selectKey>
+  </insert>
+</mapper>

@@ -1,0 +1,137 @@
+@charset "UTF-8";
+
+/* header menu and footer 首頁主選單與頁尾 */
+
+.navbar-brand.logoS {
+	width: 120px;
+	height: 120px;
+	background-repeat: no-repeat;
+   
+
+}
+
+.navbar-brand {
+    float: left;
+    padding: 0px;
+    font-size: 18px;
+    line-height: 20px;
+ 
+
+
+}
+
+.navbar-brand img{
+    margin-left: 32px;
+    margin-right:21px;
+}
+
+.navbar-default{
+    background-image: linear-gradient(to right, #007ae5 0%,#00b9d8 99%);
+    height:120px; 
+}
+
+.navbar-nav{
+   margin-top:26px;
+
+}
+
+.bcolor{
+    width: 211px;
+    height: 65px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,efefef+100 */
+background: #ffffff; /* Old browsers */
+background: -moz-linear-gradient(top, #ffffff 0%, #efefef 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #ffffff 0%,#efefef 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #ffffff 0%,#efefef 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#efefef',GradientType=0 ); /* IE6-9 */
+    margin-right: 2px;
+    border-radius: 5px;
+
+}
+
+.navbar-nav > li > a {
+    padding:0px;
+}
+
+@media (max-width: 991px) {
+	.select_size {
+		display: none;
+	}
+}
+
+#footer{
+	margin:0px auto;
+}
+
+#footer .container-fluid{
+	
+	background-color: #9E9E9E;
+	padding: 4rem;
+	padding-top: 0;
+	position: relative;
+}
+
+#footer h2, #footer h3{
+	color: var(--t2);
+}
+
+#footer h2{
+	text-align: center;
+	padding-top: 3rem;
+}
+
+#footer h3{
+	font-weight: lighter;
+}
+
+#footer li{
+	margin-left: 32%;
+}
+
+#footer ul li:first-child{
+	margin-top: 4rem;
+}
+
+#footer .footerBottom{
+	background-color: var(--t1);
+	height: 8rem;
+	padding-top: 1.7rem;
+}
+
+#footer h4{
+	color: var(--t2);
+	font-weight: lighter;
+	line-height: 1.5rem;
+}
+
+#footer .footerBottom a{
+	color: blue;
+}
+
+#footer .footerBleft{
+	padding-left: 5rem;
+}
+
+#footer .footerBright{
+	padding-right: 5rem;
+	text-align: right;
+}
+
+@media (max-width: 1500px){
+	#footer li{
+	margin-left: 25%;
+}
+}
+
+@media (max-width: 1199px){
+	#footer .footerItem0{
+	visibility: hidden;
+}
+	#footer li{
+	margin-left: auto;
+}
+	#footer hr{
+	position: absolute;
+	width: 95%;
+}
+}

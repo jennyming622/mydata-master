@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalBoxLogMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalBoxLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="box_id" jdbcType="INTEGER" property="boxId" />
+    <result column="download_sn" jdbcType="VARCHAR" property="downloadSn" />
+    <result column="verify_pwd" jdbcType="VARCHAR" property="verifyPwd" />
+    <result column="download_verify" jdbcType="VARCHAR" property="downloadVerify" />
+    <result column="provider_key" jdbcType="VARCHAR" property="providerKey" />
+    <result column="download_key" jdbcType="VARCHAR" property="downloadKey" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="stat" jdbcType="INTEGER" property="stat" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="batch_id" jdbcType="INTEGER" property="batchId" />
+    <result column="psd_id" jdbcType="INTEGER" property="psdId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, box_id, download_sn, verify_pwd, download_verify, provider_key, download_key, 
+    ctime, stat, ip, batch_id, psd_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_box_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_box_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBoxLog">
+    insert into portal_box_log (id, box_id, download_sn, 
+      verify_pwd, download_verify, provider_key, 
+      download_key, ctime, stat, 
+      ip, batch_id, psd_id)
+    values (#{id,jdbcType=INTEGER}, #{boxId,jdbcType=INTEGER}, #{downloadSn,jdbcType=VARCHAR}, 
+      #{verifyPwd,jdbcType=VARCHAR}, #{downloadVerify,jdbcType=VARCHAR}, #{providerKey,jdbcType=VARCHAR}, 
+      #{downloadKey,jdbcType=VARCHAR}, #{ctime,jdbcType=TIMESTAMP}, #{stat,jdbcType=INTEGER}, 
+      #{ip,jdbcType=VARCHAR}, #{batchId,jdbcType=INTEGER}, #{psdId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBoxLog">
+    insert into portal_box_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="boxId != null">
+        box_id,
+      </if>
+      <if test="downloadSn != null">
+        download_sn,
+      </if>
+      <if test="verifyPwd != null">
+        verify_pwd,
+      </if>
+      <if test="downloadVerify != null">
+        download_verify,
+      </if>
+      <if test="providerKey != null">
+        provider_key,
+      </if>
+      <if test="downloadKey != null">
+        download_key,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="stat != null">
+        stat,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="psdId != null">
+        psd_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="boxId != null">
+        #{boxId,jdbcType=INTEGER},
+      </if>
+      <if test="downloadSn != null">
+        #{downloadSn,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyPwd != null">
+        #{verifyPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadVerify != null">
+        #{downloadVerify,jdbcType=VARCHAR},
+      </if>
+      <if test="providerKey != null">
+        #{providerKey,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadKey != null">
+        #{downloadKey,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        #{stat,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="batchId != null">
+        #{batchId,jdbcType=INTEGER},
+      </if>
+      <if test="psdId != null">
+        #{psdId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBoxLog">
+    update portal_box_log
+    <set>
+      <if test="boxId != null">
+        box_id = #{boxId,jdbcType=INTEGER},
+      </if>
+      <if test="downloadSn != null">
+        download_sn = #{downloadSn,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyPwd != null">
+        verify_pwd = #{verifyPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadVerify != null">
+        download_verify = #{downloadVerify,jdbcType=VARCHAR},
+      </if>
+      <if test="providerKey != null">
+        provider_key = #{providerKey,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadKey != null">
+        download_key = #{downloadKey,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        stat = #{stat,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=INTEGER},
+      </if>
+      <if test="psdId != null">
+        psd_id = #{psdId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBoxLog">
+    update portal_box_log
+    set box_id = #{boxId,jdbcType=INTEGER},
+      download_sn = #{downloadSn,jdbcType=VARCHAR},
+      verify_pwd = #{verifyPwd,jdbcType=VARCHAR},
+      download_verify = #{downloadVerify,jdbcType=VARCHAR},
+      provider_key = #{providerKey,jdbcType=VARCHAR},
+      download_key = #{downloadKey,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      stat = #{stat,jdbcType=INTEGER},
+      ip = #{ip,jdbcType=VARCHAR},
+      batch_id = #{batchId,jdbcType=INTEGER},
+      psd_id = #{psdId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

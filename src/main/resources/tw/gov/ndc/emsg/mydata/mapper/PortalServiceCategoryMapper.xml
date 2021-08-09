@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalServiceCategoryMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalServiceCategory">
+    <id column="cate_id" jdbcType="INTEGER" property="cateId" />
+    <result column="cate_name" jdbcType="VARCHAR" property="cateName" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="seq" jdbcType="INTEGER" property="seq" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    cate_id, cate_name, description, parent_id, status, seq, icon
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_service_category
+    where 1=1
+    <if test="status != null">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    order by seq
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_service_category
+    where cate_id = #{cateId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_service_category
+    where cate_id = #{cateId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceCategory">
+    insert into portal_service_category (cate_id, cate_name, description, 
+      parent_id, status, seq, icon
+      )
+    values (#{cateId,jdbcType=INTEGER}, #{cateName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{seq,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceCategory">
+    insert into portal_service_category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cateId != null">
+        cate_id,
+      </if>
+      <if test="cateName != null">
+        cate_name,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cateId != null">
+        #{cateId,jdbcType=INTEGER},
+      </if>
+      <if test="cateName != null">
+        #{cateName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceCategory">
+    update portal_service_category
+    <set>
+      <if test="cateName != null">
+        cate_name = #{cateName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cate_id = #{cateId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceCategory">
+    update portal_service_category
+    set cate_name = #{cateName,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      seq = #{seq,jdbcType=INTEGER},
+      icon = #{icon,jdbcType=INTEGER}
+    where cate_id = #{cateId,jdbcType=INTEGER}
+  </update>
+</mapper>

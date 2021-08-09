@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}" th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title th:text="'MyData | '+${loginmessage}" th:if="${loginmessage!=null}">MyData | 登入成功</title>
+<title th:if="${loginmessage==null}">MyData | 登入失敗</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<link rel="stylesheet" href="css/font.css"
+	th:href="@{/resources/dist/css/font.css}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<!-- <script src="js/popper.min.js" th:src="@{/resources/dist/js/popper.min.js}"></script> -->
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+</head>
+<body style="padding: 0;">
+	<!-- 登入失敗 -->
+	<div class="fail-to-log-in-wrap log-in-wrap">
+		<img class="w-100" src="./images/fail-to-log-in.jpg" th:src="@{/resources/dist/image/fail-to-log-in.jpg}" alt="登入失敗！">
+	    <div class="text-wrap">
+	      <p class="alert" th:text="${loginmessage}" th:if="${loginmessage!=null}">登入失敗！</p>
+	      <p class="alert" th:if="${loginmessage==null}">登入失敗！</p>
+	    </div>
+		<a href="javascript:window.close();">點此關閉視窗</a>
+	</div>
+  	
+	<script type="text/javascript" th:inline="javascript">
+		setTimeout(closeWindow,3000);
+		function closeWindow(){
+			window.close();
+		}
+	</script>
+</body>
+</html>

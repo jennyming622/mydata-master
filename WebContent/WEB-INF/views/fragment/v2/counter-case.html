@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<th:block id="counter-case" th:fragment="counter-case">
+    <h5 class="text-mainred">選擇資料 </h5>
+    <th:block th:if="${#lists.size(counterSubExtList) > 1}">
+<!--        <select class="chooseData-select" onchange="javascript:changeSub();">-->
+<!--            <th:block th:each="counterSubExt : ${counterSubExtList}">-->
+<!--                <option th:value="${counterSubExt.id}" th:text="${counterSubExt.name}" th:data-agent="${counterSubExt.isOpenAgent}"></option>-->
+<!--            </th:block>-->
+<!--        </select>-->
+        <th:block th:each="counterSubExt, subStat : ${counterSubExtList}">
+            <div class="radio-wrap mr-2" >
+                <label>
+                    <input type="radio" class="radio-one"
+                           name="chooseData-select"
+                           th:value="${counterSubExt.id}"
+                           th:checked="${subStat.index == 0}"
+                           th:data-agent="${counterSubExt.isOpenAgent}"
+                           onchange="javascript:changeSub()"
+                    >
+                    <span></span>
+                    <th:block th:text="${counterSubExt.name}"></th:block>
+                </label>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block th:each="counterSubExt, subState : ${counterSubExtList}">
+        <div class="provider-data" th:id="'provider-data' + ${counterSubExt.id}"
+             th:data-id="${counterSubExt.id}" th:classappend="${subState.index == 0} ? '' : 'hidden'"
+             th:data-agent="${counterSubExt.isOpenAgent}">
+            <h5 class="text-maingreen mt-3">由MyData提供資料</h5>
+            <th:block th:each="subScopeExt : ${counterSubExt.subScopeExtList}">
+                <div class="mb-0 mt-3 cms-editor take-file-wrap provider-required" th:if="${subScopeExt.type == 'required'}">
+                    <p>必要文件</p>
+                    <ol>
+                        <th:block th:each="dp : ${subScopeExt.dpList}">
+                            <li th:text="${dp.name}" th:data-id="${dp.prId}" th:data-level="${dp.level}"></li>
+                        </th:block>
+                    </ol>
+                </div>
+                <div class="provider-choose" th:id="'provider-choose' + ${subScopeExt.id}" th:data-select-count="${subScopeExt.selectCount}" th:if="${subScopeExt.type == 'choose'}">
+                    <p>請選擇您需申辦的服務及由MyData取得之資料：<small class="alert" th:text="'選擇' + ${subScopeExt.selectCount} + '項文件'"></small></p>
+                    <div class="flex-start w-100 mt-3 flex-wrap-w">
+                        <th:block th:each="dp, dpState : ${subScopeExt.dpList}">
+                            <div class="radio-wrap mr-2" th:if="${subScopeExt.selectCount == 1}">
+                                <label>
+                                    <input type="radio" class="radio-one"
+                                           th:name="'radio-' + ${subScopeExt.id}"
+                                           th:value="'option-' + ${dp.prId}"
+                                           th:checked="${dpState.index == 0}"
+                                           th:data-id="${dp.prId}"
+                                           th:data-pcss-id="${subScopeExt.id}"
+                                           th:data-level="${dp.level}"
+                                           onchange="javascript:changeRadio(this)"
+                                    >
+                                    <span></span>
+                                    <th:block th:text="${dp.name}"></th:block>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrap" th:if="${subScopeExt.selectCount > 1}">
+                                <label>
+                                    <input type="checkbox" class="checkbox-many"
+                                           th:name="'checkBox-' + ${subScopeExt.id}"
+                                           th:value="'option-' + ${dp.prId}"
+                                           th:data-id="${dp.prId}"
+                                           th:data-pcss-id="${subScopeExt.id}"
+                                           th:data-level="${dp.level}"
+                                           onchange="javascript:changeCheckbox(this)"
+                                    >
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    <th:block th:text="${dp.name}"></th:block>
+                                </label>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+            </th:block>
+            <th:blcok th:if="${counterSubExt.preparedDocument!=null and counterSubExt.preparedDocument!=''}">
+                <h5 class="text-maingreen mt-3">需自行提供之資料</h5>
+                <div class="normal-word">
+                    <th:block th:utext="${counterSubExt.preparedDocument}"></th:block>
+                </div>
+            </th:blcok>
+        </div>
+    </th:block>
+    <hr class="bold-line" id="bold-line">
+    <p class="description secondary bold text-left mb-0 hidden" id="param-title">請輸入您想調閱的資料明細</p>
+    <th:block th:each="counterSubExt, subState : ${counterSubExtList}">
+        <div class="sub-param" th:id="'sub-param' + ${counterSubExt.id}" th:classappend="${subState.index == 0} ? '' : 'hidden'">
+            <th:block th:each="subScopeExt : ${counterSubExt.subScopeExtList}">
+                <div class="sub-provider-param" th:id="'sub-provider-param' + ${subScopeExt.id}">
+                    <th:block th:each="prTmp,iterTmp : ${subScopeExt.dpList}">
+                        <th:block th:if="${prTmp.paramList instanceof T(java.util.List)} and not ${#lists.isEmpty(prTmp.paramList)}">
+                            <th:blcok th:replace="fragment/v2/dp-param::dp-param(id = ${prTmp.prId}, paramList = ${prTmp.paramList}, showName = 'true', defaultShow = ${subScopeExt.type == 'required'}?'true':'false')"></th:blcok>
+                        </th:block>
+                    </th:block>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+</th:block>
+<th:block th:fragment="counter-case-script">
+    <script type="text/javascript" th:inline="javascript">
+        function getSubSelectId() {
+            // var id = $('.chooseData-select').find('option:selected').val();
+            // if(typeof id === 'undefined') return $('.provider-data').first().attr('data-id');
+            // return id;
+
+            var id = $('input[name=chooseData-select]:checked').val();
+            if(typeof id === 'undefined') return $('.provider-data').first().attr('data-id');
+            return id;
+        }
+
+        function isOpenAgent() {
+            //var isOpenAgent = $('.chooseData-select').find('option:selected').attr('data-agent');
+            var isOpenAgent = $('input[name=chooseData-select]:checked').attr('data-agent');
+            if(typeof isOpenAgent === 'undefined') return $('.provider-data').first().attr('data-agent');
+            return isOpenAgent;
+        }
+
+        function changeSub(obj) {
+            var pcsId = getSubSelectId();
+
+            // 顯示提供資料集
+            $('.provider-data').addClass('hidden');
+            $('#provider-data' + pcsId).removeClass('hidden');
+
+            // 顯示輸入參數
+            $('.sub-param').addClass('hidden');
+            $('#sub-param' + pcsId).removeClass('hidden');
+
+            showDpDetailTitle();
+
+            $('.download-data').addClass('hidden');
+            $('#download-data' + pcsId).removeClass('hidden');
+
+            if(isOpenAgent() == 0) {
+                $('#agentSendBtn').hide();
+                $('#agentSendMsg').hide();
+            } else {
+                $('#agentSendBtn').show();
+                $('#agentSendMsg').show();
+            }
+        }
+
+        function changeRadio(obj) {
+
+            var pcsId = getSubSelectId();
+            var $subParam = $('#sub-param' + pcsId);
+
+            var $this = $(obj);
+            var prId = $this.attr('data-id');
+            var pcssId = $this.attr('data-pcss-id');
+            $('#sub-provider-param' + pcssId).find('.data-detail-cell-wrap').addClass('hidden');
+            $subParam.find('#param' + prId).removeClass('hidden');
+
+            var pcsId = getSubSelectId();
+
+            var $downloadData = $('#download-data' + pcsId);
+
+            $('#provider-choose' + pcssId).find('input').each(function() {
+               var dataId = $(this).attr('data-id');
+                $downloadData.find('#download-resource' + dataId).addClass('hidden');
+            });
+            $downloadData.find('#download-resource' + prId).removeClass('hidden');
+
+            showDpDetailTitle();
+        }
+
+        function changeCheckbox(obj) {
+            var pcsId = getSubSelectId();
+            var $subParam = $('#sub-param' + pcsId);
+
+            var $this = $(obj);
+
+            var $choose = $this.closest('div.provider-choose');
+            var selectCount = $choose.attr('data-select-count');
+            var checkBoxCount =$choose.find('input[type="checkBox"]:checked').length;
+
+            if(checkBoxCount > selectCount) {
+                showPopMessage("只能選擇" + selectCount + "項文件");
+                var checked = $this.prop('checked');
+                $this.prop('checked', !checked);
+                return;
+            }
+
+
+            var prId = $this.attr('data-id');
+            if($subParam.find('#param' + prId).hasClass('hidden')) {
+                $subParam.find('#param' + prId).removeClass('hidden');
+            } else {
+                $subParam.find('#param' + prId).addClass('hidden');
+            }
+
+            var $downloadData = $('#download-data' + pcsId);
+
+            if($downloadData.find('#download-resource' + prId).hasClass('hidden')) {
+                $downloadData.find('#download-resource' + prId).removeClass('hidden');
+            } else {
+                $downloadData.find('#download-resource' + prId).addClass('hidden');
+            }
+
+            showDpDetailTitle();
+        }
+
+        function showDpDetailTitle() {
+            var pcsId = getSubSelectId();
+            var size = $('#sub-param'+pcsId).find('.data-detail-cell-wrap:not(.hidden)').length;
+            if(size > 0) {
+                $('#param-title').show();
+                $('#bold-line').show();
+            } else {
+                $('#param-title').hide();
+                $('#bold-line').hide();
+            }
+        }
+
+        function checkCounterDp() {
+            var pcsId = getSubSelectId();
+            var check = true;
+            var selectCount = null;
+            $('#provider-data'+pcsId).find('.provider-choose').each(function() {
+                var $this = $(this);
+                selectCount = $this.attr('data-select-count');
+                const size = $this.find('input:checked').length;
+                if(selectCount != size) {
+                    check = false;
+                    return false;
+                }
+            });
+            if(check == false) {
+                showPopMessage("須選擇" + selectCount + "項文件");
+            }
+            return check;
+        }
+
+        function checkCounterInputParam() {
+            var inputParamCheck = true;
+            var $param = null;
+            var pcsId = getSubSelectId();
+
+            $('#sub-param'+pcsId).find('.data-detail-cell-wrap:not(.hidden)').find('.param').each(function(){
+                $param = $(this);
+                var option = $(this).attr('data-option');
+                if(option=='0' && $(this).val()==''){
+                    inputParamCheck = false;
+                    return false;
+                }
+            });
+
+            if(inputParamCheck == false) {
+                var msg = $param.attr('placeholder');
+                if(msg === undefined || msg === null || msg.length == 0) {
+                    msg = $param.attr('data-msg');
+                }
+
+                showPopMessage(msg, $param);
+            }
+            return inputParamCheck;
+        }
+
+        function getScopeStr() {
+            return getScope().join(',');
+        }
+
+        function getScope() {
+            var pcsId = getSubSelectId();
+            var prIdList = [];
+
+            $('#provider-data'+pcsId).find('.provider-required li').each(function() {
+                prIdList.push($(this).attr('data-id'));
+            });
+
+            $('#provider-data'+pcsId).find('.provider-choose').each(function() {
+                var $this = $(this);
+                $this.find('input:checked').each(function() {
+                    prIdList.push($(this).attr('data-id'));
+                });
+            });
+
+            return prIdList;
+        }
+
+        function getLevel() {
+            var pcsId = getSubSelectId();
+            var level = 3;
+
+            $('#provider-data'+pcsId).find('.provider-required li').each(function() {
+                var tmpLevel = $(this).attr('data-level');
+                if(tmpLevel < level) {
+                    level = tmpLevel;
+                }
+            });
+
+            $('#provider-data'+pcsId).find('.provider-choose').each(function() {
+                var $this = $(this);
+                $this.find('input:checked').each(function() {
+                    var tmpLevel = $(this).attr('data-level');
+                    if(tmpLevel < level) {
+                        level = tmpLevel;
+                    }
+                });
+            });
+
+            return level;
+        }
+
+        function getParamValue(data) {
+            var pcsId = getSubSelectId();
+            $('#sub-param'+pcsId).find('.data-detail-cell-wrap:not(.hidden)').find('.param').each(function(){
+                var paramName = $(this).attr('name');
+                if(paramName == 'mobile') {
+                    if($(this).prop('disabled') == true) {
+                        data[paramName] = $(this).data('value');
+                    } else {
+                        data[paramName] = $(this).val();
+                    }
+                } else {
+                    data[paramName] = $(this).val();
+                }
+            });
+        }
+    </script>
+</th:block>
+</html>

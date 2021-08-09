@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:if="${_csrf}"
+          th:content="${_csrf.headerName}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>MyData | 資料條碼區</title>
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="image/smydatalogo.png"
+          th:href="@{/resources/dist/image/smydatalogo.png}">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet"
+          th:href="@{/resources/dist/css/bootstrap.css}">
+    <link href="css/style.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/dist/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.5.1.min.js"
+            th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js" th:src="@{/resources/dist/js/popper.min.js}"></script>
+    <script src="js/bootstrap.js" th:src="@{/resources/dist/js/bootstrap.js}"></script>
+    <script src="js/scrollreveal.js" th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+    <script src="jquery-barcode.js" th:src="@{/resources/dist/js/jquery-barcode.js}"></script>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+<!--======= header =======-->
+<header th:replace="fragment/header::header"></header>
+<!--======= header =======-->
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+        <li class="breadcrumb-item">
+            <a href="#" th:href="@{/}" title="回到MyData首頁">
+                <img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+            </a>
+        </li>
+        <li class="breadcrumb-item"><a href="#" th:href="@{/sp/service}">MyData服務項目</a></li>
+        <li class="breadcrumb-item active" aria-current="page">資料條碼區</li>
+    </ol>
+</nav>
+<div class="landing-page">
+    <section class="barcode-wrap text-center section-wrap pb-3">
+        <h2 class="title-wrap">資料條碼區
+        </h2>
+        <div class="description">
+            <p>若您有下載個人資料，將於本區顯示，資料集最長保存 8 小時。</p>
+        </div>
+    </section>
+</div>
+<div class="content-wrap">
+    <h3>
+        個人資料
+        <hr>
+    </h3>
+    <!-- 無資料 -->
+    <div class="no-data" th:if="${#lists.isEmpty(portalBoxExtList)}">
+        <img class="w-100" src="./images/no-data.png" th:src="@{/resources/dist/image/no-data.png}" alt="尚無資料"
+             aria-label="尚無資料">
+    </div>
+    <!-- expired -->
+    <div class="card shadow-sm barcode-wrap" onclick="javascript:toggleClass(this);" th:id="'box'+${box.id}"
+         th:each="box : ${portalBoxExtList}" th:if="${not #lists.isEmpty(portalBoxExtList)}"
+         th:classappend="${box.stat==1} ? 'expired' : ''">
+        <div class="card-header collapsed" data-toggle="collapse" href="#list1" th:href="'#list'+${box.id}"
+             aria-expanded="false">
+            <a class="card-link">
+                <th:block th:if="${box.cateId==1}">
+                    <h4 class="icon household flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==2}">
+                    <h4 class="icon land flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==3}">
+                    <h4 class="icon fiscal-tax flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==4}">
+                    <h4 class="icon business flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==5}">
+                    <h4 class="icon highway flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==6}">
+                    <h4 class="icon labor flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==7}">
+                    <h4 class="icon health-insurance flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==8}">
+                    <h4 class="icon medical flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==9}">
+                    <h4 class="icon financial flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==10}">
+                    <h4 class="icon education flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==11}">
+                    <h4 class="icon legal flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==12}">
+                    <h4 class="icon welfare flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="${box.cateId==13}">
+                    <h4 class="icon others flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <th:block th:if="!${box.cateId}">
+                    <h4 class="icon household flex-between" th:if="${box.prName}">
+                        <th:block th:text="${box.prName}">個人戶籍資料查詢</th:block>
+                        <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> -->
+                    </h4>
+                </th:block>
+                <h4 class="i-mul-data flex-between" th:if="!${box.prName}">多筆資料集下載
+                    <!-- <span th:text="${#dates.format(box.ctime, '申請時間：yyyy年MM月dd日-hh時mm分ss')}">申請時間：2019年02月26日-16時24分12秒</span> --></h4>
+                <i class="fa fa-chevron-up pull-right"></i>
+            </a>
+        </div>
+        <div id="list1" th:id="'list'+${box.id}" class="collapse" data-parent="#collaspe-wrapper" style="">
+            <div class="card-body">
+                <div style="display:none;" th:id="'box-data'+${box.id}">
+                    <h5 class="mb-2 get-data" th:id="'get-data'+${box.id}">取用資料
+                        <th:block th:if="${box.batchTime !=null and box.batchTime>0}">（預計下載時間：
+                            <th:block th:text="${box.batchTime}"></th:block>
+                            分鐘）
+                        </th:block>
+                    </h5>
+                    <div class="flex-between" th:id="'flex-between'+${box.id}">
+                        <div class="theme-btn false" inline>下載中</div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                 role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 0%"></div>
+                        </div>
+                        <span th:id="'percent'+${box.id}">0%</span>
+                    </div>
+                </div>
+                <div class="barcode-description" th:id="'barcode-description'+${box.id}">
+                    <p>請將此條碼提供給業務申辦櫃臺人員，櫃臺人員可在您下載資料８小時內，使用此條碼取得下載的資料檔案。</p>
+                    <p class="alert alert-box"><img th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">為提高資料安全性，此條碼有效時間尚餘 <span class="waitTime" th:data-time="${box.dataTime}"
+                                                                 th:start-time="${box.startTime}"
+                                                                 th:full-wait-time="${box.waitTime}"
+                                                                 th:data-id="${box.id}"></span>
+                        ，之後將再產生新條碼。</p>
+                </div>
+                <div class="row barcode-box" th:id="'barcode-box'+${box.id}">
+                    <div class="expired-mask">
+                        <div class="expired-text">
+                            <span>您的條碼已過期，請點此</span>
+                            <button class="theme-btn flex-middle barcode"
+                                    onclick="javascript:createRandomVerifyExpired(this);" th:stat="${box.stat}"
+                                    th:download-verify="${box.downloadVerify}">
+                                <p class="img">產生新條碼</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 show-lg-only"></div>
+                    <div class="col-lg-4 col-md-12 p-0">
+                        <div class="custom-barcode-area barcodeverify" th:stat="${box.stat}"
+                             th:download-verify="${box.downloadVerify}"></div>
+                        <!-- <img src="./images/barcode-list.png" th:src="@{/resources/dist/image/barcode-list.png}" class="barcode-img" alt="條碼編號："> -->
+                    </div>
+                    <div class="col-lg-4 col-md-12 flex-bottom">
+                        <button class="theme-btn-border flex-middle barcode"
+                                onclick="javascript:createRandomVerify(this);" th:stat="${box.stat}"
+                                th:download-verify="${box.downloadVerify}">
+                            <p class="img">手動更新條碼</p>
+                        </button>
+                    </div>
+                </div>
+                <!-- Button trigger modal -->
+                <ul class="card-footer w-100 bg-white p-0 mb-0" th:id="'card-footer'+${box.id}">
+                    <li class="single-data-wrap">
+                        <p class="mb-0 text-left">
+                            你可選擇下列方式使用已下載的資料檔案：<span class="alert">開啟檔案的密碼是身分證字號（英文為大寫）</span>
+                        </p>
+                        <div class="btn-download-group text-center mt-4">
+                            <button class="btn btna theme-btn-border mr-2" onclick="javascript:previewToCompany(this);"
+                                    th:box-id="${box.id}" th:data-src="@{/personal/box/prview}+'/'+${box.id}"
+                                    th:data-id="${box.prId}"
+                                    th:httpcode="${box.code}">線上預覽檔案</button>
+                            <button class="btn btna theme-btn hidden-mobile" onclick="javascript:downloadToCompanyWarning(this);"
+                                    th:box-id="${box.id}" th:data-src="@{/personal/box/download}+'/'+${box.id}"
+                                    th:data-id="${box.prId}" th:httpcode="${box.code}">轉存到我的電腦</button>
+                            <button class="btn theme-btn mr-3 hidden-desktop" onclick="javascript:downloadToCompanyWarning(this);"
+                                    th:box-id="${box.id}" th:data-src="@{/personal/box/download}+'/'+${box.id}"
+                                    th:data-id="${box.prId}" th:httpcode="${box.code}">轉存到我的手機</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Message -->
+<div id="pop-message-refresh" class="modal fade show" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-labelledby="refuseModalLabel" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+                <button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="message-text-refresh" class="modal-body">
+                如有問題請洽客服人員，
+                <br>客服電話<a href="tel:0800-009-868" title="致電Mydata客服電話">0800-009-868</a>，
+                <br>客服信箱<a href="mailto:mydata@ndc.gov.tw" class="footer_about" title="寫信至Mydata客服信箱">mydata@ndc.gov.tw</a>
+            </div>
+            <div class="modal-footer">
+                <button id="pop-message-close-btn" class="theme-btn"
+                        data-dismiss="modal" onclick="javascript:window.location.reload();">關閉
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 下載提示-->
+<div id="download-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" data-backdrop="static" data-keyboard="false"
+     style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+                <button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="download-message-text" class="modal-body">此檔案轉存後，僅供您個人參考，不得作為業務申辦佐證文件，且本平臺將立即刪除該檔案。是否仍要轉存？</div>
+            <div class="modal-footer">
+                <button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+                <button id="download-btn" class="theme-btn" data-id="" onclick="javascript:downloadToCompany(this);">
+                    確定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--線上預覽檔案提示-->
+<div id="preview-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+				<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div id="preview-message-text" class="modal-body">此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。</div>
+			<div class="modal-footer">
+				<button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+				<button id="preview-btn" class="theme-btn" data-id="" data-src="" onclick="javascript:previewToCompanyConfirmYes(this);">確定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--======= footer =======-->
+<footer th:replace="fragment/footer::footer"></footer>
+<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+   role="button" title="網頁置頂"
+   data-toggle="tooltip" data-placement="left" style="display: inline;">
+    <img class="arrow-position" src="images/top-arrow.png"
+         th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+</a>
+<!--======= end footer =======-->
+
+<script type="text/javascript" th:inline="javascript">
+	var publicKeyBase64;
+	var privatKeyBase64;
+    $(function () {
+        var settings = {
+            barWidth: 2, //bar粗細
+            barHeight: 100, //bar高度
+            fontSize: 20, //文字大小px
+        };
+        $('div.barcodeverify').each(function () {
+            var value = $(this).attr('download-verify');
+            var btype = 'code128'; //code128
+            $(this).html('').show().barcode(value, btype, settings);
+        });
+
+        $('span.waitTime').each(function () {
+            var waitsec = $(this).attr('data-time');
+            calculatorWaitTime($(this));
+            
+            var timer = setInterval(function (obj) {
+                checkWaitTime(obj);
+            }, 1000, $(this));
+            $(this).attr('data-timer', timer);
+        });
+        var boxid = /*[[${boxid}]]*/'';
+        if (boxid != null && boxid != '') {
+            //$('#box'+boxid).click();
+            //console.log($('#box' + boxid));
+            $('#box' + boxid).addClass('show');
+            //card-header
+            $('#box' + boxid).find('.card-header').removeClass('collapsed');
+            $('#list' + boxid).addClass('show');
+            $('#list' + boxid).attr('aria-expanded', 'true');
+        }
+        
+		if(typeof crypto.subtle!='undefined'){
+			createNewUserKey().then(function(key){
+				publicKeyBase64 = toPublicPem(key[0]);
+				privatKeyBase64 = toPrivatePem(key[1]);
+			});
+		}
+    });
+    
+    function calculatorWaitTime(obj) {
+        var waitsec = parseInt($(obj).attr('data-time'));
+        //var waitmin = parseInt(waitsec / 60) + 1;
+        var mm = Math.floor((waitsec / 60)).toString();
+		var ss = ((waitsec) % (60)).toString();
+		var waitmin = paddingLeft(mm, 2) + '分' + paddingLeft(ss, 2) + '秒'
+        if (waitsec == 0) {
+            $(obj).empty().append('20分00秒');
+            $(obj).parent().parent().parent().parent().parent().addClass('expired');
+        } else {
+            $(obj).empty().append(waitmin);
+            waitsec = waitsec - 1;
+            $(obj).attr('data-time', waitsec)
+        }
+    }
+
+    function checkWaitTime(obj) {
+	    	calculatorWaitTime(obj);
+	    	var boxId = $(obj).attr('data-id');
+	    	var fullwaitsec = parseInt($(obj).attr('full-wait-time'));
+        var startsec = parseInt($(obj).attr('start-time'));
+        
+        if (startsec == -1) {
+            //UNDO
+        } else if (startsec == 0) {
+            //close percent
+            $('#box-data' + boxId).hide();
+            var percent = 100;
+            var percentStr = percent + '%';
+            $('#flex-between' + boxId).find('div.progress-bar').css('width', percentStr);
+            $('#percent' + boxId).empty().append(percentStr);
+            //show card-body
+            $('#barcode-description' + boxId).show();
+            $('#barcode-box' + boxId).show();
+            $('#card-footer' + boxId).show();
+            startsec = -1;
+            $(obj).attr('start-time', startsec)
+            RiAPI.run({
+                type: 'GET',
+                url: '/rest/personal/box/status/' + boxId,
+                loadSpin: false,
+                success: function (resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        } else {
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        }
+                    } else {
+                        //成功
+                        var httpcode = resp.data.code;
+                        $(obj).parent().parent().parent().find('button.btna').attr('httpcode', httpcode);
+                    }
+                }
+            });
+        } else {
+            //close card-body
+            $('#box-data' + boxId).show();
+            var percent = parseInt((fullwaitsec - startsec) * 100 / fullwaitsec);
+            var percentStr = percent + '%';
+            //var boxMin = parseInt(startsec/60);
+            $('#flex-between' + boxId).find('div.progress-bar').css('width', percentStr);
+            $('#percent' + boxId).empty().append(percentStr);
+            //show percent
+            $('#barcode-description' + boxId).hide();
+            $('#barcode-box' + boxId).hide();
+            $('#card-footer' + boxId).hide();
+            startsec = startsec - 1;
+            $(obj).attr('start-time', startsec)
+        }
+    }
+
+    function createRandomVerify(obj) {
+        var stat = $(obj).attr('stat');
+        var p = {
+            "downloadVerify": $(obj).attr('download-verify')
+        };
+        RiAPI.run({
+            type: 'POST',
+            url: '/rest/personal/verification',
+            data: p,
+            loadSpin: true,
+            success: function (resp) {
+                if (resp.code < 0) {
+                    if(resp.code == -5) {
+                        showTimeoutMessage(resp);
+                        return;
+                    } else {
+                        $('#message-text').text(resp.text);
+                        $('#pop-message').modal('show');
+                    }
+                } else {
+                    //alert('傳送成功！');
+                    //window.location.reload();
+                    //$(obj).attr('endtimenote',resp.data.endTimeNote);
+                    $(obj).attr('download-verify', resp.data.downloadVerify);
+                    $(obj).attr('stat', resp.data.stat);
+
+                    //var endTimeNote = $(obj).attr('endtimenote');
+                    var settings = {
+                        barWidth: 2, //bar粗細
+                        barHeight: 100, //bar高度
+                        fontSize: 20, //文字大小px
+                    };
+                    var value = $(obj).attr('download-verify');
+                    var btype = 'code128'; //code128
+                    $(obj).parent().parent().parent().parent().parent().find('button.barcode').attr('download-verify', resp.data.downloadVerify);
+                    $(obj).parent().parent().parent().find('div.barcodeverify').html('').show().barcode(value, btype, settings);
+                    //$(obj).parent().parent().parent().parent().find('p.alert').empty().append(resp.data.endTimeNote);
+                    $(obj).parent().parent().parent().parent().parent().find('span.waitTime').attr('data-time', '1200');
+                    $(obj).parent().parent().parent().parent().parent().find('span.waitTime').each(function () {
+                        //setInterval(checkWaitTime($(this)), 1000);
+                        
+                        var timer = $(this).attr('data-timer');
+    					clearInterval(timer);
+    					
+    					calculatorWaitTime($(this));
+    					timer = setInterval(function (obj) {
+                            checkWaitTime(obj);
+                        }, 1000, $(this));
+                        $(this).attr('data-timer', timer);
+                    });
+                    $(obj).parent().parent().parent().parent().parent().removeClass('expired');
+                }
+            }
+        });
+    }
+
+    function createRandomVerifyExpired(obj) {
+        var stat = $(obj).attr('stat');
+        var p = {
+            "downloadVerify": $(obj).attr('download-verify')
+        };
+        RiAPI.run({
+            type: 'POST',
+            url: '/rest/personal/verification',
+            data: p,
+            loadSpin: true,
+            success: function (resp) {
+                if (resp.code < 0) {
+                    if(resp.code == -5) {
+                        showTimeoutMessage(resp);
+                        return;
+                    } else {
+                        $('#message-text').text(resp.text);
+                        $('#pop-message').modal('show');
+                    }
+                } else {
+                    //alert('傳送成功！');
+                    //window.location.reload();
+                    //$(obj).attr('endtimenote',resp.data.endTimeNote);
+                    $(obj).attr('download-verify', resp.data.downloadVerify);
+                    $(obj).attr('stat', resp.data.stat);
+
+                    //var endTimeNote = $(obj).attr('endtimenote');
+                    var settings = {
+                        barWidth: 2, //bar粗細
+                        barHeight: 100, //bar高度
+                        fontSize: 20, //文字大小px
+                    };
+                    var value = $(obj).attr('download-verify');
+                    var btype = 'code128'; //code128
+                    $(obj).parent().parent().parent().parent().parent().find('button.barcode').attr('download-verify', resp.data.downloadVerify);
+                    $(obj).parent().parent().parent().find('div.barcodeverify').html('').show().barcode(value, btype, settings);
+                    //$(obj).parent().parent().parent().parent().find('p.alert').empty().append(resp.data.endTimeNote);
+                    $(obj).parent().parent().parent().parent().parent().find('span.waitTime').attr('data-time', '1200');
+                    $(obj).parent().parent().parent().parent().parent().find('span.waitTime').each(function () {
+                        //setInterval(checkWaitTime($(this)), 1000);
+                        
+                        var timer = $(this).attr('data-timer');
+    					clearInterval(timer);
+    	
+    					calculatorWaitTime($(this));
+                        timer = setInterval(function (obj) {
+                            checkWaitTime(obj);
+                        }, 1000, $(this));
+                        $(this).attr('data-timer', timer);
+                    });
+                    $(obj).parent().parent().parent().parent().parent().parent().removeClass('expired');
+                }
+            }
+        });
+    }
+
+    function toggleClass(obj) {
+        setTimeout(function () {
+            if ($(obj).find('div.card-header').hasClass('collapsed')) {
+                //$(obj).addClass('show');
+                $(obj).removeClass('show');
+            } else {
+                //$(obj).removeClass('show');
+                $(obj).addClass('show');
+            }
+        }, 100);
+    }
+
+    //覆蓋登入
+    function openLogin(obj) {
+        clearInterval(loginWindowTimer);
+        if (loginWindow) {
+            loginWindow.close();
+        }
+        var popupWidth = 520;
+        var popupHeight = 635;
+        var xPosition = ($(window).width() - popupWidth) / 2;
+        var yPosition = ($(window).height() - popupHeight) / 2;
+        var loginUrl = /*[[@{/signin}]]*/'';
+        if (typeof obj != 'undefined' && obj != '' && obj != null) {
+            loginUrl = obj;
+        }
+        //alert(loginUrl);
+        //另開視窗
+        loginWindow = window.open(loginUrl, "LoginWindow",
+            "location=no,scrollbars=yes,resizable=yes," + "width="
+            + popupWidth + ",height=" + popupHeight + ","
+            + "left=" + xPosition + ",top=" + yPosition);
+        loginWindowTimer = setInterval(onTimerCallbackToCheckLoginWindowClosure, 500);
+    }
+
+    function onTimerCallbackToCheckLoginWindowClosure() {
+        try {
+            if (loginWindow && loginWindow.closed) {
+                RiAPI.run({
+                    type: 'POST',
+                    url: '/rest/user/info',
+                    loadSpin: true,
+                    success: function (resp) {
+                        if (resp.code < 0) {
+                            if(resp.code == -5) {
+                                showTimeoutMessage(resp);
+                                return;
+                            } else {
+                                clearInterval(loginWindowTimer);
+                            }
+                        } else {
+                            clearInterval(loginWindowTimer);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        } catch (ex) {
+            clearInterval(loginWindowTimer);
+        }
+    }
+
+    function previewToCompany(obj) {
+        var httpcode = $(obj).attr('httpcode');
+        var prId = $(obj).attr('data-id');
+        var boxId = $(obj).attr('box-id');
+        if (httpcode == '200') {
+            var url = $(obj).attr('data-src');
+            window.open(url);
+        } else if (httpcode == '204') {
+            $('#message-text').text('查無資料！');
+            $('#pop-message').modal('show');
+            //append change portal_resource_download stat=1 RiAPI
+            RiAPI.run({
+                type: 'GET',
+                url: '/rest/personal/download/changestatone/' + prId,
+                loadSpin: false,
+                success: function (resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        } else {
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        }
+                    } else {
+                        //成功
+                        $('#box' + boxId).remove();
+                    }
+                }
+            });
+        } else {
+        		//console.log('httpcode '+httpcode+' 申請失敗！');
+            //$('#message-text').text('httpcode ' + httpcode + ' 申請失敗！');
+            $('#message-text').text('資料申請失敗，請重新操作。');
+            $('#pop-message').modal('show');
+            //append change portal_resource_download stat=1 RiAPI
+            RiAPI.run({
+                type: 'GET',
+                url: '/rest/personal/download/changestatone/' + prId,
+                loadSpin: false,
+                success: function (resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        } else {
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        }
+                    } else {
+                        //成功
+                        $('#box' + boxId).remove();
+                    }
+                }
+            });
+        }
+    }
+
+//     function previewToCompanyConfirmYes(obj){
+// 		var url = $(obj).attr('data-src');
+// 		window.open(url);
+// 		$('#preview-pop-message').modal('hide');
+// 	}
+    
+    function downloadToCompany(obj) {
+        var url = $(obj).attr('data-src');
+        window.open(url);
+        $('#download-pop-message').modal('hide');
+        var returnOrgUrl = /*[[@{/sp/verification/list}]]*/'';
+        setTimeout(function () {
+            window.location.href = returnOrgUrl;
+        }, 2000);
+    }
+
+    function changeLocation(obj) {
+        var url = $(obj).attr('data-src');
+        window.location.href = url;
+    }
+
+    function downloadToCompanyWarning(obj) {
+        var httpcode = $(obj).attr('httpcode');
+        var prId = $(obj).attr('data-id');
+        var boxId = $(obj).attr('box-id');
+        if (httpcode == '200') {
+            var datasrc = $(obj).attr('data-src');
+            $('#download-btn').attr('data-src', datasrc);
+            $('#download-pop-message').modal('show');
+        } else if (httpcode == '204') {
+            $('#message-text').text('查無資料！');
+            $('#pop-message').modal('show');
+            //append change portal_resource_download stat=1 RiAPI
+            RiAPI.run({
+                type: 'GET',
+                url: '/rest/personal/download/changestatone/' + prId,
+                loadSpin: false,
+                success: function (resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        } else {
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        }
+                    } else {
+                        //成功
+                        $('#box' + boxId).remove();
+                    }
+                }
+            });
+        } else {
+    			//console.log('httpcode '+httpcode+' 申請失敗！');
+            //$('#message-text').text('httpcode ' + httpcode + ' 申請失敗！');
+            $('#message-text').text('資料申請失敗，請重新操作。');
+            $('#pop-message').modal('show');
+            //append change portal_resource_download stat=1 RiAPI
+            RiAPI.run({
+                type: 'GET',
+                url: '/rest/personal/download/changestatone/' + prId,
+                loadSpin: false,
+                success: function (resp) {
+                    if (resp.code < 0) {
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        } else {
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        }
+                    } else {
+                        //成功
+                        $('#box' + boxId).remove();
+                    }
+                }
+            });
+        }
+    }
+    
+    function paddingLeft(str,lenght){
+		if(str.length >= lenght)
+			return str;
+		else
+			return paddingLeft("0" +str,lenght);
+	}
+</script>
+</body>
+</html>

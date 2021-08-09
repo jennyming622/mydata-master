@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<title>MyData | 我想要更多</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<script src="js/creative.js" th:src="@{/resources/dist/js/creative.js}"></script>
+<script type="text/javascript" th:src="@{/RiAPI.js}"></script>
+<!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+<script src="js/functionkey.js"
+	th:src="@{/resources/dist/js/functionkey.js}"></script>
+<script src="js/r_common.js" th:src="@{/resources/dist/js/r_common.js}"></script>
+<style>
+.grecaptcha-badge{
+	visibility: hidden;
+}
+</style>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item">
+				<a href="#" th:href="@{/}" title="回到MyData首頁">
+					<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">我想要更多</li>
+		</ol>
+	</nav>
+
+	<div class="content-wrap landing-page faq-page">
+		<section class="contact-us-wrap">
+			<div class="text-center title-wrap">
+				<h2>
+					我想要更多
+					<hr>
+				</h2>
+				<div class="description text-left">
+					<p>您想要政府依民眾自主同意，釋出更多個人化資料嗎？</p>
+					<p>您可以提出您想要政府釋出的個人化資料建議，並表達您的意見。我們會依據您提供的資訊請相關機關研議。</p>
+					<p>您的寶貴建議是政府推動精準個人化服務的原動力!</p>
+				</div>
+			</div>
+			<!-- <form role="form"> -->
+				<div class="form-group mt-4">
+					<label for="name">
+						<span>姓名</span>
+						<small class="alert">(必填)</small>
+					</label>
+					<input type="text" class="form-control" id="name"
+						placeholder="請輸入您的姓名/暱稱">
+				</div>
+				<div class="form-group mt-4">
+					<label for="email">
+						<span>電子信箱</span>
+						<small class="alert">(必填)</small>
+					</label>
+					<input type="email" class="form-control" id="email"
+						placeholder="請輸入您的電子郵件">
+				</div>
+				<div class="form-group mt-4">
+					<label for="title">
+						<span>標題</span>
+						<small class="alert">(必填)</small>
+					</label>
+					<input type="text" class="form-control" id="title"
+						placeholder="請輸入標題">
+				</div>
+				<div class="form-group mt-4">
+					<label for="content">
+						<span>內文</span>
+						<small class="alert">(必填)</small>
+					</label>
+					<textarea name="content" id="content" cols="30" rows="5"
+						placeholder="請輸入內文"></textarea>
+				</div>
+				<div class="form-group mt-4">
+					<label for="captcha">
+						<span>驗證碼</span>
+						<small class="alert">(必填)</small>
+					</label>
+					<input type="text" id="captcha" name="captcha" class="form-control">
+					<img id="captchaImg" alt="captcha" src="/captcha.jpg" th:src="@{/captcha.jpg}" class="mt-1">
+                    <button class="btn p-0 speaker" title="語音播放驗證碼" onclick="javascript:captchaGoogleSounfPlay();">
+						<img th:src="@{/resources/dist/image/speaker-icon.svg}" alt="語音播放">
+					</button>
+					<a href="javascript:void(0);" class="link" onclick="javascript:refreshCaptchaImage();">
+						<small class=" link m-0 mt-3 ml-1">刷新驗證碼</small>
+					</a>
+				</div>
+				<div class="text-center mt-4">
+					<button type="submit" class="btn theme-btn"  onclick="javascript:sumitContactUs();">確定傳送</button>
+				</div>
+			<!-- </form> -->
+		</section>
+	</div>
+
+	<div id="pop-message-refresh" class="modal fade show" role="dialog" data-backdrop="static" data-keyboard="false"
+		aria-labelledby="refuseModalLabel" style="display: none;">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+					<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div id="message-text-refresh" class="modal-body">提醒訊息</div>
+				<div class="modal-footer">
+					<button id="pop-message-close-btn" class="theme-btn" data-dismiss="modal" onclick="javascript:window.location.reload();";>關閉</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂"
+		data-toggle="tooltip" data-placement="left" style="display: inline;">
+		<img class="arrow-position" src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+	<script type="text/javascript" th:inline="javascript">
+		function sumitContactUs() {
+			var name = clearString($('#name').val());
+			var email = clearString($('#email').val());
+			var title = clearString($('#title').val());
+			var content = clearString($('#content').val());
+			var captcha = $('#captcha').val();
+			//var gRecaptchaResponse = grecaptcha.getResponse();
+			//grecaptcha.reset();
+			var p = {
+				//"g-recaptcha-response" : gRecaptchaResponse,
+				"captcha" : captcha.toUpperCase(),
+				"name" : name,
+				"email" : email,
+				"title" : title,
+				"content" : content
+			};
+			
+			if (name.length > 0 && name.length <= 50  && email.length > 0 && email.length <= 100 && title.length > 0 && title.length <=100
+					&& content.length > 0 && content.length <=  1000 && captcha.length > 0) {
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/personal/contactus',
+					data : p,
+					loadSpin : true,
+					success : function(resp) {
+						if (resp.code < 0) {
+							if(resp.code == -1110) {
+								refreshCaptchaImage();
+								$('#message-text').text('圖型驗證碼不正確，請輸入正確驗證碼，謝謝');
+								$('#pop-message').modal('show');
+								focusBefore = $('#captcha');
+							} else if (resp.code == -5) {
+								showTimeoutMessage(resp);
+								return;
+							} else {
+								$('#message-text-refresh').text(resp.text);
+								$('#pop-message-refresh').modal('show');
+							} 
+							
+							//window.location.reload();
+						} else {
+							//message-text
+							$('#message-text-refresh').text('您的意見已送出，謝謝');
+							$('#pop-message-refresh').modal('show');
+							//window.location.reload();
+						}
+					}
+				});
+			} else {
+				var checkField = true;
+				if (checkField && name.length == 0) {
+					$('#message-text').text('請輸入姓名/暱稱');
+					$('#pop-message').modal('show');
+					checkField = false;
+					focusBefore = $('#name');
+				}
+				
+				if (checkField && name.length >= 50) {
+					$('#message-text').text('「姓名/暱稱」已超過50字');
+					$('#pop-message').modal('show');
+					checkField = false;
+					focusBefore = $('#name');
+				}
+				
+				if (checkField && email.length == 0) {
+					$('#message-text').text('請輸入電子郵件');
+					$('#pop-message').modal('show');
+					checkField = false;
+					focusBefore = $('#email');
+				}				
+				
+				if (checkField && email.length >= 100) {
+					$('#message-text').text('「電子郵件」已超過100字');
+					$('#pop-message').modal('show');
+					checkField = false;
+					focusBefore = $('#email');
+				}
+				
+				if (checkField && title.length == 0) {
+					$('#message-text').text('請輸入標題');
+					$('#pop-message').modal('show');
+					checkField = false;
+					focusBefore = $('#title');
+				}	
+				
+				if (checkField && title.length >= 100) {
+					$('#message-text').text('「標題」已超過50字');
+					$('#pop-message').modal('show');
+					checkField = false;
+					focusBefore = $('#title');
+				}	
+				
+				if (checkField && content.length == 0) {
+					$('#message-text').text('請輸入內文');
+					$('#pop-message').modal('show');
+					checkField = false;
+					focusBefore = $('#content');
+				}
+				
+				if (checkField && content.length >= 500) {
+					$('#message-text').text('「內文」已超過限500字');
+					$('#pop-message').modal('show');
+					checkField = false;
+					focusBefore = $('#content');
+				}
+				
+				if(checkField && captcha.length == 0){
+					//message-text
+					$('#message-text').text('請輸入驗證碼');
+					$('#pop-message').modal('show');
+					focusBefore = $('#captcha');
+				}
+			}
+		}
+		
+		
+		function doClickEnter() {
+			if (event.keyCode == 13) {
+				sumitContactUs();
+			}
+		}
+		
+		function clearString(s){ 
+		    var pattern = new RegExp("[`~!#$^&*()=|{}':;',\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]");
+		    var rs = ""; 
+		    for (var i = 0; i < s.length; i++) { 
+		        rs = rs+s.substr(i, 1).replace(pattern, ''); 
+		    } 
+		    return rs;  
+		} 		
+		
+		function showKeyPress(evt) {
+			evt = (evt) ? evt : window.event
+			return checkSpecificKey(evt.keyCode);
+		}
+		function checkSpecificKey(keyCode) {
+			var specialKey = "[`~!#$^&*()=|{}':;',\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]‘'";
+			var realkey = String.fromCharCode(keyCode);
+			var flg = false;
+			flg = (specialKey.indexOf(realkey) >= 0);
+			if (flg) {
+				return false;
+			}
+			return true;
+		}
+		document.onkeypress = showKeyPress;
+		
+		document.onpaste = function (event){
+		    if(window.event){
+		        event = window.event;
+		    }try{
+		        var the = event.srcElement;
+		        if (!((the.tagName == "input" && the.type.toLowerCase() == "text") || the.tagName == "textarea")){
+		            return false;
+		        }
+		        return true;
+		    }catch (e){
+		        return false;
+		    }
+		}
+		
+		/**
+		 * 刷新驗證碼
+		 */
+		function refreshCaptchaImage() {
+			var url = /*[[@{/captcha.jpg}]]*/"";
+			url += "?" + "ctime=" + new Date().getTime() ;
+			$('#captchaImg').attr('src', url);
+			$('#captcha').focus();
+			$('#captcha').val('');
+		}
+		
+        function captchaGoogleSounfPlay(){
+			var m = '連線失敗'; 
+			///rest/user/captchainfo
+			var p = {};
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/captchainfo',
+                data : p,
+                loadSpin : false,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //$('#message-text').text(resp.text);
+                        //$('#pop-message').modal('show');
+                    		m = '連線失敗';
+            				var msg = new SpeechSynthesisUtterance();
+            				var synth = window.speechSynthesis;
+            				setVoices();
+            				msg.voiceURI = "native";
+            				msg.volume = 1;
+            				msg.rate = 1;
+            				msg.pitch = 0.8;
+            				msg.text = m;
+            				msg.lang = 'zh-TW';
+            				speechSynthesis.speak(msg);
+                    } else {
+                        //成功
+                        m=resp.data;
+            				var msg = new SpeechSynthesisUtterance();
+            				var synth = window.speechSynthesis;
+            				setVoices();
+            				msg.voiceURI = "native";
+            				msg.volume = 1;
+            				msg.rate = 1;
+            				msg.pitch = 0.8;
+            				msg.text = m;
+            				msg.lang = 'zh-TW';
+            				speechSynthesis.speak(msg);
+                    }
+                },
+                error:function(resp) {
+                		m = '連線失敗';
+        				var msg = new SpeechSynthesisUtterance();
+        				var synth = window.speechSynthesis;
+        				setVoices();
+        				msg.voiceURI = "native";
+        				msg.volume = 1;
+        				msg.rate = 1;
+        				msg.pitch = 0.8;
+        				msg.text = m;
+        				msg.lang = 'zh-TW';
+        				speechSynthesis.speak(msg);
+                }
+            });
+        }
+        
+		function setVoices() {
+			var synth = window.speechSynthesis;
+			return new Promise((resolve, reject) => {
+				let timer;
+				timer = setInterval(() => {
+					if(synth.getVoices().length !== 0) {
+						resolve(synth.getVoices());
+						clearInterval(timer);
+					}
+				}, 10);
+			})
+		}
+	</script>
+</body>
+</html>

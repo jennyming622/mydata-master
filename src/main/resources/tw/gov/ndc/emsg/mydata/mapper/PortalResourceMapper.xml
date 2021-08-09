@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalResourceMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalResource">
+    <id column="pr_id" jdbcType="INTEGER" property="prId" />
+    <result column="resource_id" jdbcType="VARCHAR" property="resourceId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="resource_secret" jdbcType="VARCHAR" property="resourceSecret" />
+    <result column="brief" jdbcType="VARCHAR" property="brief" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="provider_id" jdbcType="INTEGER" property="providerId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="data_endpoint" jdbcType="VARCHAR" property="dataEndpoint" />
+    <result column="cate_id" jdbcType="INTEGER" property="cateId" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+    <result column="cuser" jdbcType="VARCHAR" property="cuser" />
+    <result column="uuser" jdbcType="VARCHAR" property="uuser" />
+    <result column="fields" jdbcType="VARCHAR" property="fields" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="oas_url" jdbcType="VARCHAR" property="oasUrl" />
+    <result column="web_url" jdbcType="VARCHAR" property="webUrl" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="period_unit" jdbcType="INTEGER" property="periodUnit" />
+    <result column="download_desc" jdbcType="VARCHAR" property="downloadDesc" />
+    <result column="is_ftp" jdbcType="INTEGER" property="isFtp" />
+    <result column="ftp_account" jdbcType="VARCHAR" property="ftpAccount" />
+    <result column="data_param" jdbcType="VARCHAR" property="dataParam" />
+    <result column="data_send_method" jdbcType="VARCHAR" property="dataSendMethod" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+    <result column="data_header" jdbcType="VARCHAR" property="dataHeader" />
+    <result column="check_stat" jdbcType="INTEGER" property="checkStat" />
+    <result column="check_time" jdbcType="TIMESTAMP" property="checkTime" />
+    <result column="input_param" jdbcType="VARCHAR" property="inputParam" />
+    <result column="heartbeat_url" jdbcType="VARCHAR" property="heartbeatUrl" />
+    <result column="heartbeat_method" jdbcType="VARCHAR" property="heartbeatMethod" />
+    <result column="moeca_check" jdbcType="INTEGER" property="moecaCheck" />
+    <result column="action_type" jdbcType="INTEGER" property="actionType" />
+    <result column="tested" jdbcType="INTEGER" property="tested" />
+    <result column="is_batch" jdbcType="INTEGER" property="isBatch" />
+    <result column="batch_time" jdbcType="INTEGER" property="batchTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pr_id, resource_id, name, resource_secret, brief, description, provider_id, status, 
+    data_endpoint, cate_id, ctime, etime, cuser, uuser, fields, level, oas_url, web_url, 
+    period, period_unit, download_desc, is_ftp, ftp_account, data_param, data_send_method, 
+    is_show, data_header, check_stat, check_time, input_param, heartbeat_url, heartbeat_method, 
+    moeca_check, action_type, tested, is_batch, batch_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_resource
+    where 1=1
+    <if test="isShow != null">
+      and is_show = #{isShow,jdbcType=INTEGER}
+    </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="resourceId!=null">
+    	  and resource_id = #{resourceId,jdbcType=VARCHAR}
+    </if>
+    <if test="resourceSecret!=null">
+    	  and resource_secret = #{resourceSecret,jdbcType=VARCHAR}
+    </if>
+    <if test="checkStatNot != null">
+      and check_stat not in <foreach collection="checkStatNot" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+    </if>
+    <if test="providerIdAsc!=null">
+    		order by provider_id asc
+    </if>
+    <if test="ctimeAsc!=null">
+    		order by ctime asc
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_resource
+    where pr_id = #{prId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_resource
+    where pr_id = #{prId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResource">
+    insert into portal_resource (pr_id, resource_id, name, 
+      resource_secret, brief, description, 
+      provider_id, status, data_endpoint, 
+      cate_id, ctime, etime, 
+      cuser, uuser, fields, 
+      level, oas_url, web_url, 
+      period, period_unit, download_desc, 
+      is_ftp, ftp_account, data_param, 
+      data_send_method, is_show, data_header, 
+      check_stat, check_time, input_param, 
+      heartbeat_url, heartbeat_method, moeca_check, 
+      action_type, tested, is_batch, 
+      batch_time)
+    values (#{prId,jdbcType=INTEGER}, #{resourceId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{resourceSecret,jdbcType=VARCHAR}, #{brief,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{providerId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{dataEndpoint,jdbcType=VARCHAR}, 
+      #{cateId,jdbcType=INTEGER}, #{ctime,jdbcType=TIMESTAMP}, #{etime,jdbcType=TIMESTAMP}, 
+      #{cuser,jdbcType=VARCHAR}, #{uuser,jdbcType=VARCHAR}, #{fields,jdbcType=VARCHAR}, 
+      #{level,jdbcType=INTEGER}, #{oasUrl,jdbcType=VARCHAR}, #{webUrl,jdbcType=VARCHAR}, 
+      #{period,jdbcType=INTEGER}, #{periodUnit,jdbcType=INTEGER}, #{downloadDesc,jdbcType=VARCHAR}, 
+      #{isFtp,jdbcType=INTEGER}, #{ftpAccount,jdbcType=VARCHAR}, #{dataParam,jdbcType=VARCHAR}, 
+      #{dataSendMethod,jdbcType=VARCHAR}, #{isShow,jdbcType=INTEGER}, #{dataHeader,jdbcType=VARCHAR}, 
+      #{checkStat,jdbcType=INTEGER}, #{checkTime,jdbcType=TIMESTAMP}, #{inputParam,jdbcType=VARCHAR}, 
+      #{heartbeatUrl,jdbcType=VARCHAR}, #{heartbeatMethod,jdbcType=VARCHAR}, #{moecaCheck,jdbcType=INTEGER}, 
+      #{actionType,jdbcType=INTEGER}, #{tested,jdbcType=INTEGER}, #{isBatch,jdbcType=INTEGER}, 
+      #{batchTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResource">
+    insert into portal_resource
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="prId != null">
+        pr_id,
+      </if>
+      <if test="resourceId != null">
+        resource_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="resourceSecret != null">
+        resource_secret,
+      </if>
+      <if test="brief != null">
+        brief,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="providerId != null">
+        provider_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="dataEndpoint != null">
+        data_endpoint,
+      </if>
+      <if test="cateId != null">
+        cate_id,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+      <if test="cuser != null">
+        cuser,
+      </if>
+      <if test="uuser != null">
+        uuser,
+      </if>
+      <if test="fields != null">
+        fields,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="oasUrl != null">
+        oas_url,
+      </if>
+      <if test="webUrl != null">
+        web_url,
+      </if>
+      <if test="period != null">
+        period,
+      </if>
+      <if test="periodUnit != null">
+        period_unit,
+      </if>
+      <if test="downloadDesc != null">
+        download_desc,
+      </if>
+      <if test="isFtp != null">
+        is_ftp,
+      </if>
+      <if test="ftpAccount != null">
+        ftp_account,
+      </if>
+      <if test="dataParam != null">
+        data_param,
+      </if>
+      <if test="dataSendMethod != null">
+        data_send_method,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+      <if test="dataHeader != null">
+        data_header,
+      </if>
+      <if test="checkStat != null">
+        check_stat,
+      </if>
+      <if test="checkTime != null">
+        check_time,
+      </if>
+      <if test="inputParam != null">
+        input_param,
+      </if>
+      <if test="heartbeatUrl != null">
+        heartbeat_url,
+      </if>
+      <if test="heartbeatMethod != null">
+        heartbeat_method,
+      </if>
+      <if test="moecaCheck != null">
+        moeca_check,
+      </if>
+      <if test="actionType != null">
+        action_type,
+      </if>
+      <if test="tested != null">
+        tested,
+      </if>
+      <if test="isBatch != null">
+        is_batch,
+      </if>
+      <if test="batchTime != null">
+        batch_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="prId != null">
+        #{prId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceId != null">
+        #{resourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceSecret != null">
+        #{resourceSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null">
+        #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null">
+        #{providerId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="dataEndpoint != null">
+        #{dataEndpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="cateId != null">
+        #{cateId,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cuser != null">
+        #{cuser,jdbcType=VARCHAR},
+      </if>
+      <if test="uuser != null">
+        #{uuser,jdbcType=VARCHAR},
+      </if>
+      <if test="fields != null">
+        #{fields,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="oasUrl != null">
+        #{oasUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="webUrl != null">
+        #{webUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="periodUnit != null">
+        #{periodUnit,jdbcType=INTEGER},
+      </if>
+      <if test="downloadDesc != null">
+        #{downloadDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isFtp != null">
+        #{isFtp,jdbcType=INTEGER},
+      </if>
+      <if test="ftpAccount != null">
+        #{ftpAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="dataParam != null">
+        #{dataParam,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSendMethod != null">
+        #{dataSendMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="dataHeader != null">
+        #{dataHeader,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStat != null">
+        #{checkStat,jdbcType=INTEGER},
+      </if>
+      <if test="checkTime != null">
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inputParam != null">
+        #{inputParam,jdbcType=VARCHAR},
+      </if>
+      <if test="heartbeatUrl != null">
+        #{heartbeatUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="heartbeatMethod != null">
+        #{heartbeatMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="moecaCheck != null">
+        #{moecaCheck,jdbcType=INTEGER},
+      </if>
+      <if test="actionType != null">
+        #{actionType,jdbcType=INTEGER},
+      </if>
+      <if test="tested != null">
+        #{tested,jdbcType=INTEGER},
+      </if>
+      <if test="isBatch != null">
+        #{isBatch,jdbcType=INTEGER},
+      </if>
+      <if test="batchTime != null">
+        #{batchTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResource">
+    update portal_resource
+    <set>
+      <if test="resourceId != null">
+        resource_id = #{resourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceSecret != null">
+        resource_secret = #{resourceSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null">
+        brief = #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null">
+        provider_id = #{providerId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="dataEndpoint != null">
+        data_endpoint = #{dataEndpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="cateId != null">
+        cate_id = #{cateId,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cuser != null">
+        cuser = #{cuser,jdbcType=VARCHAR},
+      </if>
+      <if test="uuser != null">
+        uuser = #{uuser,jdbcType=VARCHAR},
+      </if>
+      <if test="fields != null">
+        fields = #{fields,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="oasUrl != null">
+        oas_url = #{oasUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="webUrl != null">
+        web_url = #{webUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="periodUnit != null">
+        period_unit = #{periodUnit,jdbcType=INTEGER},
+      </if>
+      <if test="downloadDesc != null">
+        download_desc = #{downloadDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isFtp != null">
+        is_ftp = #{isFtp,jdbcType=INTEGER},
+      </if>
+      <if test="ftpAccount != null">
+        ftp_account = #{ftpAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="dataParam != null">
+        data_param = #{dataParam,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSendMethod != null">
+        data_send_method = #{dataSendMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="dataHeader != null">
+        data_header = #{dataHeader,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStat != null">
+        check_stat = #{checkStat,jdbcType=INTEGER},
+      </if>
+      <if test="checkTime != null">
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inputParam != null">
+        input_param = #{inputParam,jdbcType=VARCHAR},
+      </if>
+      <if test="heartbeatUrl != null">
+        heartbeat_url = #{heartbeatUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="heartbeatMethod != null">
+        heartbeat_method = #{heartbeatMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="moecaCheck != null">
+        moeca_check = #{moecaCheck,jdbcType=INTEGER},
+      </if>
+      <if test="actionType != null">
+        action_type = #{actionType,jdbcType=INTEGER},
+      </if>
+      <if test="tested != null">
+        tested = #{tested,jdbcType=INTEGER},
+      </if>
+      <if test="isBatch != null">
+        is_batch = #{isBatch,jdbcType=INTEGER},
+      </if>
+      <if test="batchTime != null">
+        batch_time = #{batchTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where pr_id = #{prId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResource">
+    update portal_resource
+    set resource_id = #{resourceId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      resource_secret = #{resourceSecret,jdbcType=VARCHAR},
+      brief = #{brief,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      provider_id = #{providerId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      data_endpoint = #{dataEndpoint,jdbcType=VARCHAR},
+      cate_id = #{cateId,jdbcType=INTEGER},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      etime = #{etime,jdbcType=TIMESTAMP},
+      cuser = #{cuser,jdbcType=VARCHAR},
+      uuser = #{uuser,jdbcType=VARCHAR},
+      fields = #{fields,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      oas_url = #{oasUrl,jdbcType=VARCHAR},
+      web_url = #{webUrl,jdbcType=VARCHAR},
+      period = #{period,jdbcType=INTEGER},
+      period_unit = #{periodUnit,jdbcType=INTEGER},
+      download_desc = #{downloadDesc,jdbcType=VARCHAR},
+      is_ftp = #{isFtp,jdbcType=INTEGER},
+      ftp_account = #{ftpAccount,jdbcType=VARCHAR},
+      data_param = #{dataParam,jdbcType=VARCHAR},
+      data_send_method = #{dataSendMethod,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=INTEGER},
+      data_header = #{dataHeader,jdbcType=VARCHAR},
+      check_stat = #{checkStat,jdbcType=INTEGER},
+      check_time = #{checkTime,jdbcType=TIMESTAMP},
+      input_param = #{inputParam,jdbcType=VARCHAR},
+      heartbeat_url = #{heartbeatUrl,jdbcType=VARCHAR},
+      heartbeat_method = #{heartbeatMethod,jdbcType=VARCHAR},
+      moeca_check = #{moecaCheck,jdbcType=INTEGER},
+      action_type = #{actionType,jdbcType=INTEGER},
+      tested = #{tested,jdbcType=INTEGER},
+      is_batch = #{isBatch,jdbcType=INTEGER},
+      batch_time = #{batchTime,jdbcType=INTEGER}
+    where pr_id = #{prId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalBoxLockCheckMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalBoxLockCheck">
+    <id column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="stat" jdbcType="INTEGER" property="stat" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ip, count, ctime, stat
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_box_lock_check
+    where ip = #{ip,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from portal_box_lock_check
+    where ip = #{ip,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBoxLockCheck">
+    insert into portal_box_lock_check (ip, count, ctime, 
+      stat)
+    values (#{ip,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER}, #{ctime,jdbcType=TIMESTAMP}, 
+      #{stat,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBoxLockCheck">
+    insert into portal_box_lock_check
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="count != null">
+        count,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="stat != null">
+        stat,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null">
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        #{stat,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBoxLockCheck">
+    update portal_box_lock_check
+    <set>
+      <if test="count != null">
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        stat = #{stat,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ip = #{ip,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBoxLockCheck">
+    update portal_box_lock_check
+    set count = #{count,jdbcType=INTEGER},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      stat = #{stat,jdbcType=INTEGER}
+    where ip = #{ip,jdbcType=VARCHAR}
+  </update>
+</mapper>

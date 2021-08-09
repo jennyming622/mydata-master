@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="國家發展委員會">
+<meta name="description" content="沒時間到公家機關申請紙本個人資料嗎？快來使用 MyData 服務，讓您安全、方便、省時間，下載各項資料。" />
+<meta property="og:description" itemprop="description" content="沒時間到公家機關申請紙本個人資料嗎？快來使用 MyData 服務，讓您安全、方便、省時間，下載各項資料。" />
+<meta property="og:title" itemprop="name" content="MyData服務項目"/>
+<meta property="og:url" itemprop="url" content="https://mydata.nat.gov.tw/sp/service"/>
+<meta property="og:image" itemprop="image" content="https://mydata.nat.gov.tw/resources/dist/image/seo-img.jpg" />
+<title>MyData | 代辦服務</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<script src="jquery-barcode.js" th:src="@{/resources/dist/js/jquery-barcode.js}"></script>
+<style>
+.card-body p {
+text-align: left !important;
+}
+</style>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb pb-0">
+			<a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item">
+				<a href="#" th:href="@{/}" title="回到MyData首頁">
+					<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+				</a>
+			</li>
+			<li class="breadcrumb-item"><a href="#" th:href="@{/sp/service/counter}">臨櫃服務</a></li>
+			<li class="breadcrumb-item active" aria-current="page">代辦服務</li>
+		</ol>
+	</nav>
+	
+	<div class="landing-page">
+		<section id="package-service" class="package-service-wrap text-center section-wrap content-wrap organ mt-0">
+			<div class="title-wrap">
+				<h2>代辦服務</h2>
+				<div class="description">
+					<p>提供臨櫃服務指定代辦人，取得下載條碼</p>
+				</div>
+			</div>
+
+		</section>
+	</div>
+	<div class="landing-page" th:object="${session.SignedInUser}">
+	<section class="barcode-wrap section-wrap pb-3">
+	<div class="content-wrap application last-step">
+		<ul class="steps-wrap">
+			<li class="step step1">
+				<div class=""></div>
+				<hr>
+				<label for="agentVerify">請輸入代辦序號：</label>
+				<input id="agentVerify" type="text" name="agentVerify" value="" autocomplete="off">
+				<div class="text-center w-100 mt-3">
+	                <a id="agentStep1Link" class="btn theme-btn-border" href="javascript:agentStep1Confirm();" title="確認">下一步</a>
+	            </div>
+			</li>
+			<li id="step2" class="step step2" style="display: none;">
+				<div class=""></div>
+				<hr>
+				<h3 class="title alert mb-2">代辦序號正確</h3>
+				<p class="description mb-0">您是否同意接受<span id="applyName">王○明</span>委託辦理【 <span id="providerName">嘉義縣</span> - <span id="serviceName">長照服務 2.0 線上申辦</span> 】。</p>
+				<div class="text-center mt-4">
+					<button class="btn theme-btn-border mt-2" onclick="javascript:agentStep2Reject();">不同意</button>
+					<button class="btn theme-btn-border mt-2" onclick="javascript:agentStep2Confirm();">同意</button>
+				</div>
+			</li>
+			<li id="step3" class="step step3" style="display: none;">
+				<div class=""></div>
+				<hr>
+				<h3 class="title alert mb-2">輸入資料下載驗證碼</h3>
+				<p id="resendOTPMessage" class="description mb-0">資料下載驗證碼已發送至申請人的電子信箱：，須請申請人提供資料下載驗證碼，方能完成資料取用流程。</p>
+				<label for="checkCode">資料下載驗證碼：</label>
+				<div class="w-100">
+					<input type="text" id="checkCode" pattern="[0-9]*" inputmode="numeric" name="checkCode" value="" autocomplete="off">
+					<button id="resendOTPBtn" class="btn theme-btn-border ml-3"
+							onclick="javascript:resendOTPByOrgan();" disabled="disabled">發送資料下載驗證碼</button>
+				</div>
+				<div id="resendOTPWait" class="bg-gray p-3 mb-3 alert alert-box">
+					<div>
+						<small id="resendOTPText"><img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">請於 2 分鐘內輸入資料下載驗證碼。 2 分鐘後才能再次發送新資料下載驗證碼。</small>
+						<small id="resendOTPWaitTime">(60)</small>
+					</div>
+				</div>
+				<div class="text-center mt-4">
+					<button id="apply47" class="btn theme-btn mt-2" onclick="javascript:emailOrMobileLoginStepCheck();">確認</button>
+				</div>
+			</li>
+			<li id="step4" class="step step4" style="display: none;">
+				<div class=""></div>
+				<hr>
+				代辦人資料條碼
+                <div class="barcode-description" id="barcode-description">
+                    <p class="alert alert-box"><img th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">此資料有效期為下載資料後 8 小時，超過 8 小時，此資料將會刪除。</p>
+                    <p class="alert alert-box"><img th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">為提高資料安全性，此條碼有效時間尚餘 <span class="waitTime" data-time="1200"
+                                                                 start-time=""
+                                                                 full-wait-time=""
+                                                                 data-id=""
+					                                             data-code=""
+																 prId=""
+																 data-type="sp"></span>
+                        ，過期後請點產生新條碼。</p>
+                </div>
+                <div class="row barcode-box" id="'barcode-box'+${box.id}">
+                    <div class="expired-mask">
+                        <div class="expired-text">
+                            <span>您的條碼已過期，請點此</span>
+                            <button class="theme-btn flex-middle barcode"
+                                    onclick="javascript:createRandomVerifyExpired(this);" stat=""
+                                    download-verify="12345678">
+                                <p class="img">產生新條碼</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 show-lg-only"></div>
+                    <div class="col-lg-4 col-md-12 p-0">
+                        <div class="custom-barcode-area barcodeverify" stat=""
+                             download-verify="12345678"></div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 flex-bottom">
+                        <button class="theme-btn-border flex-middle barcode" id="barcode-btn"
+                                onclick="javascript:createRandomVerifyExpired(this);" stat=""
+                                download-verify="">
+                            <p class="img">手動更新條碼</p>
+                        </button>
+                    </div>
+                </div>
+				<!-- 服務box內的個人資料下載 -->
+				<ul id="card-footer" class="card-footer w-100 bg-white p-0 mb-0">
+				</ul>
+			</li>
+		</ul>
+	</div>
+	</section>
+	</div>
+	<!-- 申請提示-->
+	<div id="applyTo-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+					<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div id="applyTo-message-text" class="modal-body">系統將連結至服務網站，進行線上申辦作業</div>
+				<div class="modal-footer">
+					<button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+					<button id="applyTo-btn" class="theme-btn" data-src="" onclick="javascript:toServiceUri(this);">確定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--線上預覽檔案提示-->
+	<div id="preview-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+					<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div id="preview-message-text" class="modal-body">此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。</div>
+				<div class="modal-footer">
+					<button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+					<button id="preview-btn" class="theme-btn" data-id="" data-src="" onclick="javascript:previewAgentToCompanyConfirmYes(this);">確定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 不同意 -->
+	<div id="not-agree-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+					<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div id="not-agree-message-text" class="modal-body">此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。</div>
+				<div class="modal-footer">
+					<button id="not-agree-btn" class="theme-btn" data-id="" data-src="" onclick="javascript:location.reload();">確定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂"
+		data-toggle="tooltip" data-placement="left" style="display: inline;">
+		<img class="arrow-position" src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+	
+	<script type="text/javascript" th:inline="javascript">
+		var member, uuidcheck;
+		var waitOTPsecInterval;
+		$(function(){
+			//TODO
+		});
+        var settings = {
+                barWidth: 2, //bar粗細
+                barHeight: 100, //bar高度
+                fontSize: 20, //文字大小px
+            };
+        
+		function agentStep1Confirm(){
+			var agentVerify = $('#agentVerify').val();
+			var p = {
+					"agentVerify": agentVerify,
+				};
+			if(typeof agentVerify!='undefined' && agentVerify!=''){
+			    RiAPI.run({
+			        type: 'POST',
+			        url: '/rest/user/agentStep1Confirm',
+			        loadSpin: true,
+			        data: p,
+			        success: function (resp) {
+			        	if (resp.code < 0) {
+							if(resp.code == -5) {
+								showTimeoutMessage(resp);
+								return;
+							}
+							$('#message-text').text('資料下載驗證碼輸入錯誤或失效');
+							$('#pop-message').modal('show');
+			        	}else{
+							$('li.step1').find('div').first().addClass('disabled-mask');
+							$('#applyName').empty().append(resp.data.applyName);
+							$('#providerName').empty().append(resp.data.providerName);
+							$('#serviceName').empty().append(resp.data.serviceName);
+							showStep2();
+			        	}
+			        }
+			    });
+			}else{
+				$('#message-text').text('請輸入代辦序號');
+				$('#pop-message').modal('show');
+				$('#agentVerify').focus();
+			}
+		}
+		
+		function showStep2() {
+			$('#step2').show();
+		}
+		
+		function agentStep2Confirm(){
+			var agentVerify = $('#agentVerify').val();
+			var p = {
+					"agentVerify": agentVerify,
+				};
+			if(typeof agentVerify!='undefined' && agentVerify!=''){
+			    RiAPI.run({
+			        type: 'POST',
+			        url: '/rest/user/agentStep2Confirm',
+			        loadSpin: true,
+			        data: p,
+			        success: function (resp) {
+			        	if (resp.code < 0) {
+							if(resp.code == -5) {
+								showTimeoutMessage(resp);
+								return;
+							}
+							$('#message-text').text('資料下載驗證碼輸入錯誤或失效');
+							$('#pop-message').modal('show');
+			        	}else{
+							//TODO SUCCESS
+							uuidcheck = resp.data.uuidcheck;
+							member = resp.data.member;
+							$('li.step2').find('div').first().addClass('disabled-mask');
+							showStep3();
+			        	}
+			        }
+			    });
+			}else{
+				$('#message-text').text('請輸入代辦序號');
+				$('#pop-message').modal('show');
+				$('#agentVerify').focus();
+			}
+		}
+		
+		function agentStep2Reject(){
+			var agentVerify = $('#agentVerify').val();
+			var p = {
+					"agentVerify": agentVerify,
+				};
+			if(typeof agentVerify!='undefined' && agentVerify!=''){
+			    RiAPI.run({
+			        type: 'POST',
+			        url: '/rest/user/agentStep2Reject',
+			        loadSpin: true,
+			        data: p,
+			        success: function (resp) {
+			        	if (resp.code < 0) {
+							if(resp.code == -5) {
+								showTimeoutMessage(resp);
+								return;
+							}
+							$('#message-text').text('資料下載驗證碼輸入錯誤或失效');
+							$('#pop-message').modal('show');
+			        	}else{
+			        		$('li.step2').find('div').first().addClass('disabled-mask');
+							$('#not-agree-message-text').empty().text('您已拒絕'+resp.data.applyName+'的委託辦理【'+resp.data.providerName+' - '+ resp.data.serviceName +' 】。');
+							$('#not-agree-pop-message').modal('show');
+			        	}
+			        }
+			    });
+			}else{
+				$('#message-text').text('請輸入代辦序號');
+				$('#pop-message').modal('show');
+				$('#agentVerify').focus();
+			}
+		}		
+		
+		function showStep3() {
+			$('#step3').show();
+			$('.card-body').addClass('organ-step1');
+			if (member.informMethod === 'mobile') {
+				hint = '資料下載驗證碼已發送至申請人的手機號碼：'
+						+ maskPhoneNumber(member.mobile)
+						+ '，須請申請人提供資料下載驗證碼，方能完成資料取用流程。';
+				$('#resendOTPMessage').empty().append(hint);
+			} else {
+				hint = '資料下載驗證碼已發送至申請人的電子信箱：'
+						+ maskEmailAddress(member.email)
+						+ '，須請申請人提供資料下載驗證碼，方能完成資料取用流程。';
+				$('#resendOTPMessage').empty().append(hint);
+			}
+			$('#resendOTPWaitTime').attr('data-time', 120);
+			waitOTPsecInterval = setInterval(
+				function() {
+					checkOTPWaitTimeByOrgan();
+			}, 1000);
+		}		
+		
+		function resendOTPByOrgan() {
+			var p = {
+				"inform_method": member.informMethod,
+				"memberId": member.id
+			};
+		    RiAPI.run({
+		        type: 'POST',
+		        url: '/rest/user/verifyMobileOrEmailForVerificatoin',
+		        loadSpin: true,
+		        data: p,
+		        success: function (resp) {
+					if(resp.code == -5) {
+						showTimeoutMessage(resp);
+						return;
+					}
+
+	                if (typeof resp.data.uuidcheck != 'undefined') {
+	                    uuidcheck = resp.data.uuidcheck;
+	                    //初次發送，一樣等一分鐘後，才可重送
+	                    $('#resendOTPBtn').attr('disabled','disabled');
+	                    $('#resendOTPWait').show();
+	                    $('#resendOTPWaitTime').attr('data-time', 120);
+	                    waitOTPsecInterval = setInterval(function () {
+	                        checkOTPWaitTimeByOrgan();
+	                    }, 1000);
+	                }
+		        }
+		    });
+		}
+		
+		/**
+		 * 發送資料下載驗證碼後秒數倒數
+		 */
+		function checkOTPWaitTimeByOrgan() {
+		    var waitsec = parseInt($('#resendOTPWaitTime').attr('data-time'));
+		    waitsec = parseInt(waitsec);
+		    if (waitsec == 0) {
+		        $('#resendOTPWaitTime').empty();
+		        $('#resendOTPBtn').removeAttr('disabled')
+		        $('#resendOTPWait').hide();
+		        clearInterval(waitOTPsecInterval);
+		    } else {
+		        $('#resendOTPWaitTime').empty().append('(' + waitsec + ')');
+		        waitsec = waitsec - 1;
+		        $('#resendOTPWaitTime').attr('data-time', waitsec)
+		    }
+		}		
+		
+		function emailOrMobileLoginStepCheck() {
+			var checkFlag = true;
+			p = {
+				"uuidcheck" : uuidcheck,
+				"checkCode" : $('#checkCode').val(),
+				"isVerification": "Y"
+			};
+			if (checkFlag
+					&& (typeof $('#checkCode').val() == 'undefined' || $(
+							'#checkCode').val() == '')) {
+				$('#message-text').text('未填資料下載驗證碼！');
+				$('#pop-message').modal('show');
+				checkFlag = false;
+			}
+			if (checkFlag) {
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/emailOrMobileLoginStep/check',
+					loadSpin : true,
+					data : p,
+					success : function(resp) {
+						$('#checkCode').val('');
+						if (resp.code < 0) {
+							if(resp.code == -5) {
+								showTimeoutMessage(resp);
+								return;
+							}
+							$('#message-text').text('資料下載驗證碼輸入錯誤或失效');
+							$('#pop-message').modal('show');
+						} else {
+							afterCheckAndShowAgentData();
+						}
+					}
+				});
+			}
+		}
+		//抓回條碼，刷新條碼，計時條碼
+		function afterCheckAndShowAgentData(){
+			var agentVerify = $('#agentVerify').val();
+			var p = {
+					"agentVerify": agentVerify,
+			};
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/agentStep4Confirm',
+				loadSpin : true,
+				data : p,
+				success : function(resp) {
+					$('#checkCode').val('');
+					if (resp.code < 0) {
+						if(resp.code == -5) {
+							showTimeoutMessage(resp);
+							return;
+						}
+						$('#message-text').text('資料下載驗證碼輸入錯誤或失效');
+						$('#pop-message').modal('show');
+					} else {
+						$('li.step3').find('div').first().addClass('disabled-mask');
+						var downloadVerify = resp.data.downloadVerify;
+						
+						//download-verify
+						$('div.barcodeverify').each(function () {
+							$(this).attr('download-verify',downloadVerify);
+							$(this).attr('stat',resp.data.box.stat);
+							var value = $(this).attr('download-verify');
+							var btype = 'code128'; //code128
+							$(this).html('').show().barcode(value, btype, settings);
+						});
+						$('.barcode').each(function () {
+							$(this).attr('download-verify',downloadVerify);
+							$(this).attr('stat',resp.data.box.stat);
+						});
+						//抓回條碼，刷新條碼，計時條碼
+						$('span.waitTime').each(function () {
+							$(this).attr('data-time',resp.data.box.dataTime);
+							$(this).attr('start-time',resp.data.box.startTime);
+							$(this).attr('full-wait-time',resp.data.box.waitTime);
+							$(this).attr('data-id',resp.data.box.id);
+							$(this).attr('data-code',resp.data.box.code);
+							$(this).attr('prId',resp.data.box.prId);
+							$(this).attr('randomVar',resp.data.box.randomVar);
+				            var waitsec = $(this).attr('data-time');
+				            var dataType = $(this).attr('data-type');
+				            calculatorWaitTime($(this));
+				            
+				            var timer = setInterval(function (obj) {
+				            	prepareCheck(obj);
+				            }, 1000, $(this));
+				            $(this).attr('data-timer', timer);
+						});
+						$('#step4').show();
+						$('#resendOTPWaitTime').empty();
+						clearInterval(waitOTPsecInterval);
+						//box.boxList
+						$('#card-footer').empty();
+						if(typeof resp.data.box.boxList!='undefined'&&resp.data.box.boxList.length>0){
+							for(var i=0;i<resp.data.box.boxList.length;i++){
+								var tbox = resp.data.box.boxList[i];
+								var appendStr = '<li class="single-data-wrap multiple flex-between"><p class="mb-0 text-left w-100"><span class="icon ';
+								if(tbox.cateId==1){
+									appendStr = appendStr + 'household';
+								}
+								if(tbox.cateId==2){
+									appendStr = appendStr + 'land';
+								}
+								if(tbox.cateId==3){
+									appendStr = appendStr + 'fiscal-tax';
+								}
+								if(tbox.cateId==4){
+									appendStr = appendStr + 'business';
+								}
+								if(tbox.cateId==5){
+									appendStr = appendStr + 'highway';
+								}
+								if(tbox.cateId==6){
+									appendStr = appendStr + 'labor';
+								}
+								if(tbox.cateId==7){
+									appendStr = appendStr + 'health-insurance';
+								}
+								if(tbox.cateId==8){
+									appendStr = appendStr + 'medical';
+								}
+								if(tbox.cateId==9){
+									appendStr = appendStr + 'financial';
+								}
+								if(tbox.cateId==10){
+									appendStr = appendStr + 'education';
+								}
+								if(tbox.cateId==11){
+									appendStr = appendStr + 'legal';
+								}
+								if(tbox.cateId==12){
+									appendStr = appendStr + 'welfare';
+								}
+								if(tbox.cateId==13){
+									appendStr = appendStr + 'others';
+								}
+								appendStr= appendStr +'"></span><span>';
+								appendStr= appendStr +tbox.prName+'<span></p>';
+								appendStr= appendStr +'</li>';
+								$('#card-footer').append(appendStr);								
+							}
+						}
+					}
+				}
+			});
+		}
+		
+	    function calculatorWaitTime(obj) {
+	        var waitsec = parseInt($(obj).attr('data-time'));
+	        var startsec = parseInt($(obj).attr('start-time'));
+	        var boxId = $(obj).attr('data-id');
+	        var dataType = $(obj).attr('data-type');
+	        var mm = Math.floor((waitsec / 60)).toString();
+			var ss = ((waitsec) % (60)).toString();
+			var waitmin = paddingLeft(mm, 2) + '分' + paddingLeft(ss, 2) + '秒'
+	        if (waitsec == 0) {
+	            $(obj).empty().append('20分00秒');
+	            $(obj).parent().parent().parent().parent().parent().addClass('expired');
+	        } else {
+	            $(obj).empty().append(waitmin);
+	            waitsec = waitsec - 1;
+	            $(obj).attr('data-time', waitsec);
+	        }
+	    }
+	    
+		function prepareCheck(obj) {
+			calculatorWaitTime(obj);
+			var boxId = $(obj).attr('data-id');
+			var prId = $(obj).attr('prId');
+			var dataType = $(obj).attr('data-type');
+			var code = $(obj).parent().parent().parent().find('button.btna').attr('httpcode');
+			if(dataType=='dp'){
+				if(code == '429') {
+					RiAPI.run({
+						type: 'GET',
+						url: '/rest/personal/countpercent/'+prId,
+						loadSpin : false,
+						success: function(resp) {
+							if (resp.code < 0) {
+								if(resp.code == -5) {
+									showTimeoutMessage(resp);
+									return;
+								}
+							} else {
+								var percent = resp.data.percent;
+								var httpcode = resp.data.httpcode;
+								if(typeof percent!='undefined'){
+									console.log('percent -> ' + percent);
+									if(percent >= 0){
+										let id = '#uid' + prId;
+										let tmpUid = $(id).val();
+									}
+
+									var percentStr = percent + '%';
+									$('#flex-between' + boxId).find('div.progress-bar').css('width', percentStr);
+
+									$(obj).parent().parent().parent().find('button.btna').attr('httpcode', httpcode);
+									if(percent==100){
+										$('#box-data' + boxId).hide();
+										if(httpcode == 204) {
+											$('#barcode-description' + boxId).hide();
+											$('#barcode-box' + boxId).hide();
+											$('#card-footer' + boxId).hide();
+											$('#show204_' + boxId).show();
+										} else {
+											createRandomVerify('#barcode-btn' + boxId);
+											$('#barcode-description' + boxId).show();
+											$('#barcode-box' + boxId).show();
+											$('#card-footer' + boxId).show();
+											$('#show204_' + boxId).hide();
+										}
+									}else if(percent>=0){
+										$('#box-data' + boxId).show()
+										$('#percent' + boxId).empty().append(percentStr);
+										$('#barcode-description' + boxId).hide();
+										$('#barcode-box' + boxId).hide();
+										$('#card-footer' + boxId).hide();
+									}else{
+										$('#box-data' + boxId).hide();
+									}
+								}
+							}
+						}
+					});
+				} else if(code == 204) {
+					$('#barcode-description' + boxId).hide();
+					$('#barcode-box' + boxId).hide();
+					$('#card-footer' + boxId).hide();
+					$('#show204_' + boxId).show();
+				} else {
+					//createRandomVerify('#barcode-btn' + boxId);
+					$('#barcode-description' + boxId).show();
+					$('#barcode-box' + boxId).show();
+					$('#card-footer' + boxId).show();
+					$('#show204_' + boxId).hide();
+				}
+			}else if(dataType=='sp'){
+		        var dataCode = $(obj).attr('data-code');
+		        if(dataCode=='429'){
+					RiAPI.run({
+						type: 'GET',
+						url: '/rest/personal/service/counter/countpercent/'+boxId,
+						loadSpin : false,
+						success: function(resp) {
+							if (resp.code < 0) {
+								if(resp.code == -5) {
+									showTimeoutMessage(resp);
+									return;
+								}
+							} else {
+								var percent = resp.data.percent;
+								if(typeof percent!='undefined'){
+									console.log('percent -> ' + percent);
+									if(percent==100){
+										$('#box-data' + boxId).hide();
+										$('#barcode-description' + boxId).show();
+										//TODO WEDER
+										if($('#barcode-box' + boxId).attr('data-agent')!='true'){
+											$('#barcode-box' + boxId).show();
+										}
+										$('#card-footer' + boxId).find('button.btna').removeClass('disabled');
+										$('#card-footer' + boxId).find('button.btna').attr('disabled',false);
+										$('#show204_' + boxId).hide();
+										$(obj).attr('data-code','200');
+									}else if(percent>=0){
+										$('#box-data' + boxId).show()
+										$('#barcode-description' + boxId).hide();
+										$('#barcode-box' + boxId).hide();
+										$('#card-footer' + boxId).find('button.btna').addClass('disabled');
+										$('#card-footer' + boxId).find('button.btna').attr('disabled',true);
+									}else{
+										$('#box-data' + boxId).hide();
+									}
+								}
+							}
+						}
+					});
+		        }else{
+		        		//UNDO
+		        }
+			}
+		}
+		
+	    function paddingLeft(str,lenght){
+			if(str.length >= lenght)
+				return str;
+			else
+				return paddingLeft("0" +str,lenght);
+		}
+	    
+	    function createRandomVerifyExpired(obj) {
+	        var stat = $(obj).attr('stat');
+	        var p = {
+	            "downloadVerify": $(obj).attr('download-verify')
+	        };
+	        RiAPI.run({
+	            type: 'POST',
+	            url: '/rest/user/createRandomVerify',
+	            data: p,
+	            loadSpin: true,
+	            success: function (resp) {
+	                if (resp.code < 0) {
+	                    if(resp.code == -5) {
+	                        showTimeoutMessage(resp);
+	                        return;
+	                    } else {
+	                        $('#message-text').text(resp.text);
+	                        $('#pop-message').modal('show');
+	                    }
+	                } else {
+	                    //alert('傳送成功！');
+	                    //window.location.reload();
+	                    //$(obj).attr('endtimenote',resp.data.endTimeNote);
+	                    $(obj).attr('download-verify', resp.data.downloadVerify);
+	                    $(obj).attr('stat', resp.data.stat);
+
+	                    //var endTimeNote = $(obj).attr('endtimenote');
+	                    var settings = {
+	                        barWidth: 2, //bar粗細
+	                        barHeight: 100, //bar高度
+	                        fontSize: 20, //文字大小px
+	                    };
+	                    var value = $(obj).attr('download-verify');
+	                    var btype = 'code128'; //code128
+	                    $(obj).parent().parent().parent().parent().parent().find('button.barcode').attr('download-verify', resp.data.downloadVerify);
+	                    $(obj).parent().parent().parent().find('div.barcodeverify').html('').show().barcode(value, btype, settings);
+	                    //$(obj).parent().parent().parent().parent().find('p.alert').empty().append(resp.data.endTimeNote);
+	                    $(obj).parent().parent().parent().parent().parent().find('span.waitTime').attr('data-time', '1200');
+	                    $(obj).parent().parent().parent().parent().parent().find('span.waitTime').each(function () {
+	                        //setInterval(checkWaitTime($(this)), 1000);
+	                        
+	                        var timer = $(this).attr('data-timer');
+	    					clearInterval(timer);
+	    	
+	    					calculatorWaitTime($(this));
+	                        timer = setInterval(function (obj) {
+	                            //checkWaitTime(obj);
+								prepareCheck(obj);
+	                        }, 1000, $(this));
+	                        $(this).attr('data-timer', timer);
+	                    });
+	                    $(obj).parent().parent().parent().parent().parent().parent().removeClass('expired');
+	                }
+	            }
+	        });
+	    }
+	    
+	    function previewAgentToCompany(obj){
+	    	var boxId = $(obj).attr('box-id');
+	    	var prId = $(obj).attr('data-id');
+	    	var randomVar = $(obj).attr('randomVar');
+	    	var httpcode = $(obj).attr('httpcode');
+	    	if (httpcode == '200') {
+	            $('#preview-btn').attr('data-id',prId);
+	            $('#preview-btn').attr('httpcode',httpcode);
+	            $('#preview-btn').attr('box-id',boxId);
+	            $('#preview-btn').attr('randomVar',randomVar);
+	            $('#preview-message-text').text('此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。');
+	            $('#preview-pop-message').modal('show');
+	        } else if (httpcode == '204') {
+	            $('#message-text').text('查無資料！');
+	            $('#pop-message').modal('show');
+	        } else {
+	            $('#message-text').text('資料申請失敗，請重新操作。');
+	            $('#pop-message').modal('show');
+	        }
+	    }
+	    
+	    function previewAgentToCompanyConfirmYes(obj){
+	    	var boxId = $(obj).attr('box-id');
+	    	var prId = $(obj).attr('data-id');
+	    	var httpcode = $(obj).attr('httpcode');
+	    	var agentVerify = $('#agentVerify').val();
+	    	var randomVar = $(obj).attr('randomVar');
+	    	var downloadUrl = /*[[@{/personal/box/agentPreview}]]*/'';
+	    	downloadUrl = downloadUrl + '/' + boxId + '/' + prId + '/' + randomVar;
+	    	window.open(downloadUrl);
+	    	$(obj).attr('randomVar','');
+			$('#preview-pop-message').modal('hide');
+		}
+	</script>
+</body>
+</html>

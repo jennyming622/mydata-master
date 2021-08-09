@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>MyData | 最新消息</title>
+  <link rel="icon" type="image/png" sizes="16x16"
+		href="image/smydatalogo.png"
+		th:href="@{/resources/dist/image/smydatalogo.png}">
+  <meta name="description" content="沒時間臨櫃申辦個人資料與服務嗎？快來線上申辦 MyData 雲服務，安全、安心、省時間！" />
+  <meta name="keywords" content="便民服務、線上申請個人資料、戶政、地政、健保局、交通局、財政、勞保局、教育部" />
+  <meta property="og:site_name" content="MyData 個人化資料自主運用，線上申辦好方便！" />
+  <meta property="og:type" content="website" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="MyData 個人化資料自主運用，線上申辦好方便！" />
+  <meta property="og:description" content="沒時間臨櫃申辦個人資料與服務嗎？快來線上申辦 MyData 雲服務，安全、安心、省時間！" />
+  <meta property="og:url" content="/tw/" />
+  <meta property="og:image" content="" />
+  <link rel="stylesheet" href="css/bootstrap.css" th:href="@{/resources/dist/css/bootstrap.css}" />
+  <link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+  <link rel="stylesheet" href="css/style.css" th:href="@{/resources/dist/css/style.css}" />
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="js/jquery-3.5.1.min.js" th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/popper.min.js" th:src="@{/resources/dist/js/popper.min.js}"></script>
+  <script src="js/bootstrap.js" th:src="@{/resources/dist/js/bootstrap.min.js}"></script>
+</head>
+
+<!-- 登入後增加 .after-login 以顯示會員名稱與條碼按鈕 -->
+
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+  <!--======= header =======-->
+  <header th:replace="fragment/header::header"></header>
+  <!--======= header =======-->
+
+  <!-- 參考 css 的 /* icon 檢索 */ -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pb-0">
+      <a href="#" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+      <li class="breadcrumb-item">
+        <a href="#"><img src="images/breadcrumb-home.png"
+                         th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="" />首頁</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">最新消息</li>
+    </ol>
+  </nav>
+  <div class="content-wrap latest-news-list pt-0">
+    <div class="landing-page">
+      <section class="barcode-wrap text-center section-wrap pb-3">
+        <h2 class="title-wrap">最新消息
+        </h2>
+    </div>
+    <div id="exTab2">
+      <ul class="nav nav-tabs nav-fill mt-3 mb-3 flex-center w-100">
+        <li>
+          <a class="nav-item active" href="#4" data-toggle="tab">資料及服務異動<div class="twingle-down"></div></a>
+        </li>
+        <li>
+          <a class="nav-item" href="#0" data-toggle="tab">平台維運公告<div class="twingle-down"></div></a>
+        </li>
+        <li>
+          <a class="nav-item" href="#1" data-toggle="tab">平臺操作說明<div class="twingle-down"></div></a>
+        </li>
+        <li><a class="nav-item" href="#2" data-toggle="tab" style="">介接試辦要點<div class="twingle-down"></div></a>
+        </li>
+        <li>
+        </li>
+        <li>
+        </li>
+      </ul>
+      <div class="tab-content mt-3 w-100">
+        <div class="tab-pane active" id="4">
+          <ul>
+            <li>
+              <a href="#" th:href="@{/sp/news/slist4}" title="勞動部勞工保險局109/8/1 系統維護通知">
+                <h3>
+                  <span>勞動部勞工保險局109/8/1 系統維護通知</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/22</span>
+                </h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" th:href="@{/sp/news/slist3}" title="勞動部勞工保險局每週三中午12:00~13:30定期維護通知">
+                <h3>
+                  <span>勞動部勞工保險局每週三中午12:00~13:30定期維護通知</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/21</span>
+                </h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" th:href="@{/sp/news/slist2}" title="經濟部商業司系統維護通知">
+                <h3>
+                  <span>財政部財政資訊中心109/7/17~7/20系統維護通知</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/17</span>
+                </h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" th:href="@{/sp/news/slist1}" title="經濟部商業司系統維護通知">
+                <h3>
+                  <span>經濟部商業司109/7/17~7/18系統維護通知</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/17</span>
+                </h3>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-pane" id="0">
+          <ul>
+            <li>
+              <a href="#" th:href="@{/sp/news/notify}" title="7/15~7/28 公開測試期間平臺維護時間說明">
+                <h3>
+                  <span>7/15~7/28 公開測試期間平臺維護時間說明</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/15</span>
+                </h3>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-pane" id="1">
+          <ul>
+            <li>
+              <a href="#" th:href="@{/sp/news/ready}" title="MyData服務簡介與操作平臺前準備事項">
+                <h3>
+                  <span>MyData服務簡介與操作平臺前準備事項</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/15</span>
+                </h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" th:href="@{/sp/news/download}" title="資料下載操作流程">
+                <h3>
+                  <span>資料下載操作流程</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/15</span>
+                </h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" th:href="@{/sp/news/op}" title="臨櫃核驗操作流程">
+                <h3>
+                  <span>臨櫃核驗操作流程</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/15</span>
+                </h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" th:href="@{/sp/news/manual}" title="機關(構)臨櫃核驗操作手冊">
+                <h3>
+                  <span>機關(構)臨櫃核驗操作手冊</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/15</span>
+                </h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" th:href="@{/sp/news/lazy}" title="3分鐘了解MyData，個人化資料自主運用大解密">
+                <h3>
+                  <span>3分鐘了解MyData，個人化資料自主運用大解密</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/15</span>
+                </h3>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-pane" id="2">
+          <ul>
+            <li>
+              <a href="#" th:href="@{/sp/news/apply}" title="介接試辦要點暨資料及服務提供者介接申請表">
+                <h3>
+                  <span>個人化資料自主運用平臺介接作業試辦要點暨介接申請表</span>
+                  <span class="ml-2 mr-2 hidden-lg">-</span>
+                  <span class="pull-right">109/07/15</span>
+                </h3>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--======= footer =======-->
+  <footer th:replace="fragment/footer::footer"></footer>
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+     role="button" title="網頁置頂" data-toggle="tooltip" data-placement="left"
+     style="display: inline;">
+    <img class="arrow-position" src="images/top-arrow.png"
+      th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+  </a>
+  <!--======= footer end =======-->
+</body>
+
+</html>

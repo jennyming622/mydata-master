@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.ext.PortalResourceExtMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalResource">
+    <id column="pr_id" jdbcType="INTEGER" property="prId" />
+    <result column="resource_id" jdbcType="VARCHAR" property="resourceId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="resource_secret" jdbcType="VARCHAR" property="resourceSecret" />
+    <result column="brief" jdbcType="VARCHAR" property="brief" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="provider_id" jdbcType="INTEGER" property="providerId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="data_endpoint" jdbcType="VARCHAR" property="dataEndpoint" />
+    <result column="cate_id" jdbcType="INTEGER" property="cateId" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+    <result column="cuser" jdbcType="VARCHAR" property="cuser" />
+    <result column="uuser" jdbcType="VARCHAR" property="uuser" />
+    <result column="fields" jdbcType="VARCHAR" property="fields" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="oas_url" jdbcType="VARCHAR" property="oasUrl" />
+    <result column="web_url" jdbcType="VARCHAR" property="webUrl" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="period_unit" jdbcType="INTEGER" property="periodUnit" />
+    <result column="download_desc" jdbcType="VARCHAR" property="downloadDesc" />
+    <result column="is_ftp" jdbcType="INTEGER" property="isFtp" />
+    <result column="ftp_account" jdbcType="VARCHAR" property="ftpAccount" />
+    <result column="data_param" jdbcType="VARCHAR" property="dataParam" />
+    <result column="data_send_method" jdbcType="VARCHAR" property="dataSendMethod" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+    <result column="data_header" jdbcType="VARCHAR" property="dataHeader" />
+    <result column="check_stat" jdbcType="INTEGER" property="checkStat" />
+    <result column="input_param" jdbcType="VARCHAR" property="inputParam" />
+    <result column="moeca_check" jdbcType="INTEGER" property="moecaCheck" />
+    <result column="is_batch" jdbcType="INTEGER" property="isBatch" />
+    <result column="batch_time" jdbcType="INTEGER" property="batchTime" />
+      <result  column="cate_name" jdbcType="VARCHAR" property="cateName"></result>
+  </resultMap>
+    <resultMap id="BaseCateMap" type="tw.gov.ndc.emsg.mydata.entity.PortalResourceExt">
+        <id column="pr_id" jdbcType="INTEGER" property="prId" />
+        <result column="resource_id" jdbcType="VARCHAR" property="resourceId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="resource_secret" jdbcType="VARCHAR" property="resourceSecret" />
+        <result column="brief" jdbcType="VARCHAR" property="brief" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="provider_id" jdbcType="INTEGER" property="providerId" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="data_endpoint" jdbcType="VARCHAR" property="dataEndpoint" />
+        <result column="cate_id" jdbcType="INTEGER" property="cateId" />
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+        <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+        <result column="cuser" jdbcType="VARCHAR" property="cuser" />
+        <result column="uuser" jdbcType="VARCHAR" property="uuser" />
+        <result column="fields" jdbcType="VARCHAR" property="fields" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="oas_url" jdbcType="VARCHAR" property="oasUrl" />
+        <result column="web_url" jdbcType="VARCHAR" property="webUrl" />
+        <result column="period" jdbcType="INTEGER" property="period" />
+        <result column="period_unit" jdbcType="INTEGER" property="periodUnit" />
+        <result column="download_desc" jdbcType="VARCHAR" property="downloadDesc" />
+        <result column="is_ftp" jdbcType="INTEGER" property="isFtp" />
+        <result column="ftp_account" jdbcType="VARCHAR" property="ftpAccount" />
+        <result column="data_param" jdbcType="VARCHAR" property="dataParam" />
+        <result column="data_send_method" jdbcType="VARCHAR" property="dataSendMethod" />
+        <result column="is_show" jdbcType="INTEGER" property="isShow" />
+        <result column="data_header" jdbcType="VARCHAR" property="dataHeader" />
+        <result column="check_stat" jdbcType="INTEGER" property="checkStat" />
+        <result column="input_param" jdbcType="VARCHAR" property="inputParam" />
+        <result column="moeca_check" jdbcType="INTEGER" property="moecaCheck" />
+        <result column="is_batch" jdbcType="INTEGER" property="isBatch" />
+        <result column="batch_time" jdbcType="INTEGER" property="batchTime" />
+        <result column="cate_name" jdbcType="VARCHAR" property="cateName"/>
+        <result column="type" jdbcType="INTEGER" property="type" />
+    </resultMap>
+  <resultMap id="PortalBoxLogMap" type="tw.gov.ndc.emsg.mydata.entity.PortalBoxLogExt">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="box_id" jdbcType="INTEGER" property="boxId" />
+    <result column="download_sn" jdbcType="VARCHAR" property="downloadSn" />
+    <result column="verify_pwd" jdbcType="VARCHAR" property="verifyPwd" />
+    <result column="download_verify" jdbcType="VARCHAR" property="downloadVerify" />
+    <result column="provider_key" jdbcType="VARCHAR" property="providerKey" />
+    <result column="download_key" jdbcType="VARCHAR" property="downloadKey" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="stat" jdbcType="INTEGER" property="stat" />
+    <result column="pr_name" jdbcType="VARCHAR" property="prName" />
+  </resultMap>
+  <resultMap id="PortalBoxMap" type="tw.gov.ndc.emsg.mydata.entity.PortalBoxExt">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="download_sn" jdbcType="VARCHAR" property="downloadSn" />
+    <result column="verify_pwd" jdbcType="VARCHAR" property="verifyPwd" />
+    <result column="download_verify" jdbcType="VARCHAR" property="downloadVerify" />
+    <result column="provider_key" jdbcType="VARCHAR" property="providerKey" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="stat" jdbcType="INTEGER" property="stat" />
+    <result column="pr_name" jdbcType="VARCHAR" property="prName" />
+    <result column="ps_name" jdbcType="VARCHAR" property="psName" />
+    <result column="provider_name" jdbcType="VARCHAR" property="providerName" />
+    <result column="wait_time" jdbcType="INTEGER" property="waitTime" />
+	<result column="pr_id" jdbcType="INTEGER" property="prId" />
+	<result column="ps_id" jdbcType="INTEGER" property="psId" />
+	<result column="psd_id" jdbcType="INTEGER" property="psdId" />
+	<result column="files" jdbcType="VARCHAR" property="files" />
+	<result column="batch_time" jdbcType="INTEGER" property="batchTime" />
+	<result column="code" jdbcType="VARCHAR" property="code" />
+	<result column="agent_uid" jdbcType="VARCHAR" property="agentUid" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+	<result column="agent_birthdate" jdbcType="DATE" property="agentBirthdate" />
+	<result column="agent_verify" jdbcType="VARCHAR" property="agentVerify" />
+    <result column="agree_agent" jdbcType="INTEGER" property="agreeAgent" />
+  </resultMap>
+  <select id="selectByExampleOrderByOid" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceExample" resultMap="BaseResultMap">
+    select
+    pr.pr_id,  pr.resource_id,  pr.name,  pr.resource_secret,  pr.brief,  pr.description,  pr.provider_id,  pr.status, 
+     pr.data_endpoint,  pr.cate_id,  pr.ctime,  pr.etime, 
+     pr.cuser,  pr.uuser,  pr.fields,  pr.level,  pr.oas_url,
+     pr.web_url,  pr.period,  pr.period_unit,  pr.download_desc, 
+     pr.is_ftp,  pr.ftp_account,  pr.data_param,  pr.data_send_method,  pr.is_show,  pr.data_header, pr.check_stat, pr.input_param,
+     pr.moeca_check, pr.is_batch, pr.batch_time
+    from portal_resource pr
+    left join portal_provider pp on pr.provider_id = pp.provider_id
+    where pr.is_show =1 and pp.provider_id is not null order by pp.oid asc,pr.pr_id asc 
+  </select>
+  <select id="selectByCateIdOrderByOid" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalResourceExample" resultMap="BaseResultMap">
+    select
+    pr.pr_id,  pr.resource_id,  pr.name,  pr.resource_secret,  pr.brief,  pr.description,  pr.provider_id,  pr.status, 
+     pr.data_endpoint,  pr.cate_id,  pr.ctime,  pr.etime, 
+     pr.cuser,  pr.uuser,  pr.fields,  pr.level,  pr.oas_url,
+     pr.web_url,  pr.period,  pr.period_unit,  pr.download_desc, 
+     pr.is_ftp,  pr.ftp_account,  pr.data_param,  pr.data_send_method,  pr.is_show,  pr.data_header, pr.check_stat, pr.input_param,
+     pr.moeca_check, pr.is_batch, pr.batch_time
+    from portal_resource pr
+    left join portal_provider pp on pr.provider_id = pp.provider_id
+    where pr.cate_id = #{cateId} and pr.is_show =1 and pp.provider_id is not null order by pp.oid asc,pr.pr_id asc
+  </select>
+
+  <select id="selectMyBoxLogByAccount" resultMap="PortalBoxLogMap">
+  	select pbl.*,pr.name as pr_name from portal_box_log pbl 
+  	left join portal_resource_download prd on pbl.download_sn = prd.download_sn
+  	left join portal_resource pr on pr.pr_id = prd.pr_id
+  	where prd.provider_key = #{account}
+	order by pbl.ctime desc
+	limit 10
+  </select>
+  <select id="selectMyBoxByAccount" resultMap="PortalBoxMap">
+  	select pb.*,prd.provider_key,pr.name as pr_name,pp.name as provider_name,prd.wait_time,prd.pr_id,prd.files,pr.batch_time,prd.code from portal_box pb 
+  	left join portal_resource_download prd on pb.download_sn = prd.download_sn
+  	left join portal_resource pr on pr.pr_id = prd.pr_id
+  	left join portal_provider pp on pr.provider_id = pp.provider_id
+  	where prd.provider_key = #{account} and prd.stat = 0
+  	and (now()+(prd.wait_time||' second')::interval) <![CDATA[ >= ]]> pb.ctime and now() <![CDATA[ <= ]]> (pb.ctime+interval '8 H')
+  	and prd.psd_id is null
+	order by pb.ctime desc
+  </select>
+  <select id="selectMyBoxForCounterByAccount" resultMap="PortalBoxMap">
+  	select pb.*,prd.provider_key,ps.name as ps_name,pp.name as provider_name,prd.wait_time,pb.psd_id,ps.ps_id,prd.files from portal_box pb
+  	left join portal_resource_download prd on pb.psd_id = prd.psd_id
+  	left join portal_service_download psd on psd.id = prd.psd_id
+  	left join portal_service ps on ps.ps_id = psd.ps_id
+  	left join portal_provider pp on ps.provider_id = pp.provider_id
+  	where prd.provider_key = #{account} and prd.stat = 0
+  	and (now()+(prd.wait_time||' second')::interval) <![CDATA[ >= ]]> pb.ctime and now() <![CDATA[ <= ]]> (pb.ctime+interval '8 H')
+  	and prd.psd_id is not null and prd.pr_id = 0
+	order by pb.ctime desc
+  </select>
+  <select id="selectMyBoxForCounter" resultMap="PortalBoxMap">
+    select pb.*,prd.provider_key,ps.name as ps_name,pp.name as provider_name,prd.wait_time,pb.psd_id,ps.ps_id,prd.files from portal_box pb
+     left join portal_resource_download prd on pb.psd_id = prd.psd_id
+     left join portal_service_download psd on psd.id = prd.psd_id
+     left join portal_service ps on ps.ps_id = psd.ps_id
+     left join portal_provider pp on ps.provider_id = pp.provider_id
+    where (prd.provider_key = #{account} or (pb.agent_uid = #{uid} and agent_birthdate = #{birthdate,jdbcType=DATE} and agree_agent = 1))
+      and prd.stat = 0
+      and (now()+(prd.wait_time||' second')::interval) <![CDATA[ >= ]]> pb.ctime and now() <![CDATA[ <= ]]> (pb.ctime+interval '8 H')
+      and prd.psd_id is not null and prd.pr_id = 0
+    order by pb.ctime desc
+  </select>
+  <select id="selectMyBoxForCounterByPsdId" resultMap="PortalBoxMap">
+  	select pb.*,prd.provider_key,pr.name as pr_name,pp.name as provider_name,prd.wait_time,prd.pr_id,prd.files,pr.batch_time,prd.code from portal_box pb 
+  	left join portal_resource_download prd on pb.download_sn = prd.download_sn
+  	left join portal_resource pr on pr.pr_id = prd.pr_id
+  	left join portal_provider pp on pr.provider_id = pp.provider_id
+  	where prd.psd_id = #{psdId} and prd.stat = 0 
+  	and (now()+(prd.wait_time||' second')::interval) <![CDATA[ >= ]]> pb.ctime and now() <![CDATA[ <= ]]> (pb.ctime+interval '8 H')
+	order by pb.ctime desc
+  </select>  
+  <select id="selectMyBoxByAccountAndPrId" resultMap="PortalBoxMap">
+  	select pb.*,prd.provider_key,pr.name as pr_name,pp.name as provider_name,prd.wait_time,prd.pr_id,prd.files,pr.batch_time,prd.code from portal_box pb 
+  	left join portal_resource_download prd on pb.download_sn = prd.download_sn
+  	left join portal_resource pr on pr.pr_id = prd.pr_id
+  	left join portal_provider pp on pr.provider_id = pp.provider_id
+  	where prd.provider_key = #{account} and prd.pr_id = #{prId} and prd.stat = 0
+  	and (now()+(prd.wait_time||' second')::interval) <![CDATA[ >= ]]> pb.ctime and now() <![CDATA[ <= ]]> (pb.ctime+interval '8 H')
+	order by pb.ctime desc
+  </select>
+  <select id="selectMyBoxById" resultMap="PortalBoxMap">
+  	select pb.*,prd.provider_key,pr.name as pr_name,pp.name as provider_name,prd.wait_time,prd.pr_id,prd.files,pr.batch_time from portal_box pb 
+  	left join portal_resource_download prd on pb.download_sn = prd.download_sn
+  	left join portal_resource pr on pr.pr_id = prd.pr_id
+  	left join portal_provider pp on pr.provider_id = pp.provider_id
+  	where pb.id = #{id} and prd.stat = 0
+  	and (now()+(prd.wait_time||' second')::interval) <![CDATA[ >= ]]> pb.ctime and now() <![CDATA[ <= ]]> (pb.ctime+interval '8 H')
+  </select>
+  <select id="selectPortalResourceWithCateName" resultMap="BaseCateMap">
+  	select prc.cate_name, pp.name as providerName, pp.type, pr.* from portal_resource pr
+    left join portal_resource_category prc on pr.cate_id = prc.cate_id
+    left join portal_provider pp on pp.provider_id = pr.provider_id
+    where pr.is_show = 1
+    order by prc.seq ,pp.oid asc,pr.pr_id asc
+  </select>
+  <select id="selectPrByPs" resultMap="BaseResultMap">
+	select pr.* from portal_resource pr
+	left join portal_resource_category prc on pr.cate_id = prc.cate_id
+	left join portal_provider pp on pp.provider_id = pr.provider_id
+	where pr.pr_id in (select pr_id from portal_resource_scope where scope in (select scope from portal_service_scope where ps_id = #{psId}))
+	order by prc.seq ,pp.oid asc,pr.pr_id asc
+  </select>
+  <select id="selectPrByPsCounter" resultMap="BaseResultMap">
+	select pr.* from portal_resource pr
+	left join portal_resource_category prc on pr.cate_id = prc.cate_id
+	left join portal_provider pp on pp.provider_id = pr.provider_id
+	where pr.pr_id in (select pr_id from portal_resource_scope where scope in (select scope from portal_service_scope_counter where ps_id = #{psId}))
+	order by prc.seq ,pp.oid asc,pr.pr_id asc
+  </select>
+</mapper>

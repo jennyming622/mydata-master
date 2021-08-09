@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.MydataNewsMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.MydataNews">
+    <id column="news_uid" jdbcType="VARCHAR" property="newsUid" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="publish_date" jdbcType="TIMESTAMP" property="publishDate" />
+    <result column="news_cate" jdbcType="INTEGER" property="newsCate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    news_uid, title, content, publish_date, news_cate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mydata_news
+    where news_uid = #{newsUid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByCateId" parameterType="INTEGER" resultMap="BaseResultMap">
+    select * from mydata_news
+    where news_cate = #{id}
+    and publish_date is not null
+    and now() <![CDATA[ >= ]]> publish_date
+    order by publish_date desc nulls last
+  </select>
+</mapper>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>測試隱碼頁面</title>
+  <link rel="icon" type="image/png" sizes="16x16"
+        href="image/smydatalogo.png"
+        th:href="@{/resources/dist/image/smydatalogo.png}">
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.css" rel="stylesheet"
+        th:href="@{/resources/dist/css/bootstrap.css}">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+  <link href="css/style.css" rel="stylesheet" type="text/css"
+        th:href="@{/resources/dist/css/style.css}">
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="js/jquery-3.5.1.min.js"
+          th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/popper.min.js"
+          th:src="@{/resources/dist/js/popper.min.js}"></script>
+  <script src="js/bootstrap.js"
+          th:src="@{/resources/dist/js/bootstrap.js}"></script>
+  <script src="js/scrollreveal.js"
+          th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+  <script src="jquery-barcode.js"
+          th:src="@{/resources/dist/js/jquery-barcode.js}"></script>
+<!--  <script src="js/r_common.js" th:src="@{/resources/dist/js/r_common.js}"></script>-->
+  <script src="js/maskWordFunction.js" th:src="@{/resources/dist/js/maskWordFunction.js}"></script>
+
+  <script >
+    // var typeStart = false;
+    // // $(obj).on('compositionstart',function(){ isChin = true;});
+    // // $(obj).on('compositionend',function(){ isChin = false;});
+    //
+    // $('#name25').on('compositionstart',function (){
+    //   typeStart = true;
+    // })
+    // $('#name25').on('compositionend',function (){
+    //   typeStart = false;
+    // })
+    // var flag = true;
+    //
+    // $('#name25').on('compositionstart',function(){
+    //   flag = false;
+    // })
+    // $('#name25').on('compositionend',function(){
+    //   flag = true;
+    // })
+    // $('#name25').on('input',function(){
+    //     if(flag){
+    //       console.log('set time out',1);
+    //     }else{
+    //       console.log('flag is false')
+    //     }
+    // })
+
+  </script>
+</head>
+<body>
+測試業面
+<div id="inputMaskArea" class="card-body">
+  <div class="tab-pane active" id="personal">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="pt-1 text-left">
+          <label class="w-100 eyes-switch-loca" for="name25">
+				                        <span>姓名<small class="alert">(必填)</small>
+				                        </span>
+            <input id="name25" class="form-control encparam" type="text" name="name" placeholder="請輸入您的姓名(例：林小華)"  onfocus="inputFocusinEvent_1(this)" onblur="inputFocusoutEvent_1(this, MaskType.name)" autocomplete="off">
+            <svg onclick="maskorUnMask_v2(this);" id="eye_name25" class="svg-inline--fa fa-eye fa-w-18 eye-switch pen-edit" alt="點擊輸入框即可開始編輯" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path></svg><!-- <i onclick="maskorUnMask_v2(this);" id="eye_name25" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i> -->
+          </label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="pt-2 pb-3 text-left">
+          <label class="w-100" for="uid">
+            <span>身分證字號<small class="alert">(必填)</small><small class="alert">英文字母為大寫</small></span>
+            <input id="uid" value="" class="form-control" type="text" name="uid" placeholder="請輸入身分證字號" maxlength="10" data-uidtype="0" 
+            onfocus="inputFocusinEvent_1(this)" 
+            oninput="inputTypingEvent(this, MaskType.uid)" 
+            onblur="inputFocusoutEvent_1(this, MaskType.uid)" autocomplete="off" data-id="0" data-value="">
+            <svg onclick="maskorUnMask_v2(this)" id="eye_uid" class="svg-inline--fa fa-eye fa-w-18 eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path></svg><!-- <i onclick="maskorUnMask_v2(this)" id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i> -->
+          </label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="pt-2 pb-3 text-left">
+          <label class="w-100" for="birthdate">
+                                    <span>生日<small class="alert">(必填)</small>
+                                        <small class="alert">請輸入民國年月日</small>
+                                    </span>
+            <input id="birthdate" class="form-control" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" value="" placeholder="例：0770101" maxlength="7" 
+            oninput="inputTypingEvent(this, MaskType.birthdate)" 
+            onfocus="inputFocusinEvent_1(this)" 
+            onblur="inputFocusoutEvent_1(this, MaskType.birthdate)" autocomplete="off" data-id="0" data-value="">
+            <svg onclick="maskorUnMask_v2(this)" id="eye_birthdate" class="svg-inline--fa fa-eye fa-w-18 eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path></svg><!-- <i onclick="maskorUnMask_v2(this)" id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i> -->
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gray m-0 mt-2 mb-4 p-3 verify" data-type="multifactor" style="">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="text-left form-group multifactor radio" style="display:none;">
+            <span class="mul-title">請選擇本次的雙證件驗證方式</span>
+            <div class="tooltips">
+              <div id="multifactor-div25" class="tooltips-conteiner text-left">
+                <label class="flex-middle active" for="multifactor-type-2-25" multi-id="25" onclick="javascript:selectLabelThis(this);" tabindex="0" title="健保卡卡號+選擇設籍戶口名簿戶號">
+                  <input type="radio" id="multifactor-type-2-25" name="multifactor-type25" value="10" checked="">健保卡卡號+戶口名簿戶號</label>
+              </div>
+            </div>
+          </div>
+          <div class="text-left">
+            <label class="w-100 mt-1 mb-0" id="mutifactor-hid25" for="mutifactor-hid125">
+              <span>健保卡卡號<small class="alert">(必填)</small></span>
+              <!-- .learning-wrap 為完整的提示訊息。若使用者點擊問號，則在 .learning-wrap 旁加上 .active。若使用者再次點擊「問號」、或點擊網頁的其他地方。則移除 .active。 -->
+              <input id="mutifactor-hid125"  maxlength="12" oninput="inputTypingEvent(this, MaskType.NHI)" onblur="inputFocusoutEvent(this, MaskType.NHI)" type="text" pattern="[0-9]*" inputmode="numeric" name="multifactor-type" class="form-control" placeholder="請輸入健保卡卡號，共12碼" data-value="" autocomplete="off">
+            </label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-left">
+            <label class="w-100 mb-0" id="mutifactor-houseHoldId25" for="houseHoldId25">
+              <span>戶口名簿戶號<small class="alert">(必填)</small></span>
+              <input type="text" name="multifactor-type" id="houseHoldId25" maxlength="10" oninput="inputTypingEvent(this, MaskType.domicile)" onblur="inputFocusoutEvent(this, MaskType.domicile)" class="form-control" placeholder="請輸入戶口名簿戶號，共8碼" data-value="" autocomplete="off">
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row contact-info-wrap">
+    <div class="col-md-6">
+      <div class="pt-1 text-left">
+        <!-- flex-center -->
+        <label id="mobilelabel25" for="mobile25" class="w-100 eyes-switch-loca">
+          <span>手機號碼</span>
+          <div class="flex-center w-100">
+            <input id="mobile25" class="form-control encparam" type="text" pattern="[0-9]*" inputmode="numeric" name="mobile" maxlength="10"  placeholder="例：09123456789" onfocus="inputFocusinEvent_1(this)" oninput="inputTypingEvent(this, MaskType.phone)" onblur="inputFocusoutEvent_1(this, MaskType.phone)" autocomplete="off" data-id="0" data-value="">
+            <button class="btn theme-btn-border ml-3 false" onclick="javascript:emailOrMobileMessageSend('25');">發送驗證碼</button>
+          </div>
+          <svg onclick="maskorUnMask_v2(this);" id="eye_mobile25" class="svg-inline--fa fa-eye fa-w-18 eye-switch pen-edit" alt="點擊輸入框即可開始編輯" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path></svg><!-- <i onclick="maskorUnMask_v2(this);" id="eye_mobile25" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i> -->
+        </label>
+      </div>
+
+    </div>
+    <div class="col-md-6">
+      <div class="pt-1 text-left">
+        <label id="emaillabel25" class="w-100 eyes-switch-loca" for="email25">
+          <span>電子信箱</span>
+          <div class="flex-center w-100">
+            <input id="email25" class="form-control encparam" type="text" name="email" placeholder="請輸入您的電子信箱" onfocus="inputFocusinEvent_1(this)" onblur="inputFocusoutEvent_1(this, MaskType.email)" autocomplete="off">
+            <button class="btn theme-btn-border ml-3 false" onclick="javascript:emailOrMobileMessageSend('25');" disabled="">發送驗證碼</button>
+          </div>
+          <svg onclick="maskorUnMask_v2(this);" id="eye_email25" class="svg-inline--fa fa-eye fa-w-18 eye-switch pen-edit" alt="點擊輸入框即可開始編輯" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path></svg><!-- <i onclick="maskorUnMask_v2(this);" id="eye_email25" class=" fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i> -->
+        </label>
+      </div>
+    </div>
+
+  </div>
+</div>
+	<script type="text/javascript">
+	var typing = false;
+	$('input').each((idx, element)=>{
+		$(element).on('compositionstart',function(){
+		    typing = true;
+		});
+		$(element).on('compositionend',function(){
+		    typing = false;
+		});
+		var oninputAttr = $(element).attr('oninput');
+		if(typeof oninputAttr!='undefined'){
+			if(oninputAttr.indexOf('MaskType.phone')>-1){
+				$(element).on('input',function(){
+				    setTimeout(function() {
+				        if(!typing) {
+				        	inputTypingEvent($(element), MaskType.phone);
+				        }
+				    },0);
+				})	
+			}
+			if(oninputAttr.indexOf('MaskType.uid')>-1){
+				$(element).on('input',function(){
+				    setTimeout(function() {
+				        if(!typing) {
+				        	inputTypingEvent($(element), MaskType.uid);
+				        }
+				    },0);
+				})	
+			}
+			if(oninputAttr.indexOf('MaskType.email')>-1){
+				$(element).on('input',function(){
+				    setTimeout(function() {
+				        if(!typing) {
+				        	inputTypingEvent($(element), MaskType.email);
+				        }
+				    },0);
+				})	
+			}
+			if(oninputAttr.indexOf('MaskType.birthdate')>-1){
+				$(element).on('input',function(){
+				    setTimeout(function() {
+				        if(!typing) {
+				        	inputTypingEvent($(element), MaskType.birthdate);
+				        }
+				    },0);
+				})	
+			}
+			if(oninputAttr.indexOf('MaskType.NHI')>-1){
+				$(element).on('input',function(){
+				    setTimeout(function() {
+				        if(!typing) {
+				        	inputTypingEvent($(element), MaskType.NHI);
+				        }
+				    },0);
+				})	
+			}
+			if(oninputAttr.indexOf('MaskType.domicile')>-1){
+				$(element).on('input',function(){
+				    setTimeout(function() {
+				        if(!typing) {
+				        	inputTypingEvent($(element), MaskType.domicile);
+				        }
+				    },0);
+				})	
+			}
+		}			
+	});
+	</script>
+</body>
+</html>

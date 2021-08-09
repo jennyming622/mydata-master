@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>agree-policy</title>
+</head>
+<body>
+    <th:block th:fragment="sp-step4">
+        <li id="step4" class="step" style="display:none;">
+            <hr>
+            <h4 class="title">提交申請</h4>
+            <p class="mt-2 mb-0 text-left link subtitle">申請人資訊</p>
+            <p class="description">
+                姓名：<span class="userName">林*明</span> <br>
+                身分證字號：<span class="userUid">H12345****</span>
+            </p>
+            <!-- <p class="mt-2 mb-0 text-left link subtitle">聲明</p> -->
+            <!-- <p class="description">
+                我已完成身分驗證，並確認將上述資料提供給
+                <span class="link" th:text="${portalService.providerName}">OO銀行</span>
+                進行<span class="link" th:text="${portalService.name}">線上開戶</span>的服務申請。
+            </p> -->
+            <p class="mb-2">本次傳送的資料如下：</p>
+            <div id="collaspe-inner" class="mb-4">
+                <!-- 卡片展開時，在 Class 'card' 旁加上 'show' -->
+                <div class="card" th:each="pr,iter : ${portalResourceExtList}"
+                     th:if="${not #lists.isEmpty(portalResourceExtList)}"
+                     th:data-id="${pr.prId}">
+                    <div class="card-header collapsed" data-toggle="collapse"
+                         href="#data-delievery1" th:href="'#data-delievery'+${pr.prId}">
+                        <a class="card-link" href="javascript:void(0)"> <span
+                                th:text="${iter.index+1}+'.'+${pr.name}">1.個人戶籍資料</span> <i
+                                class="fa fa-chevron-up pull-right"></i>
+                        </a>
+                    </div>
+                    <div id="data-delievery1" th:id="'data-delievery'+${pr.prId}"
+                         class="collapse show" data-parent="#collaspe-inner">
+                        <div class="card-body">
+                            <th:block th:if="${pr.downloadDesc!=null&&pr.downloadDesc!=''}">
+                                <p class="alert">簡述</p>
+                                <p>
+                                    <th:block th:text="${pr.downloadDesc}"></th:block>
+                                </p>
+                            </th:block>
+                            <p class="alert">您可下載的資料內容</p>
+                            <ol>
+                                <!-- th:text="${iter1.index+1}+'.'+${field.fieldName}" -->
+                                <li th:each="field,iter1: ${pr.fieldList}"
+                                    th:if="${not #lists.isEmpty(pr.fieldList)}"
+                                    th:text="${field.fieldName}">個人記事</li>
+                            </ol>
+                            <p th:id="'show204_'+${pr.prId}" style="display: none;"><span class="alert">個人資料查詢完成：</span>您申請的「<span th:id="'prName' + ${pr.prId}" th:text="${pr.name}"></span>」查無相關（證明）資料</p>
+                            <p th:id="'statText'+${pr.prId}" class="alert">資料已準備完成。您可以開啟並預覽此資料檔案：開啟檔案的密碼是身分證字號（英文為大寫）</p>
+                            <div th:id="'preView'+${pr.prId}" class="text-center mt-4 mb-2 false" th:data-show="${pr.isShow==null}?'':${pr.isShow}">
+                                <button class="btn btna theme-btn-border mr-3"
+                                        onclick="javascript:previewToCompany(this);"
+                                        th:data-src="@{/personal/sppreview}+'/'+${pr.prId}" th:data-id="${pr.prId}" disabled="disabled">線上預覽檔案</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4 p-3 bg-gray alert-box">
+            		<img src="./images/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+				您已完成身分驗證，是否同意將上述資料傳送給
+                「<span th:text="${portalService.providerName}">OO銀行</span>&nbsp;-&nbsp;<span th:text="${portalService.name}">線上開戶</span>」。
+            		<span class="divider mt-3 block"></span>
+            		<img src="./images/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+            		MyData 成功將資料傳送後，
+                <span id="step3InformWarming">系統將自動發通知簡訊至您的手機號碼 091234****。如手機號碼有誤，或想變更手機號碼</span>
+                ，請至
+                <a th:href="@{/sp/member}" class="link">會員專區</a>
+                進行變更，謝謝。
+            </p>
+            <div class="text-center" style="margin-top: 25px;">
+                <!-- Button trigger modal -->
+                <button class="btn btna theme-btn-border mt-3 mr-3 false" data-toggle="modal" data-target="#refuseModal">不同意傳送</button>
+                <button id="agreeSpSendBtn" class="btn btna theme-btn-border mt-3 mr-3" th:data-id="${portalService.psId}" th:tx-id="${tx_id}"
+                        th:data-src="${returnUrl}" onclick="ckeckedApplyDirectAfter();">同意傳送</button>
+            </div>
+        </li>
+        <script type="text/javascript" th:inline="javascript">
+            function ckeckedApplyDirectAfter() {
+                var obj = $('#agreeSpSendBtn');
+                $('#agreeSpSendBtn').attr('disabled', true);
+                var returnUrl = $(obj).attr('data-src');
+                var p = {};
+                p.returnUrl = returnUrl;
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/service/spNotify/' + psdId,
+                    data : p,
+                    loadSpin : true,
+                    success : function(resp) {
+                        console.log(resp);
+                        if (typeof resp == 'undefined' || resp.code < 0) {
+                            if(resp.code == -5) {
+                                showSPTimeoutMessage(resp);
+                                return;
+                            } else {
+                                $('#message-text').text('您的服務申請失敗，請重新確認或聯絡客服人員。');
+                                $('#pop-message').modal('show');
+                            }
+                        } else {
+                            //後端起Thread,根據不同資料集處理下載,回傳returnUrl（含code）
+                            $('#mStep').find('#download').addClass('pass');
+                            if (typeof resp.data.sp_return_url != 'undefined'
+                                && resp.data.sp_return_url != '') {
+                                window.location.href = resp.data.sp_return_url;
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    </th:block>
+    <th:block th:fragment="sp-step4-counter">
+        <li id="step4" class="step" style="display:none;">
+            <hr>
+            <h4 class="title">申請完成</h4>
+            <p class="mt-2 mb-0 text-left link subtitle">申請人資訊</p>
+            <p class="description">
+                姓名：<span class="userName">林*明</span> <br>
+                身分證字號：<span class="userUid">H12345****</span>
+            </p>
+            <p class="mb-2">本次取得的資料如下：</p>
+            <div id="collaspe-inner" class="mb-4">
+                <!-- 卡片展開時，在 Class 'card' 旁加上 'show' -->
+                <div class="card" th:each="pr,iter : ${portalResourceExtList}"
+                     th:if="${not #lists.isEmpty(portalResourceExtList)}"
+                     th:data-id="${pr.prId}">
+                    <div class="card-header collapsed" data-toggle="collapse"
+                         href="#data-delievery1" th:href="'#data-delievery'+${pr.prId}">
+                        <a class="card-link" href="javascript:void(0)"> <span
+                                th:text="${iter.index+1}+'.'+${pr.name}">1.個人戶籍資料</span> <i
+                                class="fa fa-chevron-up pull-right"></i>
+                        </a>
+                    </div>
+                    <div id="data-delievery1" th:id="'data-delievery'+${pr.prId}"
+                         class="collapse show" data-parent="#collaspe-inner">
+                        <div class="card-body">
+                            <th:block th:if="${pr.downloadDesc!=null&&pr.downloadDesc!=''}">
+                                <p class="alert">簡述</p>
+                                <p>
+                                    <th:block th:text="${pr.downloadDesc}"></th:block>
+                                </p>
+                            </th:block>
+                            <p class="alert">您可下載的資料內容</p>
+                            <ol>
+                                <li th:each="field,iter1: ${pr.fieldList}"
+                                    th:if="${not #lists.isEmpty(pr.fieldList)}"
+                                    th:text="${field.fieldName}">個人記事</li>
+                            </ol>
+                            <p th:id="'show204_'+${pr.prId}" style="display: none;"><span class="alert">個人資料查詢完成：</span>您申請的「<span th:id="'prName' + ${pr.prId}" th:text="${pr.name}"></span>」查無相關（證明）資料</p>
+                            <p th:id="'statText'+${pr.prId}" class="alert">資料已準備完成。您可以開啟並預覽此資料檔案：開啟檔案的密碼是身分證字號（英文為大寫）</p>
+                            <div th:id="'preView'+${pr.prId}" class="text-center mt-4 mb-2 false" th:data-show="${pr.isShow==null}?'':${pr.isShow}">
+                                <button class="btn btna theme-btn-border mr-3"
+                                        onclick="javascript:previewToCompany(this);"
+                                        th:data-src="@{/personal/sppreview}+'/'+${pr.prId}" th:data-id="${pr.prId}" disabled="disabled">線上預覽檔案</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4 p-3 bg-gray alert-box">
+            	<img src="./images/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+            		請您前往資料條碼區，將「資料條碼」提供臨櫃核驗作業完成後，
+                <span id="step3InformWarming">系統將自動發通知簡訊至您的手機號碼 091234****。如手機號碼有誤，或想變更手機號碼</span>
+                ，請至
+                <a th:href="@{/sp/member}" class="link">會員專區</a>
+                進行變更，謝謝。
+                
+                <br th:if="${counterAgentVer==1}">
+                <img src="./images/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px" th:if="${counterAgentVer==1}">
+            	<span th:if="${counterAgentVer==1}">若您無法親自至臨櫃申辦時，可使用MyData代辦機制，點選「代辦服務」由代辦人代為申辦。</span>
+            	
+            </p>
+            <div class="text-center btn-group-wrap" style="margin-top: 25px;">
+                <!-- Button trigger modal -->
+                <button id="agreeSpSendBtn" class="btn theme-btn-border mt-3" th:data-id="${portalService.psId}"
+                        th:data-src="@{/sp/member/}" onclick="ckeckedApplyDirectAfter();">前往資料條碼區</button>
+                <button id="agentSendBtn" class="btn theme-btn-border mt-3" onclick="javascript:changeAgentPopWin(this);" th:if="${counterAgentVer==1}">代辦服務</button>
+            </div>
+        </li>
+        <script type="text/javascript" th:inline="javascript">
+            function ckeckedApplyDirectAfter() {
+                var obj = $('#agreeSpSendBtn');
+                $('#agreeSpSendBtn').attr('disabled', true);
+                var returnUrl = $(obj).attr('data-src');
+                if(typeof $('#agreeSpSendBtn').attr('box-id')!='undefined'&&$('#agreeSpSendBtn').attr('box-id')!=null&&$('#agreeSpSendBtn').attr('box-id')!=''){
+                		returnUrl = returnUrl + $('#agreeSpSendBtn').attr('box-id');
+                }else{
+                		returnUrl = returnUrl + '1';
+                }
+                window.location.href = returnUrl;
+            }
+        </script>
+    </th:block>
+    <th:block th:fragment="sp-same-script">
+        <script type="text/javascript" th:inline="javascript">
+            function ckeckedApplyDirect(model) {
+                var obj = $('#agreeSpSendBtn');
+                var psId = $(obj).attr('data-id');
+                var returnUrl = $(obj).attr('data-src');
+                var txId = $(obj).attr('tx-id');
+                var verificationlevel = $('input[name=verification-level]:checked').val();
+                //直接申請 ajax
+                //console.log('----apply-prId-----:' + psId);
+                var prIdList = [];
+                $('#step4').find('div.card').each(function() {
+                    var prId = $(this).attr('data-id');
+                    prIdList.push(prId);
+                });
+                var p = {};
+                p.prIdList = prIdList;
+                p.returnUrl = returnUrl;
+                p.txId = txId;
+                p.verificationlevel = verificationlevel;
+                p.model = model;
+                $('#param' + psId).find('.param').each(function() {
+                    var paramName = $(this).attr('name');
+                    if(paramName == 'mobile') {
+                        if($(this).prop('disabled') == true) {
+                            p[paramName] = $(this).data('value');
+                        } else {
+                            p[paramName] = $(this).val();
+                        }
+                    } else {
+                        p[paramName] = $(this).val();
+                    }
+                });
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/service/apply/' + psId,
+                    data : p,
+                    loadSpin : true,
+                    success : function(resp) {
+                        hideLoadSpinner();
+                        if (typeof resp == 'undefined' || resp.code < 0) {
+                            if(resp.code == -5) {
+                                showSPTimeoutMessage(resp);
+                                return;
+                            }else if(resp.code == -1102){
+                                $('#level-low-message-text').text('使用者授權等級不足。');
+                                $('#level-low-message').modal('show');
+                            		return;
+                            }
+                            $('#message-text').text('您的服務申請失敗，請重新確認或聯絡客服人員。');
+                            $('#pop-message').modal('show');
+                        } else {
+                            //後端起Thread,根據不同資料集處理下載,回傳returnUrl（含code）
+                            $('#mStep').find('#download').addClass('pass');
+                            if (typeof resp.data.psdId != 'undefined'
+                                && resp.data.psdId != '') {
+                                psdId = resp.data.psdId;
+                                $('#step4').show();
+                                scrollToPos('#step4');
+                            }
+                            if(typeof resp.data.prdList != 'undefined'
+                                && resp.data.prdList.length>0){
+                                var name = "";
+                                var prIdList = [];
+                                for(var i=0;i<resp.data.prdList.length;i++){
+                                    var tmpPrId = resp.data.prdList[i].prId;
+                                    var code = resp.data.prdList[i].code;
+                                    var downloadsn = resp.data.prdList[i].downloadSn;
+                                    if(typeof code!='undefined'&&code!=null&&code!='200'&&code!='204'&&code!='400'&&code!='426'&&code!='429'){
+                                        $('#checkResourceOk').modal('show');
+                                        return;
+                                    } else if (code=='429'||code=='426') {
+                                        $('#statText'+tmpPrId).empty().append('此資料需要較長時間準備，無法預覽。');
+                                        $('#preView'+tmpPrId).addClass('false');
+                                        $('#preView'+tmpPrId).find('button').attr('downloadsn',downloadsn);
+                                        $('#preView'+tmpPrId).find('button').attr('httpcode',code);
+                                        $('#preView'+tmpPrId).find('button').attr('disabled',true);
+                                    } else if(code=='204'){
+                                       show204Message(tmpPrId);
+                                    }else if(code=='400'){
+                                        if(name != '') {
+                                            name += "，"
+                                        }
+                                        name += "「" + $('#prName'+tmpPrId).text() + "」";
+                                        prIdList.push(tmpPrId);
+                                    }else {
+                                        $('#preView'+tmpPrId).find('button').attr('downloadsn',downloadsn);
+                                        $('#preView'+tmpPrId).find('button').attr('httpcode',code);
+                                        $('#preView'+tmpPrId).removeClass('false');
+
+                                        var show = $('#preView'+tmpPrId).attr('data-show');
+                                        if(show != '2') {
+                                            $('#preView'+tmpPrId).find('button').removeAttr('disabled');
+                                        }
+
+                                    }
+                                }
+                                if(typeof resp.data.boxId!='undefined'&&resp.data.boxId!=null&&resp.data.boxId!=''){
+                                		$('#agreeSpSendBtn').attr('box-id',resp.data.boxId);
+                                		$('#agentSendBtn').attr('data-id',resp.data.boxId);
+                                }
+                                if(name.length > 0) {
+                                    previewToCompany400(prIdList, name);
+                                }
+                            }
+                        }
+                    },
+	        			error: function(resp) {
+	        				hideLoadSpinner();
+	        				$('#message-text').text('系統錯誤，請重新操作！');
+	        				$('#pop-message').modal('show');				
+	        			},
+	        			complete: function (resp) {
+	        				hideLoadSpinner();
+	        			}
+                });
+            }
+
+            function show204Message(id) {
+                $('#show204_'+tmpPrId).show();
+                $('#statText'+tmpPrId).hide();
+                $('#preView'+tmpPrId).hide();
+            }
+
+            function previewToCompany400(prIdList, name){
+                $('#message-text').text(name + '，的欄位內容有誤，請重新確認，謝謝');
+                $('#pop-message').modal('show');
+                for(var i=0;i<prIdList.length;i++) {
+                    var prId = prIdList[i];
+                    RiAPI.run({
+                        type: 'GET',
+                        url: '/rest/personal/download/changestatonebyspdetail/' + prId,
+                        loadSpin: false,
+                        success: function (resp) {
+                            if (resp.code < 0) {
+                                if (resp.code == -5) {
+                                    showSPTimeoutMessage(resp);
+                                    return;
+                                }
+                                $('#message-text').text(resp.text);
+                                $('#pop-message').modal('show');
+                            } else {
+                                //成功
+                                //console.log('------apply success------:' + prId);
+                                $('#accordion' + prId).attr('download-status', '2');
+                            }
+                        }
+                    });
+                }
+            }
+            function redirectToReturnUrl401(){
+            		var sp_return_url_401 = /*[[${sp_return_url_401}]]*/'';
+            		window.location.href = sp_return_url_401;
+            }
+        </script>
+    </th:block>
+</body>
+</html>

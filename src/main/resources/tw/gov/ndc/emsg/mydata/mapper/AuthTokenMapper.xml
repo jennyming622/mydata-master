@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.AuthTokenMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.AuthToken">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="scope" jdbcType="VARCHAR" property="scope" />
+    <result column="as_id" jdbcType="VARCHAR" property="asId" />
+    <result column="verification" jdbcType="VARCHAR" property="verification" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, account, token, ctime, scope, as_id, verification, etime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from auth_token
+    where 1=1
+    <if test="account != null">
+      and account = #{account,jdbcType=VARCHAR}
+    </if>
+    <if test="token != null">
+      and token = #{token,jdbcType=VARCHAR}
+    </if>
+    <if test="ctime != null">
+      and ctime = #{ctime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="scope != null">
+      and scope = #{scope,jdbcType=VARCHAR}
+    </if>
+    <if test="asId != null">
+      and as_id = #{asId,jdbcType=VARCHAR}
+    </if>
+    <if test="verification != null">
+      and verification = #{verification,jdbcType=VARCHAR}
+    </if>
+    <if test="etime != null">
+      and etime = #{etime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="intime != null">
+      and (etime is null or now() <![CDATA[ <= ]]> etime)
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from auth_token
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from auth_token
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.AuthToken" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into auth_token (id, account, token, 
+      ctime, scope, as_id, verification, etime
+      )
+    values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, 
+      #{ctime,jdbcType=TIMESTAMP}, #{scope,jdbcType=VARCHAR}, #{asId,jdbcType=VARCHAR}, #{verification,jdbcType=VARCHAR},  #{etime,jdbcType=TIMESTAMP}
+      )
+      <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+		SELECT currval('auth_token_id_seq');
+	  </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.AuthToken" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into auth_token
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="scope != null">
+        scope,
+      </if>
+      <if test="asId != null">
+        as_id,
+      </if>
+      <if test="verification != null">
+        verification,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scope != null">
+        #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="asId != null">
+        #{asId,jdbcType=VARCHAR},
+      </if>
+      <if test="verification != null">
+        #{verification,jdbcType=VARCHAR},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+	  SELECT currval('auth_token_id_seq');
+	</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.AuthToken">
+    update auth_token
+    <set>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scope != null">
+        scope = #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="asId != null">
+        as_id = #{asId,jdbcType=VARCHAR},
+      </if>
+      <if test="verification != null">
+        verification = #{verification,jdbcType=VARCHAR},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.AuthToken">
+    update auth_token
+    set account = #{account,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      scope = #{scope,jdbcType=VARCHAR},
+      as_id = #{asId,jdbcType=VARCHAR},
+      verification = #{verification,jdbcType=VARCHAR},
+      etime = #{etime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

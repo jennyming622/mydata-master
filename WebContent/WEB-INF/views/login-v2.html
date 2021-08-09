@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:if="${_csrf}"
+          th:content="${_csrf.headerName}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MyData | 登入</title>
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="image/smydatalogo.png"
+          th:href="@{/resources/dist/image/smydatalogo.png}">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet"
+          th:href="@{/resources/dist/css/bootstrap.css}">
+    <link href="css/style.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/dist/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+    <script th:src="@{/resources/dist/js/font-awesone.min.js}" ></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.5.1.min.js"
+            th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"
+            th:src="@{/resources/dist/js/popper.min.js}"></script>
+    <script src="js/bootstrap.js"
+            th:src="@{/resources/dist/js/bootstrap.js}"></script>
+    <script src="js/scrollreveal.js"
+            th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+    <script src="js/certLogin.js" th:src="@{/resources/dist/js/certLogin.js}"></script>
+    <script src="js/errorcode.js" th:src="@{/resources/dist/js/errorcode.js}"></script>
+    <script src="js/qrcode.js" th:src="@{/resources/dist/js/qrcode.js}"></script>
+    <!-- twca js-->
+    <script th:src="@{/resources/dist/js/mydata.twca.ap.js}"></script>
+    <script th:src="@{/resources/dist/js/tcw.api.js}"></script>
+    <script th:src="@{/resources/dist/js/twcaCryptoLib.js}"></script>
+    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+</head>
+<style>
+    .modal {
+        position: relative;
+        -webkit-transform: none;
+    }
+
+    /*取消input type 為number的arrow*/
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    .grecaptcha-badge{
+        visibility: hidden;
+    }
+</style>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+<!--======= header =======-->
+<header th:replace="fragment/header::header"></header>
+<!--======= header =======-->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb pb-0">
+    <a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+    <li class="breadcrumb-item">
+      <a href="#" th:href="@{/}" title="回到MyData首頁">
+      	<img src="images/breadcrumb-home.png"
+            th:src="@{/resources/dist/image/breadcrumb-home.png}" alt=""/>首頁</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">登入</li>
+  </ol>
+</nav>
+<div class="loca login-wrap">
+    <div class="landing-page log-in-type-wrap shadow-sm my-area">
+        <section class="mt-3 p-3 pb-5" id="step1" style="display: block;">
+            <h2 class="mt-5 mb-5 pt-2">基本資訊</h2>
+
+            <th:blcok th:replace="fragment/identity-verify::identity-info(id = '', paramobj = null, showName = 'false', isSingle = 'true', showParamTitle = 'false', moecaCheck = 1, uidType = 0, usePolicy = false)"></th:blcok>
+        </section>
+        <section class="mt-3 p-3 pb-5" id="step2" style="display: none;">
+            <h2 class="mt-5 mb-5 pt-2">個人化資料自主運用(MyData)平臺服務條款暨隱私權保護政策</h2>
+
+            <th:blcok th:replace="fragment/member-privacy::member-privacy(id = '')"></th:blcok>
+        </section>
+        <section class="mt-3 p-3 pb-5" id="step3" style="display: none;">
+            <h2 class="mt-5 mb-5 pt-2">身分驗證</h2>
+
+            <th:blcok th:replace="fragment/identity-verify::identity-verify(id = '', moecaCheck = 1, level = 2, uidType = 0, type= 0, showTwca = 'true', isLogin='true')"></th:blcok>
+            <div class="text-center mt-3">
+                <button id="login" class="btn theme-btn" title="確認"
+                        onclick="javascript:login();" disabled style="display: none;">確認</button>
+            </div>
+        </section>
+        <section class="mt-3 p-3 pb-5" id="step4" style="display: none;">
+            <h2 class="mt-5 mb-5 pt-2" id="step4-title">雙重驗證</h2>
+            <p class="description">初次使用MyData平臺，為確認您的身分，需進行第二證件驗證作業，您可選擇下列其中一種方式驗證</p>
+            <th:blcok th:replace="fragment/identity-verify::identity-verify(id = 'double', moecaCheck = false, level = 4, uidType = 0, type=0, showTwca='true', isLogin=null)"></th:blcok>
+            <div class="text-center mt-3">
+                <button id="logindouble" class="btn theme-btn" title="確認"
+                        onclick="javascript:loginDouble();" disabled style="display: none;">確認</button>
+            </div>
+        </section>
+        <section class="mt-3 p-3 pb-5" id="step5" style="display: none;">
+            <h2 class="mt-5 mb-5 pt-2" id="step5-title">個人資訊</h2>
+            <p class="description text-left mb-3">請填寫下列個人基本資料</p>
+            <th:blcok th:replace="fragment/fill-member::member(id = '')"></th:blcok>
+        </section>
+    </div>
+    <div class="text-right hidden-mobile login-img-wrap">
+        <img src="./images/login-img.png" th:src="@{/resources/dist/image/login-img.png}" alt="">
+    </div>
+</div>
+
+<!-- 	<div id="recaptcha" class="g-recaptcha" data-sitekey="6Lc-G-IUAAAAADhDfGxbSqfoBnQ30qVTdaIXlnt0" data-callback="verifyRecaptcha" data-size="invisible"></div> -->
+
+<!--======= footer =======-->
+<footer th:replace="fragment/footer::footer"></footer>
+<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+   role="button" title="網頁置頂"
+   data-toggle="tooltip" data-placement="left" style="display: inline;">
+    <img class="arrow-position" src="images/top-arrow.png"
+         th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+</a>
+<!--======= end footer =======-->
+
+<!--======= health-card =======-->
+<span th:replace="fragment/login-health::login-health"></span>
+<!--======= end health-card =======-->
+
+<th:block th:replace="fragment/identity-verify::identity-info-script"></th:block>
+<th:block th:replace="fragment/identity-verify::identity-info-for-login-script"></th:block>
+<th:block th:replace="fragment/member-privacy::member-privacy-script"></th:block>
+<th:block th:replace="fragment/member-privacy::member-privacy-for-login-script"></th:block>
+<th:block th:replace="fragment/fill-member::fill-member-script"></th:block>
+<th:block th:replace="fragment/fill-member::fill-member-for-login-script"></th:block>
+<th:block th:replace="fragment/fill-member::email-mobile-script"></th:block>
+
+<script type="text/javascript" th:inline="javascript">
+    var level = /*[[${level}]]*/'';
+    var uuidcheck;
+    var waitOTPsecInterval;
+    var informMethod = '';
+    var tfidos = [];
+    var toPage = /*[[${toPage}]]*/'';
+    var qrcodeIntervalObj;
+	var isDoubleVerify = false;
+	var bakDataId = '';
+	var typing = false;
+	$(function() {
+		piiPrompt();
+		
+// 		var typing = false;
+		$('input').each((idx, element)=>{
+			$(element).on('compositionstart',function(){
+			    typing = true;
+			});
+			$(element).on('compositionend',function(){
+			    typing = false;
+			});
+			var oninputAttr = $(element).attr('oninput');
+			if(typeof oninputAttr!='undefined'){
+				if(oninputAttr.indexOf('MaskType.phone')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.phone);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.uid')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.uid);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.email')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.email);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.birthdate')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.birthdate);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.NHI')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.NHI);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.domicile')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.domicile);
+					        }
+					    },0);
+					})	
+				}
+			}			
+    	});
+	});
+	
+	$(document).mouseup(function (e) {
+		var container =$(".learning-wrap"); // 這邊放你想要排除的區塊
+		if (!container.is(e.target) && container.has(e.target).length === 0) {
+			container.removeClass('active');
+		}
+	});
+	
+	$(window).scroll(function() {
+		$(".learning-wrap").removeClass('active');
+	});	
+	
+    function getUidById(id) {
+        return getUnmaskValue('#uid'+id.replace('double',''));
+    }
+
+    function getBirthDate(id) {
+        return transferBirthDateToAD(getUnmaskValue('#birthdate'+id.replace('double','')));
+    }
+
+    function checkUid(uid, id) {
+        const uidType = $('#uid'+id).attr('data-uidType');
+        if(uid == null || uid == ''){
+            showPopMessage(uidType == 1?'請輸入身分證字號 / 居留證號':'請輸入身分證字號', $('#uid'+id));
+            return false;
+        }else if(!verifyExpression(uid)){
+            showPopMessage(uidType == 1?'身分證字號 / 居留證號格式不正確':'身分證字號格式不正確', $('#uid'+id));
+            return false;
+        }
+        return true;
+    }
+
+    function checkBirthDate(birthdate, id) {
+        if(birthdate == null || birthdate == ''){
+            showPopMessage('請輸入生日', $('#birthdate'+id));
+            return false;
+        }else if(!verifyBirthDateExpression(birthdate)){
+            showPopMessage('生日格式不正確', $('#birthdate'+id));
+            return false;
+        }
+        return true;
+    }
+
+    function addClassChecked(obj){
+        //div中包含input會造成二次觸發事件
+        if(event) event.preventDefault();
+        var dataId = $(obj).attr('data-id');
+        clearInterval(qrcodeIntervalObj);
+        // 申請按鈕
+        if(typeof dataId =='undefined'){
+            $('#login').removeAttr('disabled');
+            $('#login').show();
+        }else if(dataId=='double'){
+            $('#logindouble').removeAttr('disabled');
+            $('#logindouble').show();
+        }
+        
+        $('div.form-group').removeClass('checked');
+        $(obj).addClass('checked');
+        $(obj).find('input[name=verification-level]').prop('checked','checked');
+
+        $('div.verify').hide();
+        var type = $(obj).data('type');
+        if(type != null && type != ''){
+//             if($('#card'+dataId).length > 0) {
+//                 $('#card'+dataId).find('div.verify[data-type='+type+']').show();
+//             } else {
+//                 $('div.verify[data-type='+type+']').show();
+//             }
+        	$(obj).parent().parent().find('div.verify[data-type='+type+']').show();
+        }
+        if(type=='digital'||type=='business'){
+            checkHiCOSCardPlugin();
+        }
+        if(type=='health'){
+            checkNHICardPlugin();
+            refreshCaptchaImage(dataId);
+        }
+        if(type=='fic'){
+            checkTwcaLibIsAlive();
+        }
+        if(type=='fch'){
+            checkTwcaLibIsAlive();
+        }
+        if(type=='fcs'){
+            checkTwcaLibIsAlive();
+            if(typeof dataId =='undefined'){
+            	$('#login').hide();
+            	$('#fcs-btn').attr('onclick','javascript:login();');
+            }else if(dataId=='double'){
+            	$('#logindouble').hide();
+            	$('#fcs-btndouble').attr('onclick','javascript:loginDouble();');
+            }
+        }
+        if(type=='email-mobile'){
+            loginByEmailOrMobileStep1();
+        }
+    }
+
+    function redirectPage() {
+        if(toPage != null && toPage!='') {
+            var tmpboxId = '';
+            if(toPage.startsWith('verification')){
+                tmpboxId = toPage.replace('verification', '');
+
+                var tmpReturnUrl = /*[[@{/sp/member/1}]]*/'';
+                if(tmpboxId==''){
+                    return tmpReturnUrl;
+                }else{
+                    tmpReturnUrl = /*[[@{/sp/member}]]*/'';
+                    tmpReturnUrl = tmpReturnUrl + '/' + tmpboxId;
+                    return tmpReturnUrl;
+                }
+            } else if(toPage.startsWith('counter-agent')){
+                return /*[[@{/sp/service/counter/agent}]]*/'';
+            }
+
+        }
+        return /*[[@{/sp/member}]]*/'';
+    }
+
+    function getVerificationLevel(id) {
+        return $('#login'+id).parent().parent().find('input[name=verification-level]:checked').val();
+        //return $('#verification-level' + id).find('input[name=verification-level]:checked').val();
+    }
+    
+    function login() {
+    	isDoubleVerify = false;
+        const verificationLevel = getVerificationLevel('');
+        if(verificationLevel == "0.5") { // 工商憑證
+            loginByBusiness('');
+        } else if(verificationLevel == 0) { // 自然人憑證
+            loginByCer('');
+        } else if(verificationLevel == 0.1) { // 晶片金融卡
+            loginByFic('');
+        } else if(verificationLevel == 0.2) { // 硬體金融卡
+            loginByFch('');
+        } else if(verificationLevel == 2) { // 健保卡
+            loginByNhi('');
+        } else if(verificationLevel == 2.1) { // 軟體金融卡
+            loginByFcs('');
+        } else if(verificationLevel == 3) { // 雙證件
+            loginByMutifactor('');
+        } else if(verificationLevel == "email-mobile") { // 一次性密碼
+            loginByemailOrMobileLoginStepCheck();
+        } else if(verificationLevel == 5) { // mobile-id
+        	loginByMobileId('');
+        }
+    }
+
+
+    function loginDouble() {
+        const verificationLevel = getVerificationLevel('double');
+        var checkPrivacyUUID = $('#agree-privacy-btn').attr('data-privacy-uuid');
+        isDoubleVerify = true;
+        if(verificationLevel == "0.5") { // 工商憑證
+            loginByBusiness('double');
+        } else if(verificationLevel == 0) { // 自然人憑證
+            loginByCer('double');
+        } else if(verificationLevel == 0.1) { // 晶片金融卡
+            loginByFic('double');
+        } else if(verificationLevel == 0.2) { // 硬體金融卡
+            loginByFch('double');
+        } else if(verificationLevel == 2) { // 健保卡
+            loginByNhi('double');
+        } else if(verificationLevel == 2.1) { // 軟體金融卡
+            loginByFcs('double');
+        } else if(verificationLevel == 3) { // 雙證件
+            loginByMutifactor('double');
+        } else if(verificationLevel == "email-mobile") { // 一次性密碼
+            loginByemailOrMobileLoginStepCheck();
+        } else if(verificationLevel == 5) { //手機號碼
+        	loginByMobileId('double');
+        }
+    }
+    
+    /**
+     * 組成驗證登入參數
+     */
+    function loginParam() {
+        return {
+            "uid" : getUnmaskValue('#uid'),
+            "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+            "scope" : "basic"
+        };
+    }
+
+    /**
+     * 驗證欄位
+     * @param checkFlag
+     * @returns {boolean}
+     */
+    function verifyCheckFlag(checkFlag) {
+        if (checkFlag && (typeof getUnmaskValue('#uid') == 'undefined' || getUnmaskValue('#uid') == '')) {
+            $('#message-text').text('請輸入身分證字號');
+            $('#pop-message').modal('show');
+            checkFlag = false;
+            focusBefore = $('#uid');
+        }
+        if (checkFlag && !verifyExpression(getUnmaskValue('#uid'))) {
+            $('#message-text').text('身分證字號格式不正確');
+            $('#pop-message').modal('show');
+            checkFlag = false;
+            focusBefore = $('#uid');
+        }
+        if (checkFlag && (typeof getUnmaskValue('#birthdate') == 'undefined' || getUnmaskValue('#birthdate') == '')) {
+            $('#message-text').text('請輸入生日');
+            $('#pop-message').modal('show');
+            checkFlag = false;
+            focusBefore = $('#birthdate');
+        }
+        if (checkFlag && !verifyBirthDateExpression(getUnmaskValue('#birthdate'))) {
+            $('#message-text').text('生日格式不正確');
+            $('#pop-message').modal('show');
+            checkFlag = false;
+            focusBefore = $('#birthdate');
+        }
+
+        return checkFlag;
+    }
+
+    //自然人憑證登入
+    function loginByCer(id) {
+        var checkFlag = true;
+        if (verifyCheckFlag(checkFlag)) {
+            //自然人憑證
+            var pin =  $('#digital-pin'+id).val();
+            if(pin == null || pin == ''){
+                $('#message-text').text('請輸入PIN碼');
+                $('#pop-message').modal('show');
+                focusBefore = $('#digital-pin'+id);
+                return;
+            }
+
+
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/webservice/birthdate',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                    	$('#step1').show();
+                    	$('#step2').hide();
+                    	$('#step3').hide();
+                    	$('#step4').hide();
+                    	$('#step5').hide();
+                    	$('#agree-privacy').removeClass('user-agree');
+                    	$('#agree-privacy').prop('checked', false);
+                    	$('div.form-group').removeClass('checked');
+                    	$('div.form-group input').prop('checked', false);
+                    	$('div.verify').hide();
+                    	$('#digital-pin').val('');
+                    	$('#fic-pin').val('');
+                    	$('#fch-pin').val('');
+                    	$('#health-pwd').val('');
+                    	$('#captcha').val('');
+                    	$('#mutifactor-hid1').val('');
+                    	$('#houseHoldId').val('');
+                    	$('div.privacy-content').scrollTop(0);
+                    	$('#agree-privacy').prop('disabled', true);
+                        if (resp.code == -4) {
+                            showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                            return;
+                        }
+                        // WebService驗證失敗
+                        $('#message-text').text('身分驗證失敗，請重新輸入。');
+                        $('#pop-message').modal('show');
+                        focusBefore = $('#uid');
+                    } else {
+                        //在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+                        makeSignature(pin, function(ret){
+                            if(ret.ret_code!=0){
+                                $('#message-text').text(ret.errorMsg);
+                                $('#pop-message').modal('show');
+                                return;
+                            }
+                            var pkcs7 = ret.signature;
+                            var p = {
+                                "uid" : getUnmaskValue('#uid'),
+                                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                                "scope" : "basic",
+                                "pkcs7" : pkcs7,
+                                "isDoubleVerify": isDoubleVerify
+                            };
+                            if(checkFlag){
+                                RiAPI.run({
+                                    type : 'POST',
+                                    url : '/rest/user/verifyCert',
+                                    loadSpin : true,
+                                    data : p,
+                                    success : function(resp) {
+                                        if (resp.code < 0) {
+                                            //登入失敗
+                                            $('#message-text').text('自然人憑證驗證失敗，請重新操作。');
+                                            $('#pop-message').modal('show');
+                                        } else {
+                                            updataMemberInfo('', resp, true, 0);
+                                        }
+                                    },
+                                    error : function() {
+                                        $('#message-text').text('自然人憑證驗證失敗，請重新操作。');
+                                        $('#pop-message').modal('show');
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+                },
+                error : function() {
+                    $('#message-text').text('戶政機關生日驗證失敗。');
+                    $('#pop-message').modal('show');
+                }
+            });
+        }
+    }
+
+    //晶片金融卡
+    function loginByFic(id){
+        //自然人憑證
+        var pin =  $('#fic-pin'+id).val();
+        if(pin == null || pin == ''){
+            $('#message-text').text('請輸入密碼');
+            $('#pop-message').modal('show');
+            focusBefore = $('#fic-pin'+id);
+            return;
+        }
+
+        var p = {
+            "uid" : getUnmaskValue('#uid'),
+            "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+        };
+
+        RiAPI.run({
+            type : 'POST',
+            url : '/rest/user/webservice/birthdate',
+            loadSpin : true,
+            data : p,
+            success : function(resp) {
+                if (resp.code < 0) {
+                	$('#step1').show();
+                	$('#step2').hide();
+                	$('#step3').hide();
+                	$('#step4').hide();
+                	$('#step5').hide();
+                	$('#agree-privacy').removeClass('user-agree');
+                	$('#agree-privacy').prop('checked', false);
+                	$('div.form-group').removeClass('checked');
+                	$('div.form-group input').prop('checked', false);
+                	$('div.verify').hide();
+                	$('#digital-pin').val('');
+                	$('#fic-pin').val('');
+                	$('#fch-pin').val('');
+                	$('#health-pwd').val('');
+                	$('#captcha').val('');
+                	$('#mutifactor-hid1').val('');
+                	$('#houseHoldId').val('');
+                	$('div.privacy-content').scrollTop(0);
+                	$('#agree-privacy').prop('disabled', true);
+                    if (resp.code == -4) {
+                        showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                        return;
+                    }
+                    // WebService驗證失敗
+                    $('#message-text').text('身分驗證失敗，請重新輸入。');
+                    $('#pop-message').modal('show');
+                    focusBefore = $('#uid');
+                } else {
+                    //在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+                    //ATM Login
+                    console.log('----ficAtmLogin----');
+                    RiAPI.run({
+                        type : 'POST',
+                        url : '/rest/user/ficAtmLogin',
+                        loadSpin : true,
+                        data : {"uid" : getUnmaskValue('#uid')},
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                //登入失敗
+                                showPopMessage('晶片金融卡驗證失敗，請重新操作。');
+                            } else {
+                                mydataTWCALib.ATMVerifyInvoke(
+                                    pin,
+                                    resp.data.BusinessNo,
+                                    resp.data.ApiVersion,
+                                    resp.data.HashKeyNo,
+                                    resp.data.VerifyNo,
+                                    resp.data.Token,
+                                    resp.data.IdentifyNo,
+                                    resp.data.proxyURL,
+                                    ATMVerifyInvokeCallback);
+                            }
+                        },
+                        error : function() {
+                            showPopMessage('晶片金融卡功能暫時無法使用，請改用其他驗證方式。');
+                        }
+                    });
+                }
+            },
+            error : function() {
+                $('#message-text').text('戶政機關生日驗證失敗。');
+                $('#pop-message').modal('show');
+            }
+        });
+    }
+
+    //硬體金融憑證
+    function loginByFch(id){
+        //硬體金融憑證
+        var pin =  $('#fch-pin'+id).val();
+        if(pin == null || pin == ''){
+            $('#message-text').text('請輸入PIN碼');
+            $('#pop-message').modal('show');
+            focusBefore = $('#fch-pin'+id);
+            return;
+        }
+
+        var p = {
+            "uid" : getUnmaskValue('#uid'),
+            "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+        };
+
+        RiAPI.run({
+            type : 'POST',
+            url : '/rest/user/webservice/birthdate',
+            loadSpin : true,
+            data : p,
+            success : function(resp) {
+                if (resp.code < 0) {
+                	$('#step1').show();
+                	$('#step2').hide();
+                	$('#step3').hide();
+                	$('#step4').hide();
+                	$('#step5').hide();
+                	$('#agree-privacy').removeClass('user-agree');
+                	$('#agree-privacy').prop('checked', false);
+                	$('div.form-group').removeClass('checked');
+                	$('div.form-group input').prop('checked', false);
+                	$('div.verify').hide();
+                	$('#digital-pin').val('');
+                	$('#fic-pin').val('');
+                	$('#fch-pin').val('');
+                	$('#health-pwd').val('');
+                	$('#captcha').val('');
+                	$('#mutifactor-hid1').val('');
+                	$('#houseHoldId').val('');
+                	$('div.privacy-content').scrollTop(0);
+                	$('#agree-privacy').prop('disabled', true);
+                    if (resp.code == -4) {
+                        showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                        return;
+                    }
+                    // WebService驗證失敗
+                    $('#message-text').text('身分驗證失敗，請重新輸入。');
+                    $('#pop-message').modal('show');
+                    focusBefore = $('#uid');
+                } else {
+                    //在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+                    //ATM Login
+                    console.log('----fchInitParam----');
+                    RiAPI.run({
+                        type : 'POST',
+                        url : '/rest/user/fchInitParam',
+                        loadSpin : true,
+                        data : {"uid" : getUnmaskValue('#uid')},
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                //登入失敗
+                                showPopMessage('硬體金融憑證驗證失敗，請重新操作。');
+                            } else {
+                                mydataTWCALib.HWSignPKCS7(
+                                    resp.data.VerifyNo,
+                                    pin,
+                                    resp.data.proxyURL,
+                                    HWSignPKCS7Callback);
+                            }
+                        },
+                        error : function() {
+                            showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                        }
+                    });
+                }
+            },
+            error : function() {
+                $('#message-text').text('戶政機關生日驗證失敗。');
+                $('#pop-message').modal('show');
+            }
+        });
+    }
+
+    //工商憑證登入
+    function loginByBusiness(id) {
+        var checkFlag = true;
+        if (checkFlag) {
+            //工商憑證
+            var pin =  $('#business-pin'+id).val();
+            if(pin == null || pin == ''){
+                $('#message-text').text('請輸入PIN碼');
+                $('#pop-message').modal('show');
+                focusBefore = $('#business-pin'+id);
+                return;
+            }
+            //在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+            makeSignature(pin, function(ret){
+                if(ret.ret_code!=0){
+                    $('#message-text').text(ret.errorMsg);
+                    $('#pop-message').modal('show');
+                    return;
+                }
+                var pkcs7 = ret.signature;
+                var p = {
+                    "scope" : "basic",
+                    "pkcs7" : pkcs7
+                };
+                if(checkFlag){
+                    RiAPI.run({
+                        type : 'POST',
+                        url : '/rest/user/verifyMOECA',
+                        loadSpin : true,
+                        data : p,
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                //登入失敗
+                                $('#message-text').text('工商憑證驗證失敗，請重新操作。');
+                                $('#pop-message').modal('show');
+                            } else {
+                                updataMemberInfo('', resp, false, 0.5);
+                            }
+                        },
+                        error : function() {
+                            $('#message-text').text('工商憑證驗證失敗，請重新操作。');
+                            $('#pop-message').modal('show');
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+
+
+    //健保卡登入
+    function loginByNhi(id) {
+        var checkFlag = true;
+        if (verifyCheckFlag(checkFlag)) {
+            //健保卡
+            var checkFlag = true;
+            var pwd =  $('#health-pwd'+id).val();
+            if(pwd == null || pwd == ''){
+                $('#message-text').text('請輸入註冊密碼');
+                $('#pop-message').modal('show');
+                checkFlag = false;
+                focusBefore = $('#health-pwd'+id);
+                return;
+            }
+
+            var captcha = $('#captcha'+id).val();
+            if(captcha == null || captcha.length == 0) {
+                $('#message-text').text("請輸入驗證碼");
+                $('#pop-message').modal('show');
+                focusBefore = $('#captcha'+id);
+                return;
+            }
+
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+            };
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/webservice/birthdate',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                    	$('#step1').show();
+                    	$('#step2').hide();
+                    	$('#step3').hide();
+                    	$('#step4').hide();
+                    	$('#step5').hide();
+                    	$('#agree-privacy').removeClass('user-agree');
+                    	$('#agree-privacy').prop('checked', false);
+                    	$('div.form-group').removeClass('checked');
+                    	$('div.form-group input').prop('checked', false);
+                    	$('div.verify').hide();
+                    	$('#digital-pin').val('');
+                    	$('#fic-pin').val('');
+                    	$('#fch-pin').val('');
+                    	$('#health-pwd').val('');
+                    	$('#captcha').val('');
+                    	$('#mutifactor-hid1').val('');
+                    	$('#houseHoldId').val('');
+                    	$('div.privacy-content').scrollTop(0);
+                    	$('#agree-privacy').prop('disabled', true);
+                        if (resp.code == -4) {
+                            showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                            return;
+                        }
+                        // WebService驗證失敗
+                        $('#message-text').text('身分驗證失敗，請重新輸入。');
+                        $('#pop-message').modal('show');
+                    } else {
+
+                        if(healthCardCanVerify){
+                            // 檢驗健保卡，verifyHealth function in fragment/login-health
+                            verifyHealth(pwd, function(ret){
+                                var p = {
+                                    "uid" : getUnmaskValue('#uid'),
+                                    "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                                    "scope" : "basic",
+                                    "captcha" : captcha.toUpperCase(),
+                                    "isDoubleVerify": isDoubleVerify
+                                };
+                                p.health = ret;
+                                if(checkFlag){
+                                    RiAPI.run({
+                                        type : 'POST',
+                                        url : '/rest/user/verifyNHICard',
+                                        loadSpin : true,
+                                        data : p,
+                                        success : function(resp) {
+                                            if (resp.code < 0) {
+                                                refreshCaptchaImage(id);
+                                                //登入失敗
+                                                $('#message-text').text(resp.text);
+                                                $('#pop-message').modal('show');
+                                            } else {
+                                                updataMemberInfo('', resp, true, 2);
+                                            }
+                                        },
+                                        error : function() {
+                                            $('#message-text').text('健保卡驗證失敗，請重新操作。');
+                                            $('#pop-message').modal('show');
+                                        }
+                                    });
+                                }
+                            });
+                        }else{
+                            $('#message-text').text("未安裝健保卡檢測元件，請重新確認或安裝");
+                            $('#pop-message').modal('show');
+                            return;
+                        }
+
+                    }
+                },
+                error : function() {
+                    $('#message-text').text('戶政機關生日驗證失敗。');
+                    $('#pop-message').modal('show');
+                }
+            });
+
+
+        }
+    }
+
+    //軟體金融憑證
+    function loginByFcs(id){
+        //軟體金融憑證
+// 			var pin =  $('#fcs-pin').val();
+// 			if(pin == null || pin == ''){
+// 				$('#message-text').text('請輸入PIN碼');
+// 				$('#pop-message').modal('show');
+// 				focusBefore = $('#fcs-pin');
+// 				return;
+// 			}
+        var pin = '';
+        var p = {
+            "uid" : getUnmaskValue('#uid'),
+            "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+        };
+
+        RiAPI.run({
+            type : 'POST',
+            url : '/rest/user/webservice/birthdate',
+            loadSpin : true,
+            data : p,
+            success : function(resp) {
+                if (resp.code < 0) {
+                	$('#step1').show();
+                	$('#step2').hide();
+                	$('#step3').hide();
+                	$('#step4').hide();
+                	$('#step5').hide();
+                	$('#agree-privacy').removeClass('user-agree');
+                	$('#agree-privacy').prop('checked', false);
+                	$('div.form-group').removeClass('checked');
+                	$('div.form-group input').prop('checked', false);
+                	$('div.verify').hide();
+                	$('#digital-pin').val('');
+                	$('#fic-pin').val('');
+                	$('#fch-pin').val('');
+                	$('#health-pwd').val('');
+                	$('#captcha').val('');
+                	$('#mutifactor-hid1').val('');
+                	$('#houseHoldId').val('');
+                	$('div.privacy-content').scrollTop(0);
+                	$('#agree-privacy').prop('disabled', true);
+                    if (resp.code == -4) {
+                        showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                        return;
+                    }
+                    // WebService驗證失敗
+                    $('#message-text').text('身分驗證失敗，請重新輸入。');
+                    $('#pop-message').modal('show');
+                    focusBefore = $('#uid');
+                } else {
+                    console.log('---軟體金融憑證 Init---');
+                    RiAPI.run({
+                        type : 'POST',
+                        url : '/rest/user/fcsInitParam',
+                        loadSpin : true,
+                        data : {"uid" : getUnmaskValue('#uid')},
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                //登入失敗
+                                showPopMessage('軟體金融憑證驗證失敗，請重新操作。');
+                            } else {
+                                mydataTWCALib.SWSignPKCS7(
+                                    resp.data.VerifyNo,
+                                    pin,
+                                    resp.data.MemberNo,
+                                    SWSignPKCS7Callback);
+                            }
+                        },
+                        error : function() {
+                            showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                        }
+                    });
+                }
+            },
+            error : function() {
+                $('#message-text').text('戶政機關生日驗證失敗。');
+                $('#pop-message').modal('show');
+            }
+        });
+    }
+
+    //雙證件登入
+    function loginByMutifactor(id) {
+        var checkFlag = true;
+        if (verifyCheckFlag(checkFlag)) {
+            //自然人憑證
+            var pin =  $('#digital-pin'+id).val();
+            //身份證換補日期
+            var $inputMarkDate = $('#mutifactor-idMarkDate' + id).find('input[name=multifactor-type]');
+            //戶號
+            var $inputhouseHoldId = $('#mutifactor-houseHoldId'+ id).find('input[name=multifactor-type]');
+            //健保卡卡號
+            var $inputHid = $('#mutifactor-hid'+ id).find('input[name=multifactor-type]');
+            var markDate = $inputMarkDate.val();
+            var houseHoldId = getUnmaskValue($inputhouseHoldId);
+            var hid = getUnmaskValue($inputHid);
+            
+            
+            if(hid == null || hid == ''){
+                $('#message-text').text('請輸入健保卡卡號');
+                $('#pop-message').modal('show');
+                focusBefore = $inputHid;
+                return;
+            }
+
+            if(houseHoldId == null || houseHoldId == ''){
+                $('#message-text').text('請輸入戶口名簿戶號');
+                $('#pop-message').modal('show');
+                focusBefore = $inputhouseHoldId;
+                return;
+            }
+
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/webservice/birthdate',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                    	$('#step1').show();
+                    	$('#step2').hide();
+                    	$('#step3').hide();
+                    	$('#step4').hide();
+                    	$('#step5').hide();
+                    	$('#agree-privacy').removeClass('user-agree');
+                    	$('#agree-privacy').prop('checked', false);
+                    	$('div.form-group').removeClass('checked');
+                    	$('div.form-group input').prop('checked', false);
+                    	$('div.verify').hide();
+                    	$('#digital-pin').val('');
+                    	$('#fic-pin').val('');
+                    	$('#fch-pin').val('');
+                    	$('#health-pwd').val('');
+                    	$('#captcha').val('');
+                    	$('#mutifactor-hid1').val('');
+                    	$('#houseHoldId').val('');
+                    	$('div.privacy-content').scrollTop(0);
+                    	$('#agree-privacy').prop('disabled', true);
+                        if (resp.code == -4) {
+                            showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                            return;
+                        }
+                        // WebService驗證失敗
+                        $('#message-text').text('身分證字號或生日錯誤，請重新操作。');
+                        $('#pop-message').modal('show');
+                        focusBefore = $('#uid');
+                    } else {
+                        var p = {
+                            "uid" : getUnmaskValue('#uid'),
+                            "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+                            "scope" : "basic",
+                            "isDoubleVerify": isDoubleVerify
+                        };            
+                        p.nhiCardNumber = hid;
+                        p.houseHoldId = houseHoldId;
+                        if(checkFlag){
+                            RiAPI.run({
+                                type : 'POST',
+                                url : '/rest/user/piiVerifyUrl/mydata/10',
+                                loadSpin : true,
+                                data : p,
+                                success : function(resp) {
+                                    if (resp.code < 0) {
+                                        //登入失敗
+                                        if(resp.text === '身分證發證日期或發證日期種類(領/補/換)錯誤'){
+                                            $('#idMark_selection' + id ).val('-1');
+                                            $inputMarkDate.val('');
+                                            focusBefore = $inputMarkDate;
+                                        }else if(resp.text === '戶口名簿戶號錯誤'){
+                                            $inputhouseHoldId.val('');
+                                            focusBefore = $inputhouseHoldId;
+                                        }else if(resp.text === '健保卡卡號錯誤'){
+                                            $inputHid.val('');
+                                            focusBefore = $inputHid;
+                                        }
+                                        showPopMessage(resp.text);
+                                    } else {
+                                        // 驗證通過
+                                        if (typeof resp.data.uuidcheck != 'undefined') {
+                                            var uuidcheck = resp.data.uuidcheck;
+                                            forPIIVerifyUrlCheckLoginWindowClosure(id,uuidcheck,'10',isDoubleVerify);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                },
+                error : function() {
+                    $('#message-text').text('戶政機關生日驗證失敗。');
+                    $('#pop-message').modal('show');
+                }
+            });
+        }
+    }
+        
+    //TFIDO登入
+    function loginByTfido(obj) {
+        $(obj).prop('disabled', true);
+        var checkFlag = true;
+        if (verifyCheckFlag(checkFlag)) {
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+            };
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/webservice/birthdate',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                    	$('#step1').show();
+                    	$('#step2').hide();
+                    	$('#step3').hide();
+                    	$('#step4').hide();
+                    	$('#step5').hide();
+                    	$('#agree-privacy').removeClass('user-agree');
+                    	$('#agree-privacy').prop('checked', false);
+                    	$('div.form-group').removeClass('checked');
+                    	$('div.form-group input').prop('checked', false);
+                    	$('div.verify').hide();
+                    	$('#digital-pin').val('');
+                    	$('#fic-pin').val('');
+                    	$('#fch-pin').val('');
+                    	$('#health-pwd').val('');
+                    	$('#captcha').val('');
+                    	$('#mutifactor-hid1').val('');
+                    	$('#houseHoldId').val('');
+                    	$('div.privacy-content').scrollTop(0);
+                    	$('#agree-privacy').prop('disabled', true);
+                        if (resp.code == -4) {
+                            showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                            return;
+                        }
+                        $(obj).prop('disabled', false);
+                        // WebService驗證失敗
+                        $('#message-text').text('身分驗證失敗，請重新輸入。');
+                        $('#pop-message').modal('show');
+                    } else {
+                        createTFidoQRcode(obj);
+                    }
+                },
+                error : function() {
+                    $('#message-text').text('戶政機關生日驗證失敗。');
+                    $('#pop-message').modal('show');
+                }
+            });
+
+        }else{
+            $('div.verify').hide();
+            $(obj).prop('disabled', false);
+        }
+    }
+
+    function confirmTFido(){
+        //TW FidO
+        var checkFlag = true;
+        var qrid =  $('#qrid'+bakDataId).val();
+        var p = {
+            "uid" : getUnmaskValue('#uid'),
+            "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+            "scope" : "basic",
+            "qrid" : qrid,
+            "isDoubleVerify": isDoubleVerify
+        };
+        if (verifyCheckFlag(checkFlag)) {
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/confirmTFido',
+                data: p,
+                loadSpin : true,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        $('#message-text').text('TW FidO認證失敗，請重新操作。');
+                        $('#pop-message').modal('show');
+                    }else{
+                        updataMemberInfo('', resp, true, 1);
+                    }
+                }
+            });
+        }
+    }
+
+    //手機號碼登入
+    function loginByMobileId(id) {
+        var checkFlag = true;
+        if (verifyCheckFlag(checkFlag)) {
+            //手機號碼
+            var msisdn =  $('#msisdn'+id).val();
+            var clauseVer =  $('#clauseVer'+id).val();
+            var clauseVerTime =  $('#clauseVerTime'+id).val();
+            if(msisdn == null || msisdn == ''){
+                $('#message-text').text('請輸入手機門碼');
+                $('#pop-message').modal('show');
+                focusBefore = $('#msisdn'+id);
+                return;
+            }
+            
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/webservice/birthdate',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                    	$('#step1').show();
+                    	$('#step2').hide();
+                    	$('#step3').hide();
+                    	$('#step4').hide();
+                    	$('#step5').hide();
+                    	$('#agree-privacy').removeClass('user-agree');
+                    	$('#agree-privacy').prop('checked', false);
+                    	$('div.form-group').removeClass('checked');
+                    	$('div.form-group input').prop('checked', false);
+                    	$('div.verify').hide();
+                    	$('#digital-pin').val('');
+                    	$('#fic-pin').val('');
+                    	$('#fch-pin').val('');
+                    	$('#health-pwd').val('');
+                    	$('#captcha').val('');
+                    	$('#mutifactor-hid1').val('');
+                    	$('#houseHoldId').val('');
+                    	$('div.privacy-content').scrollTop(0);
+                    	$('#agree-privacy').prop('disabled', true);
+                        if (resp.code == -4) {
+                            showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                            return;
+                        }
+                        // WebService驗證失敗
+                        $('#message-text').text('身分驗證失敗，請重新輸入。');
+                        $('#pop-message').modal('show');
+                        focusBefore = $('#uid');
+                    } else {
+                        var p = {
+                            "uid" : getUnmaskValue('#uid'),
+                            "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                            "scope" : "basic",
+							"msisdn": msisdn,
+							"clauseVer": clauseVer,
+							"clauseVerTime": clauseVerTime,
+                            "isDoubleVerify": isDoubleVerify
+                        };
+                        if(checkFlag){
+                            RiAPI.run({
+                                type : 'POST',
+                                url : '/rest/user/verifyMobileId',
+                                loadSpin : true,
+                                data : p,
+                                success : function(resp) {
+                                    if (resp.code < 0) {
+                                        //登入失敗
+                                        $('#message-text').text('此手機號碼非登記於您本人名下。如無本人名下之門號，請選擇其他驗證方式。');
+                                        $('#pop-message').modal('show');
+                                    } else {
+                                        updataMemberInfo('', resp, true, 0);
+                                    }
+                                },
+                                error : function() {
+                                    $('#message-text').text('此手機號碼非登記於您本人名下。如無本人名下之門號，請選擇其他驗證方式。');
+                                    $('#pop-message').modal('show');
+                                }
+                            });
+                        }
+                    }
+                },
+                error : function() {
+                    $('#message-text').text('戶政機關生日驗證失敗。');
+                    $('#pop-message').modal('show');
+                }
+            });
+        }
+    }
+    
+    function loginByEmailOrMobileStep1() {
+        var checkFlag = true;
+        if (verifyCheckFlag(checkFlag)) {
+
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+            };
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/webservice/birthdate',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                    	$('div.privacy-content').scrollTop(0);
+                    	$('#step1').show();
+                    	$('#step2').hide();
+                    	$('#step3').hide();
+                    	$('#step4').hide();
+                    	$('#step5').hide();
+                    	$('#agree-privacy').removeClass('user-agree');
+                    	$('#agree-privacy').prop('checked', false);
+                    	$('div.form-group').removeClass('checked');
+                    	$('div.form-group input').prop('checked', false);
+                    	$('#agree-privacy').prop('disabled', true);
+                    	$('div.verify').hide();
+                    	$('#digital-pin').val('');
+                    	$('#fic-pin').val('');
+                    	$('#fch-pin').val('');
+                    	$('#health-pwd').val('');
+                    	$('#captcha').val('');
+                    	$('#mutifactor-hid1').val('');
+                    	$('#houseHoldId').val('');
+                        if (resp.code == -4) {
+                            showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                            return;
+                        }
+                        // WebService驗證失敗
+                        $('#message-text').text('身分驗證失敗，請重新輸入。');
+                        $('#pop-message').modal('show');
+                    } else {
+                        RiAPI.run({
+                            type : 'POST',
+                            url : '/rest/user/emailOrMobileLoginStep1',
+                            loadSpin : true,
+                            data : loginParam(),
+                            success : function(resp) {
+                                if (resp.code < 0) {
+                                    $('#message-text').text('您非 MyData 會員，請使用其他身分驗證方式登入');
+                                    $('#pop-message').modal('show');
+                                } else {
+                                    if (typeof resp.data.uuidcheck != 'undefined') {
+                                        // console.log(resp.data.uuidcheck);
+                                        $('#step3Div').show();
+                                        $('#uid').attr('disabled', 'disabled');
+                                        $('#birthdate').attr('disabled','disabled');
+                                        //click emailradio2Label
+                                        $('#emailradio2Label').click();
+                                        $('#loginByEmailOrMobileStep1Link').addClass('disabled');
+                                        $('#loginByEmailOrMobileStep1Link').attr('disabled', 'disabled');
+                                        //$('html, body').animate({scrollTop : $('#step3Div').offset().top}, 100);
+                                        uuidcheck = resp.data.uuidcheck;
+                                        //初次發送，一樣等一分鐘後，才可重送
+                                        var hint = '';
+                                        var hinttmp = '';
+                                        if (resp.data.inform_method === 'mobile') {
+                                            hint = '動態密碼已發送至您的手機號碼：' + maskPhoneNumber(resp.data.member.mobile) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼(120秒)';
+                                            hinttmp = '動態密碼已發送至您的手機號碼：' + maskPhoneNumber(resp.data.member.mobile) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼';
+                                            $('#resendOTPText').empty().append(hint);
+                                            $('#resendOTPText').attr('data-value',hinttmp);
+                                            $('#resendOTPText').removeClass('link');
+                                        } else {
+                                            hint = '動態密碼已發送至您的電子信箱：' + maskEmailAddress(resp.data.member.email) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼(120秒)';
+                                            hinttmp = '動態密碼已發送至您的電子信箱：' + maskEmailAddress(resp.data.member.email) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼';
+                                            $('#resendOTPText').empty().append(hint);
+                                            $('#resendOTPText').attr('data-value',hinttmp);
+                                            $('#resendOTPText').removeClass('link');
+                                        }
+                                        $('#resendOTPBtn').css('cssText','cursor: default;text-decoration:none !important;color:#414141 !important;');
+                                        $('#resendOTPBtn').attr('href','javascript:void(0);');
+                                        $('#resendOTPText').attr('data-time', 120);
+                                        waitOTPsecInterval = setInterval(function() {checkOTPWaitTime();}, 1000);
+                                    } else {
+
+                                        //$('#message-text').empty().append('您非 MyData 會員，請使用其他身分驗證方式登入');
+                                        $('#message-text').empty().append('您尚未設定主要聯絡方式，請先以其他方式進行登入並設定主要聯絡資料，才能使用動態密碼登入');
+                                        $('#pop-message').modal('show');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                },
+                error : function() {
+                    $('#message-text').text('戶政機關生日驗證失敗。');
+                    $('#pop-message').modal('show');
+                }
+            });
+        }
+    }
+
+    function loginByEmailOrMobileStep2() {
+        var checkFlag = true;
+        var p;
+        var emailradioVal = $('input[name=emailradio]:checked').val();
+
+        if (emailradioVal == 'email') {
+            p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "name" : getUnmaskValue('#name'),
+                "informMethod" : "email",
+                "email" : getUnmaskValue('#email')
+            };
+        }
+        if (emailradioVal == 'mobile') {
+            p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "name" : getUnmaskValue('#name'),
+                "informMethod" : "mobile",
+                "mobile" : getUnmaskValue('#mobile')
+            };
+        }
+        if (checkFlag && (typeof getUnmaskValue('#name') == 'undefined' || getUnmaskValue('#name') == '')) {
+            $('#message-text').text('請輸入姓名');
+            $('#pop-message').modal('show');
+            focusBefore = $('#name');
+            checkFlag = false;
+        }
+        if (checkFlag && (emailradioVal == 'email' || emailradioVal == 'mobile')) {
+            if (checkFlag && emailradioVal == 'email' && (typeof getUnmaskValue('#email') == 'undefined' || getUnmaskValue('#email') == '')) {
+                $('#message-text').text('請輸入電子信箱');
+                $('#pop-message').modal('show');
+                focusBefore = $('#email');
+                checkFlag = false;
+            }
+            if (checkFlag && emailradioVal == 'mobile' && (typeof getUnmaskValue('#mobile') == 'undefined' || getUnmaskValue('#mobile') == '')) {
+                //alert('請輸入手機號碼');
+                $('#message-text').text('請輸入手機號碼');
+                $('#pop-message').modal('show');
+                focusBefore = $('#mobile');
+                checkFlag = false;
+            }
+            if (checkFlag) {
+                RiAPI.run(
+                    {
+                        type : 'POST',
+                        url : '/rest/user/emailOrMobileLoginStep2',
+                        loadSpin : true,
+                        data : p,
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                //登入失敗
+                                //alert('登入失敗，請重新操作！');
+                                //window.close();
+                                $('#message-text').text('登入失敗，請重新操作！');
+                                $('#pop-message').modal('show');
+                                var siginUrl = /*[[@{/signin}]]*/'';
+                                window.location.href = siginUrl;
+                            } else {
+                                RiAPI.run(
+                                    {
+                                        type : 'POST',
+                                        url : '/rest/user/emailOrMobileLoginStep1',
+                                        loadSpin : true,
+                                        data : p,
+                                        success : function(resp) {
+                                            if (resp.code < 0) {
+                                                //登入失敗
+                                                //alert('登入失敗，請重新操作！');
+                                                //window.close();
+                                                $('#message-text').text('登入失敗，請重新操作！');
+                                                $('#pop-message').modal('show');
+                                                var siginUrl = /*[[@{/signin}]]*/'';
+                                                window.location.href = siginUrl;
+                                            } else {
+                                                // console.log(resp.data);
+                                                if (typeof resp.data.uuidcheck != 'undefined') {
+                                                    // console.log(resp.data.uuidcheck);
+                                                    $('#step3Div').show();
+                                                    $('#uid').attr('disabled','disabled');
+                                                    $('#birthdate').attr('disabled','disabled');
+                                                    $('#loginByEmailOrMobileStep1Link').addClass('disabled');
+                                                    $('#loginByEmailOrMobileStep1Link').attr('disabled','disabled');
+                                                    $('#name').attr('disabled','disabled');
+                                                    $('#loginByEmailOrMobileStep2Link').addClass('disabled');
+                                                    $('#loginByEmailOrMobileStep2Link').attr('disabled','disabled');
+                                                    $('#emailradio1').attr('disabled','disabled');
+                                                    $('#emailradio2').attr('disabled','disabled');
+                                                    $('#email').attr('disabled','disabled');
+                                                    $('#mobile').attr('disabled','disabled');
+                                                    $('html, body').animate({scrollTop : $('#step3Div').offset().top},100);
+                                                    uuidcheck = resp.data.uuidcheck;
+                                                    //初次發送，一樣等一分鐘後，才可重送
+                                                    var hint = '';
+                                                    var hinttmp = '';
+                                                    if (resp.data.inform_method === 'mobile') {
+                                                        hint = '動態密碼已發送至您的手機號碼：' + maskPhoneNumber(resp.data.member.mobile) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼(120秒)';
+                                                        hinttmp = '動態密碼已發送至您的手機號碼：' + maskPhoneNumber(resp.data.member.mobile) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼';
+                                                        $('#resendOTPText').empty().append(hint);
+                                                        $('#resendOTPText').attr('data-value',hinttmp);
+                                                        $('#resendOTPText').removeClass('link');
+                                                    } else {
+                                                        hint = '動態密碼已發送至您的電子信箱：' + maskEmailAddress(resp.data.member.email) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼(120秒)';
+                                                        hinttmp = '動態密碼已發送至您的電子信箱：' + maskEmailAddress(resp.data.member.email) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼';
+                                                        $('#resendOTPText').empty().append(hint);
+                                                        $('#resendOTPText').attr('data-value',hinttmp);
+                                                        $('#resendOTPText').removeClass('link');
+                                                    }
+                                                    $('#resendOTPBtn').css('cssText','cursor: default;text-decoration:none !important;color:#414141 !important;');
+                                                    $('#resendOTPBtn').attr('href','javascript:void(0);');
+                                                    $('#resendOTPText').attr('data-time', 120);
+                                                    waitOTPsecInterval = setInterval(function() {checkOTPWaitTime();}, 1000);
+                                                }
+                                            }
+                                        }
+                                    });
+                            }
+                        }
+                    });
+            }
+        } else {
+            if (checkFlag) {
+                $('#message-text').text('請選擇聯絡方式');
+                $('#pop-message').modal('show');
+            }
+        }
+    }
+
+    function fillMember(){
+        var checkFlag = true;
+        var p;
+        var emailradioVal = $('input[name=emailradio]:checked').val();
+        if (emailradioVal == 'email') {
+            p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "name" : getUnmaskValue('#name'),
+                "informMethod" : "email",
+                "email" : getUnmaskValue('#email')
+            };
+        }
+        if (emailradioVal == 'mobile') {
+            p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "name" : getUnmaskValue('#name'),
+                "informMethod" : "mobile",
+                "mobile" : getUnmaskValue('#mobile')
+            };
+        }
+        if (checkFlag && (typeof getUnmaskValue('#name') == 'undefined' || getUnmaskValue('#name') == '')) {
+            $('#message-text').text('請輸入姓名');
+            $('#pop-message').modal('show');
+            focusBefore = $('#name');
+            checkFlag = false;
+        }
+        if (checkFlag && (emailradioVal == 'email' || emailradioVal == 'mobile')) {
+            if (checkFlag && emailradioVal == 'email' && (typeof getUnmaskValue('#email') == 'undefined' || getUnmaskValue('#email') == '')) {
+                $('#message-text').text('請輸入電子信箱');
+                $('#pop-message').modal('show');
+                c
+                checkFlag = false;
+            }
+            if (checkFlag && emailradioVal == 'mobile' && (typeof getUnmaskValue('#mobile') == 'undefined' || getUnmaskValue('#mobile') == '')) {
+                $('#message-text').text('請輸入手機號碼');
+                $('#pop-message').modal('show');
+                focusBefore = $('#mobile');
+                checkFlag = false;
+            }
+            if (checkFlag) {
+                RiAPI.run(
+                    {
+                        type : 'POST',
+                        url : '/rest/user/emailOrMobileLoginStep2',
+                        loadSpin : true,
+                        data : p,
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                //登入失敗
+                                //alert('登入失敗，請重新操作！');
+                                //window.close();
+                                $('#message-text').text('登入失敗，請重新操作！');
+                                $('#pop-message').modal('show');
+                                var siginUrl = /*[[@{/signin}]]*/'';
+                                window.location.href = siginUrl;
+                            } else {
+                                updataMemberInfo('', resp, false, 4);
+                            }
+                        }
+                    });
+            }
+        } else {
+            if (checkFlag) {
+                $('#message-text').text('請選擇聯絡方式');
+                $('#pop-message').modal('show');
+            }
+        }
+    }
+
+    ///emailOrMobileLoginStep/check
+    function loginByemailOrMobileLoginStepCheck() {
+        var checkFlag = true;
+        $('#emailstep3alert').hide();
+        p = {
+            "uuidcheck" : uuidcheck,
+            "checkCode" : $('#checkCode').val()
+        };
+        if (checkFlag && (typeof $('#checkCode').val() == 'undefined' || $('#checkCode').val() == '')) {
+            $('#message-text').text('請輸入動態密碼');
+            $('#pop-message').modal('show');
+            checkFlag = false;
+            focusBefore = $('#checkCode');
+        }
+
+
+        if (checkFlag) {
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/emailOrMobileLoginStep/check',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        $('#checkCode').val('');
+                        if(resp.code == -1209) {
+                            $('#message-text').text('動態密碼不正確或已失效');
+                            $('#pop-message').modal('show');
+                        } else {
+                            $('#message-text').text('動態密碼錯誤！');
+                            $('#pop-message').modal('show');
+                        }
+                    } else {
+                        updataMemberInfo('', resp, false, 4);
+                    }
+                }
+            });
+        }
+    }
+
+
+    //製作T-Fido QRcode
+    function createTFidoQRcode(obj){
+    	var tmpDataId = $(obj).attr('data-id');
+        if(typeof tmpDataId !='undefined' && tmpDataId.indexOf('double')>-1){
+        	isDoubleVerify = true;
+        	bakDataId = tmpDataId;
+        }else{
+        	tmpDataId = '';
+        } 
+        var dataId = '0';
+        //若已有生成QRcode，則直接顯示
+        if($('#tfido-QRcode'+tmpDataId).find('img').length > 0){
+            addClassChecked(obj);
+            return;
+        }
+
+        var uid = getUnmaskValue('#uid');
+        var birthdate = transferBirthDateToAD(getUnmaskValue('#birthdate'));
+        var checkData = true;
+        if(uid == null || uid == ''){
+            $('#message-text').text('請輸入身分證字號');
+            checkData = false;
+            focusBefore = $('#uid');
+        }else if(!verifyUidExpression(uid)){
+            $('#message-text').text('身分證字號格式不正確');
+            checkData = false;
+            focusBefore = $('#uid');
+        }else if(birthdate == null || birthdate == ''){
+            $('#message-text').text('請輸入生日');
+            checkData = false;
+            focusBefore = $('#birthdate');
+        }else if(!verifyBirthDateExpression(birthdate)){
+            $('#message-text').text('生日格式不正確');
+            checkData = false;
+            focusBefore = $('#birthdate');
+        }
+        if(checkData == false){
+            $('#pop-message').modal('show');
+            $('div.verify').hide();
+            $('#apply'+dataId).hide();
+            return;
+        }
+        var p = {
+            "uid" : getUnmaskValue('#uid'),
+            "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+        };
+        RiAPI.run({
+            type : 'POST',
+            url : '/rest/user/webservice/birthdate',
+            loadSpin : true,
+            data : p,
+            success : function(resp) {
+                if (resp.code < 0) {
+                	$('#step1').show();
+                	$('#step2').hide();
+                	$('#step3').hide();
+                	$('#step4').hide();
+                	$('#step5').hide();
+                	$('#agree-privacy').removeClass('user-agree');
+                	$('#agree-privacy').prop('checked', false);
+                	$('div.form-group').removeClass('checked');
+                	$('div.form-group input').prop('checked', false);
+                	$('div.verify').hide();
+                	$('#digital-pin').val('');
+                	$('#fic-pin').val('');
+                	$('#fch-pin').val('');
+                	$('#health-pwd').val('');
+                	$('#captcha').val('');
+                	$('#mutifactor-hid1').val('');
+                	$('#houseHoldId').val('');
+                	$('div.privacy-content').scrollTop(0);
+                	$('#agree-privacy').prop('disabled', true);
+                    if (resp.code == -4) {
+                        showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+                        return;
+                    }
+                    // WebService驗證失敗
+                    $('#message-text').text('身分驗證失敗，請重新輸入。');
+                    $('#pop-message').modal('show');
+                    focusBefore = $('#uid');
+                } else {
+                    console.log('---TW FidO Init---');
+                    var data = {
+                            uid: uid
+                        };
+                        RiAPI.run({
+                            type : 'POST',
+                            url : '/rest/user/notifyTFido',
+                            data: data,
+                            loadSpin : true,
+                            success : function(resp) {
+                                if (resp.code < 0) {
+                                    $('#tfido-message-text').text(resp.text);
+                                    $('#tfido-message').modal('show');
+                                }else{
+                                    //產生QRcode
+                                    var qc = new QRCode(document.getElementById('tfido-QRcode'+tmpDataId), {
+                                        text: resp.data.TFidoResp,
+                                        width : 190,
+                                        height : 190
+                                    });
+                                    $('#qrid'+tmpDataId).val(resp.data.qrid);
+                                    //計時一分鐘
+                                    var countId = countQRcodeSecond($('#tfido-second'+tmpDataId));
+                                    // 將QRcode及計時器存入陣列，以便重新產生
+                                    tfidos.push({
+                                        dataId: dataId,
+                                        qrcode: qc,
+                                        countId: countId
+                                    });
+                                    addClassChecked(obj);
+                                    $('#uid, #birthdate').attr('disabled','disabled');
+                                    $('#tfido-QRcode'+tmpDataId).attr('title','請掃描 QRcode');
+                                    autoCheckQRcode(tmpDataId);
+                                    $('.verify').attr('disabled','disabled');
+                                    $('#tfido-overtime-btn').attr('onclick','javascript:refreshTFidoQRcode();');
+                                    $('#login').attr('disabled','disabled');
+                                }
+                            }
+                        });
+                }
+            },
+            error : function() {
+                $('#message-text').text('戶政機關生日驗證失敗。');
+                $('#pop-message').modal('show');
+            }
+        });
+    }
+
+    //重新產生T-Fido QRcode
+    function refreshTFidoQRcode(){
+        $('#tfido-overtime-message').modal('hide');
+        var dataId = '0';
+        var uid = getUnmaskValue('#uid');
+        var data = {
+            uid: uid
+        };
+        RiAPI.run({
+            type : 'POST',
+            url : '/rest/user/notifyTFido',
+            data: data,
+            loadSpin : true,
+            success : function(resp) {
+                if (resp.code < 0) {
+                    $('#tfido-message-text').text(resp.text);
+                    $('#tfido-message').modal('show');
+                }else{
+                    var qc = tfidos.find(e => e.dataId == dataId);
+                    //清除舊的計時器
+                    clearInterval(qc.countId);
+                    //產生新的QRcode
+                    qc.qrcode.makeCode(resp.data.TFidoResp);
+                    $('#qrid'+bakDataId).val(resp.data.qrid);
+                    //產生新的計時器
+                    qc.countId = countQRcodeSecond($('#tfido-second'));
+                    $('#tfido-QRcode').attr('title','請掃描 QRcode');
+                    autoCheckQRcode(bakDataId);
+                    $('.verify').attr('disabled','disabled');
+                    $('#tfido-overtime-btn').attr('onclick','javascript:refreshTFidoQRcode();');
+                }
+            },
+            error : function() {
+                $('#message-text').text('TW FidO認證失敗。');
+                $('#pop-message').modal('show');
+            }
+        });
+    }
+
+    //120秒失敗，每5秒檢查
+    function autoCheckQRcode(id){
+        var countConfirmTFido = 0; // 120 sec / 5sec = 24 times
+        var prIdEncode = $('#apply').attr('prid-list');
+        clearInterval(qrcodeIntervalObj);
+        qrcodeIntervalObj = window.setInterval(function(){
+            //TW FidO
+            var checkFlag = true;
+            var qrid =  $('#qrid'+id).val();
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "scope" : "basic",
+                "qrid" : qrid,
+                "isDoubleVerify": isDoubleVerify
+            };
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/confirmTFido',
+                data: p,
+                loadSpin : false,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //$('#message-text').text('TW FidO認證失敗，請重新操作。');
+                        //$('#pop-message').modal('show');
+                        countConfirmTFido = countConfirmTFido + 1;
+                        console.log('countConfirmTFido = '+ countConfirmTFido);
+                        if(countConfirmTFido>=24){
+                            clearInterval(qrcodeIntervalObj);
+                            $('#tfido-overtime-message-text').text('TW FidO認證已逾兩分鐘，請重新操作。');
+                            $('#tfido-overtime-message').modal('show');
+                        }
+                    }else{
+                        //檢測成功直接申請
+                        clearInterval(qrcodeIntervalObj);
+                        updataMemberInfo('', resp, true, 1);
+                    }
+                }
+            });
+        },5000);
+    }
+
+    //倒數60秒
+    function countQRcodeSecond(){
+        var obj = $('#tfido-second');
+        var second = 59;
+        var countId;
+        return countId = window.setInterval(function(){
+            obj.html(second);
+            if (second == 0){
+                clearInterval(countId);
+            }
+            second--;
+        },1000);
+    }
+
+    function refreshCaptchaImage(id) {
+        var url = /*[[@{/captcha.jpg}]]*/"";
+        url += "?" + "ctime=" + new Date().getTime();
+        $('#captchaImg'+id).attr('src', url);
+        $('#captcha'+id).val('');
+    }
+
+    function captchaGoogleSounfPlay(){
+        var m = '連線失敗';
+        ///rest/user/captchainfo
+        var p = {};
+        RiAPI.run({
+            type : 'POST',
+            url : '/rest/user/captchainfo',
+            data : p,
+            loadSpin : false,
+            success : function(resp) {
+                if (resp.code < 0) {
+                    //$('#message-text').text(resp.text);
+                    //$('#pop-message').modal('show');
+                    m = '連線失敗';
+                    var msg = new SpeechSynthesisUtterance();
+                    var synth = window.speechSynthesis;
+                    setVoices();
+                    msg.voiceURI = "native";
+                    msg.volume = 1;
+                    msg.rate = 1;
+                    msg.pitch = 0.8;
+                    msg.text = m;
+                    msg.lang = 'zh-TW';
+                    speechSynthesis.speak(msg);
+                } else {
+                    //成功
+                    m=resp.data;
+                    var msg = new SpeechSynthesisUtterance();
+                    var synth = window.speechSynthesis;
+                    setVoices();
+                    msg.voiceURI = "native";
+                    msg.volume = 1;
+                    msg.rate = 1;
+                    msg.pitch = 0.8;
+                    msg.text = m;
+                    msg.lang = 'zh-TW';
+                    speechSynthesis.speak(msg);
+                }
+            },
+            error:function(resp) {
+                m = '連線失敗';
+                var msg = new SpeechSynthesisUtterance();
+                var synth = window.speechSynthesis;
+                setVoices();
+                msg.voiceURI = "native";
+                msg.volume = 1;
+                msg.rate = 1;
+                msg.pitch = 0.8;
+                msg.text = m;
+                msg.lang = 'zh-TW';
+                speechSynthesis.speak(msg);
+            }
+        });
+    }
+
+    function setVoices() {
+        var synth = window.speechSynthesis;
+        return new Promise((resolve, reject) => {
+            let timer;
+            timer = setInterval(() => {
+                if(synth.getVoices().length !== 0) {
+                    resolve(synth.getVoices());
+                    clearInterval(timer);
+                }
+            }, 10);
+        })
+    }
+
+    function checkTwcaLibIsAlive(){
+        mydataTWCALib.IsAlive(twcaIsAliveCallback);
+    }
+
+    function twcaIsAliveCallback(code, msg, reserved, data){
+        if(code!=0){
+            showPopMessage('請下載並安裝TWCA金融憑證元件，再重新操作。');
+        }
+    }
+    function ATMVerifyInvokeCallback(code, msg, reserved, data){
+        if(code==0){
+            var dataObj = JSON.parse(data);
+            var strContent = mydataTWCALib.verifyNo + dataObj.atm_sn;
+			mydataTWCALib.ATMSignPKCS7(strContent,ATMSignPKCS7Callback);
+        }else{
+			var check = true;
+			if(code=='2038001'){
+				showPopMessage('未偵測到讀卡機或晶片卡。');
+				check = false;
+			}
+			if(code=='2038002'){
+				showPopMessage('晶片卡密碼錯誤。');
+				check = false;
+			}
+			if(code=='2038005'){
+				showPopMessage('晶片卡已鎖住。');
+				check = false;
+			}
+			if(check){
+				//showPopMessage('晶片金融卡：'+ msg);
+				showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+			}
+        }
+    }
+    function ATMSignPKCS7Callback(code, msg, reserved, data){
+        if(code==0){
+            //上傳server登入驗證
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "scope" : "basic",
+                "signCer" : data,
+                "verifyNo" : mydataTWCALib.verifyNo,
+                "token" : mydataTWCALib.token,
+                "isDoubleVerify": isDoubleVerify
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/verifyFic',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //登入失敗
+                        //showPopMessage('晶片金融卡驗證失敗，請重新操作。');
+                    	showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+                    } else {
+                        updataMemberInfo('', resp, true, 0.1);
+                    }
+                },
+                error : function() {
+                    //showPopMessage('晶片金融卡驗證功能暫時無法使用，請改用其他驗證方式。');
+                	showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+                }
+            });
+        }else{
+            //showPopMessage('晶片金融卡：'+ msg);
+        	showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+        }
+    }
+    function HWSignPKCS7Callback(code, msg, reserved, data){
+        if(code==0){
+            //上傳server登入驗證
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "scope" : "basic",
+                "signCer" : data,
+                "isDoubleVerify": isDoubleVerify
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/verifyFch',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //登入失敗
+                        showPopMessage('硬體金融憑證驗證失敗，請重新操作。');
+                    } else {
+                        updataMemberInfo('', resp, true, 0.2);
+                    }
+                },
+                error : function() {
+                    showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                }
+            });
+        }else{
+            //showPopMessage('硬體金融憑證：'+msg);
+        	showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+        }
+    }
+    function SWSignPKCS7Callback(code, msg, reserved, data){
+        if(code==0){
+            //上傳server登入驗證            
+            var p = {
+                "uid" : getUnmaskValue('#uid'),
+                "birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "scope" : "basic",
+                "signCer" : data,
+                "isDoubleVerify": isDoubleVerify
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/verifyFcs',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //登入失敗
+                        showPopMessage('軟體金融憑證驗證失敗，請重新操作。');
+                    } else {
+                        updataMemberInfo('', resp, true, 2.1);
+                    }
+                },
+                error : function() {
+                    showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                }
+            });
+        }else{
+            //showPopMessage('軟體金融憑證：'+msg);
+            if(code!='1002'){
+            	showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+            }
+        }
+    }
+
+    function showNotDoubleVerifyModal(member, id, check) {
+    	if(check == true){
+            if(member != null && (member.isOld ==null || member.isOld == false) && (member.isDoubleVerify == null || member.isDoubleVerify == false)) {
+        		//更新條款
+        		getMidClause();
+            	$('#step3').hide();
+                $('#step4').show();
+                return true;
+            }
+    	}
+        return false;
+    }
+    
+    function updataMemberInfo(id, resp, check, verificationlevel) {
+        var member = resp.data.member;
+
+        if(showMultiMemberModal(resp.data.member)) {
+            return;
+        }
+        
+        //顯示已登入
+        if(typeof member.name!='undefined'&& member.name!=null){
+        	$('body').addClass('after-login');
+        }
+        console.log('verificationlevel',verificationlevel);
+        console.log('id',id);
+        if(showNotDoubleVerifyModal(resp.data.member, id, check)){
+        	if(verificationlevel==0){
+        		$('#use-carddouble'+id).find('div[data-type=digital]').hide();
+        		$('#no-carddouble'+id).find('div[data-type=t-fido]').hide();
+        	}
+        	if(verificationlevel==0.1){
+        		$('#use-carddouble'+id).find('div[data-type=fic]').hide();
+        	}
+        	if(verificationlevel==0.2){
+        		$('#use-carddouble'+id).find('div[data-type=fch]').hide();
+        	}
+        	if(verificationlevel==1){
+        		$('#use-carddouble'+id).find('div[data-type=digital]').hide();
+        		$('#no-carddouble'+id).find('div[data-type=t-fido]').hide();
+        	}
+        	if(verificationlevel==2){
+        		$('#use-carddouble'+id).find('div[data-type=health]').hide();
+        	}
+        	if(verificationlevel==2.1){
+        		$('#use-carddouble'+id).find('div[data-type=fcs]').hide();
+        	}
+        			
+        	return; 
+        }
+        
+        if(typeof member.informMethod!='undefined' && member.informMethod == null || member.informMethod == ''){
+            $('#step5').show();
+            $('#step4').hide();
+            $('#step3').hide();
+            var checkPrivacyUUID = $('#agree-privacy-btn'+id).attr('data-privacy-uuid');
+
+            var verificationlevel = getVerificationLevel('');
+            if(verificationlevel == 0.5) {
+                $('#step5-title').text('企業資訊');
+            } else {
+                $('#step5-title').text('個人資訊');
+            }
+
+            if(typeof member.name!='undefined' && member.name != null){
+                $('#name'+id).val(maskName(member.name));
+                $('#name'+id).attr('data-value', member.name);
+            }
+            if(typeof member.email!='undefined' && member.email != null){
+                $('#email'+id).val(maskEmailAddress(member.email));
+                $('#email'+id).attr('data-value', member.email);
+            }
+            if(typeof member.mobile!='undefined' && member.mobile != null){
+                $('#mobile'+id).val(maskPhoneNumber(member.mobile));
+                $('#mobile'+id).attr('data-value', member.mobile);
+            }
+            $('#emailradio1Label'+id).click();
+        }else{
+            //登入
+            window.location.href = redirectPage();
+        }
+    }
+    
+    //雙證件驗證檢測
+    function forPIIVerifyUrlCheckLoginWindowClosure(id,uuid,multifactorType,isDoubleVerify) {
+        var prIdEncode = $('#apply0').attr('prid-list');
+        var birthdate = getBirthDate(id);
+        var p = {
+            "uid" : getUidById(id),
+            "birthdate" : birthdate,
+            "scope" : 'basic',
+            "multifactorType" : multifactorType,
+            "isDoubleVerify": isDoubleVerify
+        };
+
+        RiAPI.run({
+            type : 'POST',
+            url : '/rest/user/newPiiVerifyUrl/check',
+            data : p,
+            loadSpin : true,
+            success : function(resp) {
+                if (resp.code < 0) {
+                    showPopMessage('雙證件驗證未完成，請重新操作。');
+                } else {
+                    //檢測成功直接申請
+                    //showLoadSpinner();
+                	if(isDoubleVerify){
+                    	$('#doubleVerifyAppend'+id.replace('double','')).find('div').first().addClass('disabled-mask');
+					}
+                    updataMemberInfo(id.replace('double',''), resp, false, 3);
+                }
+            },
+            error : function() {
+                hideLoadSpinner();
+                showPopMessage('雙證件驗證未完成，請重新操作。');
+            }
+        });
+    }
+</script>
+</body>
+</html>

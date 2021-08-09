@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>agree-policy</title>
+</head>
+<body>
+    <th:block th:fragment="chatbot">
+        <!-- 歡迎使用 MydDta 小幫手 -->
+        <!-- 使用者已經看過 chatbot-onboarding 時，在 <body> 旁加上 .no-chatbot-onboarding -->
+        <!-- 手機版預設隱藏對話框（避免太佔空間） -->
+        <!-- 如果使用者曾經點擊 x ，要記錄，之後開啟就預設關閉小幫手（顯示對話 icon） -->
+        <div class="chatbot-wrap on-boarding ui-none">
+            <div class="card">
+                <div class="card-header">
+                    歡迎使用 MyData 小幫手
+                </div>
+                <div class="card-body">
+                    <img src="./images/chatbot-welcome.svg" th:src="@{/resources/dist/image/chatbot-welcome.svg}" alt="MyData 小幫手提供常見問答服務">
+                    <p class="text-center">
+                        想更了解 MyData 嗎？<br>
+                        點擊「立即開始」可以獲得更多資訊
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn theme-btn w-100" onclick="startChatbot()">立即開始</button>
+                </div>
+            </div>
+        </div>
+        <!-- 開始對話 -->
+        <div class="chatbot-wrap start-to-chart ui-none">
+            <div class="chatbot-loading" style="display: none;">
+                <div class="loader"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    MyData 小幫手
+                </div>
+                <div class="card-body" data-init="0" data-scroll="0">
+
+<!--                    <div class="chat-bubble-wrap bot">-->
+<!--                        <div class="chat-bubble">-->
+<!--                            <p>關於MyData資料下載操作，-->
+<!--                                請參閱 <a href='https://mydata.nat.gov.tw/sp/news/download' title='「資料下載」操作流程'>「資料下載」操作流程</a>，-->
+<!--                                依照您使用的裝置查看操作說明。</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="chat-bubble-wrap bot">-->
+<!--                        <div class="chat-bubble">-->
+<!--                            <p>MyData 想了解哪一種操作內容呢？</p>-->
+<!--                            <button class="w-100 btn chatbtn" data-value="資料下載" data-answer="資料下載" >資料下載</button>-->
+<!--                            <button class="w-100 btn chatbtn" data-value="民眾如何保護自己的資料" data-answer="民眾如何保護自己的資料">民眾如何保護自己的資料</button>-->
+<!--                            <button class="w-100 btn chatbtn" data-value="平臺可使用裝置" data-answer="平臺可使用裝置">平臺可使用裝置</button>-->
+<!--                            <div class="flex-center w-100">-->
+<!--                                <button class="w-50 right btn chatbtn" data-value="全部領域" data-answer="全部領域">全部領域</button>-->
+<!--                                <button class="w-50 left btn chatbtn" data-value="社會福利" data-answer="社會福利">社會福利</button>-->
+<!--                            </div>-->
+<!--                            <div class="flex-center w-100">-->
+<!--                                <a class="w-50 right btn" data-value="全部領域" data-answer="全部領域">全部領域</a>-->
+<!--                                <a class="w-50 left btn" data-value="社會福利" data-answer="社會福利">社會福利</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="chat-bubble-wrap user">-->
+<!--                        <div class="chat-bubble">-->
+<!--                            <p>平臺介紹</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="chat-bubble-wrap user">-->
+<!--                        <div class="chat-bubble">-->
+<!--                            <p>服務介紹</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+                <div class="card-footer text-muted flex-between show">
+                    <!-- 當使用者點擊 .reset-wrap 底下的按鈕時，在 .card-footer 旁增加 .show，展開選單 -->
+                    <button class="btn chatbot-menu bg-img" title="展開選單" onclick="javascript:openMenu();"></button>
+                    <div class="reset-wrap shadow-sm ui-none" id="chatbot-menu">
+                        <a href="javascript:void(0);" onclick="javascript:resetBot();"><small class="text-primary">我想問其他問題</small></a>
+                    </div>
+                    <input id="ask" name="ask" type="text" placeholder="想問什麼呢？" title="輸入想問什麼呢">
+                    <button href="javascript:void(0);" class="btn theme-btn" onclick="javascript:send();">發送</button>
+                </div>
+            </div>
+        </div>
+        <!-- 開啟 chatbot 小幫手 none -> inline -->
+        <a id="open-chatbot" href="javascript:void(0);" class="btn btn-primary btn-lg back-to-top chatbot-ui-controller open-chatbot" role="button" data-placement="left"
+           style="display: inline;" onclick="javascript:openChatbot();">
+            <img class="arrow-position open-chatroom" src="images/chatbot-open-chatroom.svg" th:src="@{/resources/dist/image/chatbot-open-chatroom.svg}" alt="開啟 MyData 小幫手">
+        </a>
+        <!-- 關閉 chatbot 小幫手 none -> inline -->
+        <a id="close-chatbot" href="javascript:void(0);" class="btn btn-primary btn-lg back-to-top chatbot-ui-controller ui-none" role="button" data-placement="left"
+           style="display: inline;" onclick="javascript:closeChatbot();">
+            <img class="arrow-position" src="images/chatbot-closed.svg" th:src="@{/resources/dist/image/chatbot-closed.svg}" alt="關閉 MyData 小幫手">
+        </a>
+
+        <script type="text/javascript" th:inline="javascript">
+            var contextPath = /*[[@{/}]]*/"";
+            var $cardBody = $('.start-to-chart .card-body');
+            var $loading = $('.start-to-chart .chatbot-loading');
+            var pageParam = {
+                pageSize : 20,
+                page : 1,
+                total : 0,
+                totalPage: 0,
+                searchTime: new Date()
+            }
+
+            $cardBody.on('click', '.chatbtn', function() {
+                var $this = $(this);
+                var value = $this.data('value');
+                var answer = $this.data('answer');
+                var feel = $this.data('feel');
+                showMsg({
+                    text: answer,
+                    type: 'text',
+                }, 'user', false);
+                sendMsg({
+                    text: answer,
+                    value: value,
+                    feel: feel
+                });
+            });
+
+            $cardBody[0].addEventListener("scroll", function() {
+                if(this.scrollTop == 0) {
+                    moreRecord();
+                };
+            });
+
+            $('#ask')[0].addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    send();
+                }
+            });
+
+            $(function() {
+                var bot = $.cookie('bot');
+                if(bot !== undefined) {
+                    startChatbot();
+                }
+            });
+
+            function openChatbot() {
+                $('#open-chatbot').addClass('ui-none');
+                $('#close-chatbot').removeClass('ui-none');
+                $('.chatbot-wrap').removeClass('ui-none');
+
+                var isInit = $cardBody.attr('data-init');
+                if(isInit == 0) {
+                    init();
+                }
+            }
+
+            function closeChatbot() {
+                $('#open-chatbot').removeClass('ui-none');
+                $('#close-chatbot').addClass('ui-none');
+                $('.chatbot-wrap').addClass('ui-none');
+            }
+
+            function startChatbot() {
+                $('body').addClass('no-chatbot-onboarding');
+                $.cookie('bot', '1', { expires : 1, path: "/;SameSite=Lax"});
+            }
+
+            function openMenu() {
+                var $target = $('#chatbot-menu');
+                if($target.hasClass('ui-none')) {
+                    $target.removeClass('ui-none');
+                } else {
+                    $target.addClass('ui-none');
+                }
+            }
+
+            function resetBot() {
+                //$cardBody.empty();
+                //$cardBody.attr('data-scroll', 0);
+                sendMegHi();
+                openMenu();
+            }
+
+            function init() {
+                callRecord(true, sendMegHi);
+            }
+
+            function moreRecord() {
+                if(pageParam.page != pageParam.totalPage) {
+                    pageParam.page++;
+
+                    callRecord(false);
+                }
+            }
+
+            function callRecord(isInit, callbackFun) {
+                RiAPI.run({
+                    type: 'POST',
+                    url: '/rest/chatbot/record',
+                    data: pageParam,
+                    loadSpin: false,
+                    beforeSend: function(xhr, plainObj) {
+                        $loading.show();
+                    },
+                    complete: function(xhr, status) {
+                        if(typeof callbackFun === 'function' && $cardBody[0].scrollHeight <= 338) {
+                            callbackFun();
+                        } else {
+                            $loading.hide();
+                        }
+                    },
+                    success: function (resp) {
+                        var data = resp.data;
+
+                        if(data) {
+                            var tmpScrollHeight = $cardBody[0].scrollHeight;
+                            $.each(data.record, function(idx, item){
+                                var json = JSON.parse(item.message);
+                                $.each(json.reverse(), function(idx, item2) {
+                                    showMsg(item2, item.type, true);
+                                    $cardBody[0].scrollTop = $cardBody[0].scrollHeight - tmpScrollHeight;
+                                });
+                            });
+
+                            pageParam = data.pageParam;
+
+                            if(isInit) {
+                                var height = $cardBody[0].scrollHeight - 60;
+                                $cardBody.animate({ scrollTop : height}, 500)
+                                $cardBody.attr('data-scroll', height);
+                            } else {
+                                $cardBody.attr('data-scroll', $cardBody[0].scrollHeight - 60);
+                            }
+                        }
+                    }
+                });
+            }
+
+            function sendMegHi() {
+                var p = {
+                    text: 'Hi',
+                    type: 'user-auto'
+                }
+
+                sendMsg(p, function() {
+                    $cardBody.attr('data-init', 1);
+                });
+            }
+
+            function showMsg(data, type, reverse) { //type user/bot
+                var $div = $('<div></div>');
+                $div.addClass('chat-bubble-wrap');
+                $div.addClass(type);
+                var $bubble = $('<div></div>').addClass('chat-bubble');
+                var text = data.text.replace('{appPath}',contextPath);
+                var $p = $('<p></p>').html(text);
+                $bubble.append($p);
+                switch (data.type) {
+                    case 'welcome':
+                        $bubble.append(welcomeHtml(data.options));
+                        break;
+                    case 'list_btn':
+                        $.each(data.options, function (idx, item) {
+                            $bubble.append(listBtnHtml(item));
+                        });
+                        break;
+                    case 'grid_btn':
+                        var $grid;
+                        var size = data.options.length;
+                        $.each(data.options, function (idx, item) {
+                            var direction = (idx%2==0)?'right':'left';
+                            if(direction == 'right') {
+                                $grid = generatorGrid();
+                            }
+                            $grid.append(gridBtnHtml(item, direction));
+                            if(direction == 'left' || idx == size-1) {
+                                $bubble.append($grid);
+                            }
+                        });
+                        break;
+                    case 'text':
+                        break;
+                }
+                $div.append($bubble);
+
+                if(reverse == true) {
+                    $cardBody.prepend($div);
+                } else {
+                    $cardBody.append($div);
+                }
+            }
+
+            function welcomeHtml(options) {
+                var $div = $('<div></div>').addClass('row');
+                $.each(options, function(idx, item) {
+                    var $col = $('<div></div>').addClass('col-md-6');
+                    var $btn = $('<button></button>');
+                    $btn.addClass("service-content");
+                    $btn.addClass("btn");
+                    $btn.addClass("chatbtn");
+                    $btn.attr('data-value', item.value);
+                    $btn.attr('data-answer', item.text);
+                    var $inner = $('<div></div>').addClass("inner");
+                    $inner.append($('<div></div>').addClass(item.className).addClass("decor-img"))
+                        .append($('<p></p>').text(item.text));
+
+                    $btn.append($inner);
+                    $col.append($btn);
+                    $div.append($col);
+                });
+                return $div;
+            }
+
+            function listBtnHtml(option) {
+                var $html;
+                if(option.type == 'btn') {
+                    $html = $('<button></button>');
+                    $html.addClass('chatbtn');
+                    $html.attr('data-value', option.value);
+                    $html.attr('data-answer', option.text);
+                    $html.attr('data-feel', option.feel);
+                } else {
+                    $html = $('<a></a>');
+                    $html.attr('href', contextPath + option.url);
+                }
+
+                $html.addClass('w-100');
+                $html.addClass('btn');
+                $html.text(option.text);
+                return $html;
+            }
+
+            function generatorGrid() {
+                return $('<div></div>').addClass('flex-center').addClass('w-100');
+            }
+
+            function gridBtnHtml(option, direction) {
+                var $html;
+                if(option.type == 'btn') {
+                    $html = $('<button></button>');
+                    $html.addClass('chatbtn');
+                    $html.attr('data-value', option.value);
+                    $html.attr('data-answer', option.text);
+                    $html.attr('data-feel', option.feel);
+                } else {
+                    $html = $('<a></a>');
+                    $html.attr('href', contextPath + option.url);
+                }
+
+                $html.addClass('w-50');
+                $html.addClass('btn');
+                $html.addClass(direction);
+                $html.text(option.text);
+                return $html;
+            }
+
+            function send() {
+                var text = $('#ask').val();
+                if(text == '') {
+                    return;
+                }
+                var p = {
+                    text: text
+                }
+                showMsg({
+                    text: text,
+                    type: 'text'
+                }, 'user', false);
+                sendMsg(p);
+                $('#ask').val('');
+            }
+
+            function sendMsg(p, callbackFun) {
+                RiAPI.run({
+                    type: 'POST',
+                    url: '/rest/chatbot/send',
+                    data: p,
+                    loadSpin: false,
+                    beforeSend: function(xhr, plainObj) {
+                        $loading.show();
+                    },
+                    complete: function(xhr, status) {
+                        $loading.hide();
+                    },
+                    success: function (resp) {
+                        var data = resp.data;
+
+                        $.each(data, function(idx, item) {
+                            parseJson(item);
+                        });
+                        animateScroll();
+                        if(typeof callbackFun === "function") {
+                            callbackFun();
+                        }
+                    }
+                });
+            }
+
+            function animateScroll() {
+                var scrollHeight = $cardBody.attr('data-scroll');
+                $cardBody.animate({ scrollTop : scrollHeight}, 500)
+                $cardBody.attr('data-scroll', $cardBody[0].scrollHeight - 60);
+            }
+
+            function parseJson(data) {
+                var json = JSON.parse(data);
+                showMsg(json, 'bot', false);
+            }
+
+        </script>
+    </th:block>
+</body>
+</html>

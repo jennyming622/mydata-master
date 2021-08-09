@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>footer</title>
+</head>
+<body>
+	<footer class="bg-primary" id="footer" th:fragment="footer">
+		<a href="#footer_area" id="footer_area" title="下方頁尾區塊" class="show-lg-only aa-index">:::</a>
+		<div class="row w-100 footer-link-wrap">
+			<div class="col-md-fifth col-6">
+				<p class="footer-title"><a href="javascript:void(0)" title="歡迎使用 MyData">歡迎使用 MyData</a></p>
+				<ul>
+					<li><a href="about-us.html" th:href="@{/sp/about}" title="關於 MyData">關於 MyData</a></li>
+					<li><a href="newsList.html" th:href="@{/news/list}" title="一分鐘了解 MyData">最新消息</a></li>
+				</ul>
+			</div>
+			<div class="col-md-fifth col-6">
+				<p class="footer-title"><a href="javascript:void(0)" title="MyData 服務項目">MyData 服務項目</a></p>
+				<ul>
+					<li><a href="services.html" th:href="@{/sp/service}" title="資料下載">資料下載</a></li>
+					<li><a href="services.html" th:href="@{/sp/service#package-service}" title="線上服務">線上服務</a></li>
+					<li><a href="services-counter.html" th:href="@{/sp/service/counter}" title="臨櫃服務">臨櫃服務</a></li>
+				</ul>
+			</div>
+			<div class="col-md-fifth col-6">
+				<p class="footer-title"><a href="javascript:void(0)" title="外部連結">外部連結</a></p>
+				<ul>
+					<li><a href="https://www.gov.tw/" target="_blank" title="我的E政府(另開新頁)">我的E政府</a></li>
+					<li><a href="https://www.ndc.gov.tw/" target="_blank" title="國家發展委員會(另開新頁)">國家發展委員會</a></li>
+				</ul>
+			</div>
+			<div class="footer-contact-wrap text-center">
+				<div class="col-md-6 col-12">
+					<div class="footer-phone footer-box shadow-sm br-lg">
+						<div class="footer-phone-img"></div>
+						<p>客服電話</p>
+						<a href="tel:0800-009-868" title="致電Mydata客服電話">0800-009-868</a>
+						<small>
+							週一～週五
+							<br>
+							9:00~12:00
+							<br>
+							13:30~18:00
+							<br>
+							(例假日除外)
+						</small>
+					</div>
+				</div>
+				<div class="col-md-6 col-12">
+					<div class="footer-email footer-box shadow-sm br-lg">
+						<div class="footer-email-img"></div>
+						<p>聯絡我們</p>
+						<a href="mailto:mydata@ndc.gov.tw" class="footer_about" title="寫信至Mydata客服信箱">mydata@ndc.gov.tw</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="footer-copyright small bg-dark-gray padding-lg">
+			<div class="row">
+				<div class="col-12 col-md-4">Copyright © 2019 版權所有 國家發展委員會「個人化資料自主運用(MyData)」為國家發展委員會註冊商標</div>
+				<div class="col-12 col-md-4 extra">本站適用 Chrome 80、Safari 13、Firefox 75、Edge18 以上之版本， 1280 x 1024 解析度瀏覽</div>
+				<div class="col-12 col-md-2">
+					<a href="member-policy.html" th:href="@{/sp/servicepolicy}" title="服務條款">服務條款</a> 
+					<br>
+					<a href="privacy-policy.html" th:href="@{/sp/privacypolicy}" title="隱私權保護政策">隱私權保護政策</a>
+				</div>
+				<div class="col-12 col-md-2">
+					<a href="https://accessibility.ncc.gov.tw/Applications/DetectLog/128155" target="_blank" title="通過AA優先等級無障礙網頁檢測 (另開新視窗)">
+						<img src="image/aa.jpg" class="aa" alt="通過AA優先等級無障礙網頁檢測" th:src="@{/resources/dist/image/aa.jpg}">
+					</a>
+				</div>
+			</div>
+		</div>
+	</footer>
+	
+	<section id="footer" th:fragment="newfooter">
+		<div class="container">
+			<div class="row">
+				<div class="footerItem col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+					<div class="list-unstyled quick-links">
+						<h2 class="footer_subtitle">關於MyData</h2>
+						<ul>
+							<li><a href="service-policy.html" th:href="@{/sp/about}">何謂MyData</a></li>
+							<li><a href="service-policy.html"
+								th:href="@{/sp/servicepolicy}">服務條款</a></li>
+							<li><a href="privacy-poclicy.html"
+								th:href="@{/sp/privacypolicy}">隱私權保護政策</a></li>
+							<li><a href="faq.html" th:href="@{/sp/faq}" class="downtext">常見問題</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="footerItem col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+					<div class="list-unstyled quick-links">
+						<h2 class="footer_subtitle">MyData應用</h2>
+						<ul>
+							<li><a href="download.html" th:href="@{/personal/list}">MyData下載</a></li>
+							<li><a href="service.html" th:href="@{/sp/service}">MyData服務</a></li>
+							<li><a href="getmybox.html" class="downtext"
+								th:href="@{/sp/member/1}">取回MyBox雲端資料</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="footerItem col-12 col-sm-6 col-md-6 col-lg-2 col-xl-2">
+					<div class="list-unstyled quick-links">
+						<h2 class="footer_subtitle">授權紀錄</h2>
+						<ul>
+							<li><a href="authorization.html" th:href="@{/authorization}">授權列表</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="footerItem col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+					<div class="list-unstyled quick-links">
+						<h2 class="footer_subtitle">外部連結</h2>
+						<ul>
+							<li><a href="https://www.gov.tw/" target="_blank" title="我的E政府(另開新頁)">我的E政府</a></li>
+							<li><a href="https://www.ndc.gov.tw/" target="_blank" title="國家發展委員會(另開新頁)">國家發展委員會</a></li>
+						</ul>
+					</div>
+				</div>
+				<div
+					class="footerItem contact_form col-12 col-sm-12 col-md-12  col-lg-4">
+					<div class="footer_box flex_middle">
+						<div class="col-1 col-sm-1 col-md-1 col-lg-3 p-0 flex_center">
+							<img src="image/phone.png" alt="客服中心" th:src="@{/resources/dist/image/phone.png}">
+						</div>
+						<div class="col-9 col-sm-9 col-md-9 col-lg-9 p-0">
+							<p class="service_txt">客服中心</p>
+							<p>0800-009-868</p>
+						</div>
+					</div>
+					<div class="footer_box flex_middle">
+						<div class="col-1 col-sm-1 col-md-1 col-lg-3 p-0 flex_center">
+							<img src="image/send.png" alt="聯絡我們"
+								th:src="@{/resources/dist/image/send.png}">
+						</div>
+						<div class="col-9 col-sm-9 col-md-9 col-lg-9 p-0">
+							<p class="service_txt">聯絡我們</p>
+							<p>
+								<a href="mailto:mydata@ndc.gov.tw">mydata@ndc.gov.tw</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer_bottom">
+			<div class="container">
+				<div class="col-12 col-sm-12 col-md-12 col-lg-12 row">
+					<div
+						class="hidden_desktop footerBright col-12 col-sm-12 col-md-5  col-lg-4">
+						<span><a href="member_service.html"
+							th:href="@{/sp/servicepolicy}">&nbsp;服務條款&nbsp;</a></span> <span><a
+							href="privacy_policy.html" th:href="@{/sp/privacypolicy}">&nbsp;隱私權保護政策&nbsp;</a></span>
+					</div>
+					<div
+						class="hidden_mobile footerBleft col-12 col-sm-12 col-md-7  col-lg-8">
+						<p>Copyright@2017版權所有 國家發展委員會「e管家計畫」</p>
+						<p>本站適用IE10、Firefox 31、Chrome 36版本、1280x1024解析度瀏覽</p>
+					</div>
+					<div
+						class="hidden_desktop footerBleft col-12 col-sm-12 col-md-7  col-lg-8">
+						<p>
+							Copyright@2017版權所有 國家發展委員會<br>「e管家計畫」
+						</p>
+						<p>本站適用IE10、Firefox 31、Chrome 36版本、1280x1024解析度瀏覽</p>
+					</div>
+					<div
+						class="hidden_mobile footerBright  col-sm-12 col-md-5  col-lg-4">
+						<span><a href="member_service.html"
+							th:href="@{/sp/servicepolicy}">&nbsp;服務條款&nbsp;</a></span> <span><a
+							href="privacy_policy.html" th:href="@{/sp/privacypolicy}">&nbsp;隱私權保護政策&nbsp;</a></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="footer" class="p-t-0" th:fragment="organfooter">
+		<div class="footer_bottom">
+			<div class="container">
+				<div class="col-12 col-sm-12 col-md-12  col-lg-12 p-r-0 m-r-0 row">
+					<div class=" footerBleft col-12 col-sm-12 col-md-12  col-lg-6">
+						<p>Copyright@2017版權所有 國家發展委員會「e管家計畫」</p>
+						<p>本站適用IE10.0、Firefox 31、Chrome 36版本、1280x1024解析度瀏覽</p>
+					</div>
+					<div
+						class="footerItem contact_form col-12 col-sm-12 col-md-12 col-lg-6 pull-right">
+						<div
+							class="footer_box flex_middle col-12 col-sm-12 col-md-12 col-lg-6">
+							<div class="col-1 col-sm-1 col-md-2 col-lg-2 p-0 flex_center">
+								<img class="phone" src="image/phone.png" alt="客服中心"
+									th:src="@{/resources/dist/image/phone.png}">
+							</div>
+							<div class="col-9 col-sm-9 col-md-8 col-lg-8 p-0">
+								<p class="service_txt">客服中心</p>
+								<p>0800-009-868</p>
+							</div>
+						</div>
+						<div
+							class="footer_box flex_middle col-12 col-sm-12 col-md-12 col-lg-6 m-r-10">
+							<div class="col-1 col-sm-1 col-md-2 col-lg-2 p-0 flex_center ">
+								<img class="send" src="image/send.png" alt="聯絡我們"
+									th:src="@{/resources/dist/image/send.png}">
+							</div>
+							<div class="col-9 col-sm-9 col-md-8 col-lg-8 p-0">
+								<p class="service_txt">聯絡我們</p>
+								<p class="w-100">
+									<a href="mailto:mydata@ndc.gov.tw">mydata@ndc.gov.tw</a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

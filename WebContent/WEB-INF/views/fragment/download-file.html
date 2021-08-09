@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>agree-policy</title>
+</head>
+<body>
+    <th:block th:fragment="download-file(pr)">
+        <!-- <p class="description">本平臺個人資料下載進度完成後，將保管您的資料八小時，在此時間內您可以重複瀏覽與刪除。</p> -->
+        <div class="flex-between">
+            <div class="theme-btn false inline">下載中</div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                     role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                     aria-valuemax="100" style="width: 0%"></div>
+            </div>
+            <span>0%</span>
+        </div>
+        <div id="downloadBtn" th:id="'downloadBtn'+${pr.prId}">
+            <div class="show204" style="display: none;">
+                <div class="get-file-wrap mt-4">
+                    <p class="mb-4 text-center">
+                        <span class="alert">個人資料查詢完成：</span>您申請的「<span th:id="'prName' + ${pr.prId}" th:text="${pr.name}"></span>」查無相關（證明）資料
+                    </p>
+                </div>
+                <div class="text-center mt-4 mb-2">
+                    <button class="btn btna theme-btn mr-3 false hidden-mobile"
+                            onclick="javascript:downloadToCompanyWarning(this);"
+                            th:data-src="@{/personal/download}+'/'+${pr.prId}" th:data-id="${pr.prId}" httpcode="204" disabled="disabled">確認</button>
+                </div>
+            </div>
+            <div class="showDownloadBtn">
+                <div class="get-file-wrap mt-4">
+                    <p class="mb-0">
+                        你可選擇下列方式使用已下載的資料檔案：<span class="alert">開啟檔案的密碼是身分證字號（英文為大寫）</span>
+                    </p>
+                    <!--								<p>若對資料內容有疑問，請洽<span th:text="${pr.providerName}"></span>。</p>-->
+                </div>
+                <div class="text-center mt-4 mb-2">
+                    <!-- Button trigger modal -->
+                    <!-- 27 核發使用牌照稅繳納證明 28 地籍及實價資料 42 財產資料 49 違規資料查詢 50 查詢車籍資料 51 查詢駕籍資料-->
+                    <button class="btn btna theme-btn-border mr-3 false"
+                            onclick="javascript:previewToCompany(this);"
+                            th:data-src="@{/personal/preview}+'/'+${pr.prId}" th:data-id="${pr.prId}" disabled="disabled">線上預覽檔案</button>
+                    <button class="btn btna theme-btn mr-3 false hidden-mobile"
+                            onclick="javascript:downloadToCompanyWarning(this);"
+                            th:data-src="@{/personal/download}+'/'+${pr.prId}" th:data-id="${pr.prId}" disabled="disabled">轉存到我的電腦</button>
+                    <button class="btn btna theme-btn mr-3 false hidden-desktop"
+                            onclick="javascript:downloadToCompanyWarning(this);"
+                            th:data-src="@{/personal/download}+'/'+${pr.prId}" th:data-id="${pr.prId}" disabled="disabled">轉存到我的手機</button>
+                    <button class="btn btna theme-btn-border mr-3 false boxid"
+                            th:onclick="'window.location.href=\''+@{/sp/member}+'/'+${pr.boxid}+'\''" th:data-id="${pr.prId}" disabled="disabled"> 前往資料條碼區 </button>
+                </div>
+                <p class="mt-4 p-3 bg-gray alert-box">
+					<img src="./images/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+					為了您的個人資料安全，請謹慎保管您的資料，並請儲存在安全的電腦設備內。
+					<span class="divider mt-3 block"></span>
+                		<img src="./images/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+                    <span th:id="'step3InformPrefix'+${pr.prId}">您將「資料集」轉存或將「資料條碼」提供臨櫃核驗作業完成後，</span>
+                    <!-- <span th:id="'step3InformPrefix'+${pr.prId}">您將資料集「轉存」或提供「臨櫃核驗」進行申辦作業後，</span> -->
+                    <span th:id="'step3InformWarming'+${pr.prId}" th:text="${(session.SignedInUser==null)?'':((session.SignedInUser!=null&&member.informMethod=='mobile')?('系統將自動發通知簡訊至您的手機號碼 '+session.SignedInUser.maskMember.mobile+'。如手機號碼有誤，或想變更手機號碼'):('系統將自動發通知信至您的電子信箱 '+session.SignedInUser.maskMember.email+'。如電子信箱有誤，或想變更電子信箱'))}">系統將自動發通知簡訊至您的手機號碼 091234****。如手機號碼有誤，或想變更手機號碼</span>
+                    ，請至
+                    <a th:href="@{/sp/member}" class="link">會員專區</a>
+                    進行變更，謝謝。
+                </p>
+            </div>
+        </div>
+    </th:blocK>
+    <th:block th:fragment="download-file-script">
+        <script type="text/javascript" th:inline="javascript">
+	    	var publicKeyBase64;
+	    	var privatKeyBase64;
+	    	
+	        $(function() {
+	        	if(typeof crypto.subtle!='undefined'){
+					createNewUserKey().then(function(key){
+						publicKeyBase64 = toPublicPem(key[0]);
+						privatKeyBase64 = toPrivatePem(key[1]);
+					});
+	        	}
+	        });
+	        
+            function previewToCompany(obj){
+                var httpcode = $(obj).attr('httpcode');
+                var prId = $(obj).attr('data-id');
+                if(httpcode=='200'){
+                    var url = $(obj).attr('data-src');
+                    $('#preview-btn').attr('data-src',url);
+                    $('#preview-btn').attr('data-id',prId);
+                    $('#preview-btn').attr('httpcode',httpcode);
+                    $('#preview-message-text').text('此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。');
+                    $('#preview-pop-message').modal('show');
+//                     window.open(url);
+                }else if(httpcode=='204'){
+                    $('#message-text').text('點擊確認後，本平臺將立即刪除此資料檔案。');
+                    $('#pop-message').modal('show');
+                    //append change portal_resource_download stat=1 RiAPI
+                    RiAPI.run({
+                        type : 'GET',
+                        url : '/rest/personal/download/changestatone/'+prId,
+                        loadSpin : false,
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                if(resp.code == -5) {
+                                    showTimeoutMessage(resp);
+                                    return;
+                                }
+                                $('#message-text').text(resp.text);
+                                $('#pop-message').modal('show');
+                            } else {
+                                //成功
+                                //console.log('------apply success------:'+prId);
+                                $('#accordion'+prId).attr('download-status','2');
+                                userInfoStatusCheck();
+                            }
+                        }
+                    });
+                }else{
+                    //console.log('httpcode '+httpcode+' 申請失敗！');
+                    //$('#message-text').text('httpcode '+httpcode+' 申請失敗！');
+                    $('#message-text').text('資料申請失敗，請重新操作');
+                    $('#pop-message').modal('show');
+                    //append change portal_resource_download stat=1 RiAPI
+                    RiAPI.run({
+                        type : 'GET',
+                        url : '/rest/personal/download/changestatone/'+prId,
+                        loadSpin : false,
+                        success : function(resp) {
+                            if (resp.code < 0) {
+                                if(resp.code == -5) {
+                                    showTimeoutMessage(resp);
+                                    return;
+                                }
+                                $('#message-text').text(resp.text);
+                                $('#pop-message').modal('show');
+                            } else {
+                                //成功
+                                //console.log('------apply success------:'+prId);
+                                $('#accordion'+prId).attr('download-status','2');
+                                userInfoStatusCheck();
+                            }
+                        }
+                    });
+                }
+            }
+            
+            function previewToCompanyConfirmYes(obj){
+	    		var prId = $(obj).attr('data-id');
+	    		var p = {
+	    			key:publicKeyBase64
+	    		};
+                RiAPI.run({
+                    type : 'POST',
+                    url : '/rest/personal/preview/'+prId,
+                    data: p,
+                    loadSpin : true,
+                    success : function(resp) {
+                        if (resp.code < 0) {
+                            if(resp.code == -5) {
+                                showTimeoutMessage(resp);
+                                return;
+                            }
+                            $('#message-text').text(resp.text);
+                            $('#pop-message').modal('show');
+                        } else {
+                        	if(typeof resp.data.data!='undefined' &&resp.data.data.length>0){
+                        		preViewDataDecodeAndShow(resp.data);
+                        	}
+                        }
+                    },
+                    error : function() {
+                        $('#message-text').text('線上預覽檔案失敗。');
+                        $('#pop-message').modal('show');
+                    }
+                
+                });
+	    		$('#preview-pop-message').modal('hide');
+            }
+            
+            function show204Message(id) {
+                $('#downloadBtn' + id).find('.showDownloadBtn').hide();
+                $('#downloadBtn' + id).find('.show204').show();
+            }
+            
+			var algorithmKeyGen = {
+				name: "RSA-OAEP",
+				hash: {name: "sha-256"},
+				modulusLength: 2048,
+				publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+			};
+			
+			function createNewUserKey(){
+				return crypto.subtle.generateKey(algorithmKeyGen, true, ['encrypt', 'decrypt']).then(function(key) {
+					return Promise.all([crypto.subtle.exportKey("spki", key.publicKey),
+					crypto.subtle.exportKey("pkcs8", key.privateKey)]);
+				});  
+			}
+				        
+	        function arrayBufferToBase64(arrayBuffer) {
+	            var byteArray = new Uint8Array(arrayBuffer);
+	            var byteString = '';
+	            for(var i=0; i < byteArray.byteLength; i++) {
+	                byteString += String.fromCharCode(byteArray[i]);
+	            }
+	            var b64 = window.btoa(byteString);
+
+	            return b64;
+	        }
+
+	        function addNewLines(str) {
+	            var finalString = '';
+	            while(str.length > 0) {
+	                finalString += str.substring(0, 64) + '\n';
+	                str = str.substring(64);
+	            }
+
+	            return finalString;
+	        }
+	        
+	        function toPrivatePem(privateKey) {
+	            var b64 = addNewLines(arrayBufferToBase64(privateKey));
+	            var pem = "-----BEGIN PRIVATE KEY-----\n" + b64 + "-----END PRIVATE KEY-----";
+	            
+	            return pem;
+	        }
+	        
+	        function toPublicPem(publicKey) {
+	            //var b64 = addNewLines(arrayBufferToBase64(publicKey));
+	            var b64 = arrayBufferToBase64(publicKey);
+	            var pem = "-----BEGIN PUBLIC KEY-----\n" + b64 + "-----END PUBLIC KEY-----";
+	            
+	            return b64;
+	        }
+	        
+	        function convertPemToBinary(pem) {
+	            var lines = pem.split('\n')
+	            var encoded = ''
+	            for(var i = 0;i < lines.length;i++){
+	              if (lines[i].trim().length > 0 &&
+	                  lines[i].indexOf('-BEGIN RSA PRIVATE KEY-') < 0 &&
+	                  lines[i].indexOf('-BEGIN PRIVATE KEY-') < 0 &&
+	                  lines[i].indexOf('-BEGIN RSA PUBLIC KEY-') < 0 &&
+	                  lines[i].indexOf('-BEGIN PUBLIC KEY-') < 0 &&
+	                  lines[i].indexOf('-END RSA PRIVATE KEY-') < 0 &&
+	                  lines[i].indexOf('-END PRIVATE KEY-') < 0 &&
+	                  lines[i].indexOf('-END PUBLIC KEY-') < 0 &&
+	                  lines[i].indexOf('-END RSA PUBLIC KEY-') < 0) {
+	                encoded += lines[i].trim()
+	              }
+	            }
+	            return base64StringToArrayBuffer(encoded)
+	        }
+	        
+	        function base64StringToArrayBuffer(b64str) {
+	            var byteStr = atob(b64str)
+	            var bytes = new Uint8Array(byteStr.length)
+	            for (var i = 0; i < byteStr.length; i++) {
+	              bytes[i] = byteStr.charCodeAt(i)
+	            }
+	            return bytes.buffer
+			}
+			
+	        function importPrivateKey(pemKey) {
+	            return new Promise(function(resolve) {
+	              var importer = crypto.subtle.importKey("pkcs8", convertPemToBinary(pemKey), algorithmKeyGen, true, ['decrypt'])
+	              importer.then(function(key) {
+	                resolve(key)
+	              })
+	            })
+	        }
+	        
+			function preViewDataDecodeAndShow(data){
+				var encryptedKey = data.key;
+				var encryptedData = data.data;
+				var encryptedIv = data.iv;
+				importPrivateKey(privatKeyBase64).then(function(key){
+					//importkey 解密
+					return crypto.subtle.decrypt({name: 'rsa-oaep'}, key, base64StringToArrayBuffer(encryptedKey));
+				}).then(function(decryptedKey){
+					var base64Str = cbcdecrypt(encryptedData,new TextDecoder("UTF-8").decode(new Uint8Array(decryptedKey)),encryptedIv);
+					return new Promise(function(resolve) {
+						resolve(base64Str);
+					});
+				}).then(function(base64Str){
+					showbase64StrPdf(base64Str);
+				});
+			}
+						
+			function showbase64StrPdf(base64Str){
+				var binary = atob(base64Str.replace(/\s/g, '')); 
+				var len = binary.length; 
+				var buffer = new ArrayBuffer(len); 
+				var view = new Uint8Array(buffer); 
+				for (var i = 0; i < len; i++) { 
+				    view[i] = binary.charCodeAt(i); 
+				} 
+				var blob = new Blob([view], { type: "application/pdf" }); 
+				var blobURL = URL.createObjectURL(blob); 
+				window.open(blobURL);
+			}
+			
+			//解密
+			function cbcdecrypt(e, key, iv){
+			   var r = CryptoJS.enc.Utf8.parse(iv);
+			   var  n = CryptoJS.enc.Utf8.parse(key);
+			   var o = CryptoJS.AES.decrypt(e, n, {
+			        iv: r,
+			        mode: CryptoJS.mode.CBC,
+			        padding: CryptoJS.pad.Pkcs7
+			   });
+			   return CryptoJS.enc.Utf8.stringify(o).toString();
+			}
+			
+        </script>
+    </th:block>
+</body>
+</html>

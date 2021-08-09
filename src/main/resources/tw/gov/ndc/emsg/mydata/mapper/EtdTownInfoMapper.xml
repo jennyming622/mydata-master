@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.EtdTownInfoMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.EtdTownInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="hsn_cd" jdbcType="VARCHAR" property="hsnCd" />
+    <result column="town_cd" jdbcType="VARCHAR" property="townCd" />
+    <result column="town_nm" jdbcType="VARCHAR" property="townNm" />
+    <result column="town_nm_en" jdbcType="VARCHAR" property="townNmEn" />
+    <result column="tax_type" jdbcType="VARCHAR" property="taxType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, hsn_cd, town_cd, town_nm, town_nm_en, tax_type
+  </sql>
+  <select id="selectByExample" parameterType="tw.gov.ndc.emsg.mydata.entity.EtdTownInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from etd_town_info
+	where 1=1
+	<if test="hsnCd != null">
+	  and hsn_cd = #{hsnCd,jdbcType=VARCHAR}
+	</if>
+	<if test="taxType != null">
+	  and tax_type = #{taxType,jdbcType=VARCHAR}
+	</if>
+  </select>
+</mapper>

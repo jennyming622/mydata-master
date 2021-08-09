@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:if="${_csrf}" th:content="${_csrf.headerName}" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<title th:text="'MyData | '+${portalResourceCategory.cateName}">MyData | MyData服務項目</title>
+	<link rel="icon" type="image/png" sizes="16x16"
+		  href="image/smydatalogo.png"
+		  th:href="@{/resources/dist/image/smydatalogo.png}">
+	<!-- Bootstrap -->
+	<link href="css/bootstrap.css" rel="stylesheet"
+		  th:href="@{/resources/dist/css/bootstrap.css}">
+	<link href="css/style.css" rel="stylesheet" type="text/css"
+		  th:href="@{/resources/dist/css/style.css}">
+	<link rel="stylesheet"
+		  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		  th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+	<script th:src="@{/resources/dist/js/font-awesone.min.js}" ></script>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/jquery-3.5.1.min.js" th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/popper.min.js" th:src="@{/resources/dist/js/popper.min.js}"></script>
+	<script src="js/bootstrap.js" th:src="@{/resources/dist/js/bootstrap.js}"></script>
+	<script src="js/scrollreveal.js" th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+	<script src="js/certLogin.js" th:src="@{/resources/dist/js/certLogin.js}"></script>
+	<script src="js/errorcode.js" th:src="@{/resources/dist/js/errorcode.js}"></script>
+	<script src="js/qrcode.js" th:src="@{/resources/dist/js/qrcode.js}"></script>
+	<!-- twca js-->
+	<script th:src="@{/resources/dist/js/mydata.twca.ap.js}"></script>
+	<script th:src="@{/resources/dist/js/tcw.api.js}"></script>
+	<script th:src="@{/resources/dist/js/twcaCryptoLib.js}"></script>
+<!-- 	<script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+	<style>
+		.dropbox .dropbox-dropin-btn, .dropbox-dropin-btn:link {
+			padding: 7px 3px 7px 3px;
+		}
+
+		.download_wrap .download_position ul li .custom_btn img {
+			padding-left: 0px;
+			padding-right: 10px;
+		}
+
+		.download_wrap button.custom_btn {
+			background: #ffffff;
+			background: -moz-linear-gradient(top, #ffffff 0%, #efefef 100%);
+			background: -webkit-linear-gradient(top, #ffffff 0%, #efefef 100%);
+			background: linear-gradient(to bottom, #ffffff 0%, #efefef 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff',
+			endColorstr='#efefef', GradientType=0);
+			border: 1px solid #ebebeb;
+			padding: 0px;
+			height: 30px;
+			padding-left: 6px;
+			padding-right: 6px;
+		}
+
+		.download_wrap .download_position .modal .failed {
+			color: red;
+		}
+
+		.hidden {
+			display:none;
+		}
+		
+		.grecaptcha-badge{
+			visibility: hidden;
+		}
+	</style>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+<!--======= header =======-->
+<header th:replace="fragment/header::header"></header>
+<!--======= header =======-->
+
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+		<li class="breadcrumb-item">
+			<a href="#" th:href="@{/}" title="回到MyData首頁">
+				<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+			</a>
+		</li>
+		<li class="breadcrumb-item"><a href="#" th:href="@{/sp/service}">MyData服務項目</a></li>
+		<li class="breadcrumb-item active" aria-current="page" th:text="${portalResourceCategory.cateName}"></li>
+	</ol>
+</nav>
+<div class="content-wrap">
+	<input type="hidden" id="cateId" name="cateId" th:value="${portalResourceCategory.cateId}" />
+	<!-- 已下載資料放入 div.alert 之中 -->
+	<!-- <div class="alert">
+        <h3>已下載資料</h3>
+        <hr>
+    </div> -->
+	<!-- 若使用者無可下載資料，顯示「項目一覽」；如使用者有資料可下載，則區分「已下載資料」與「尚未下載資料」兩個區塊。 -->
+	<h3>
+		項目一覽
+		<hr>
+	</h3>
+	<!-- 無資料 -->
+	<div class="no-data" th:if="${#lists.isEmpty(prExtList)}">
+		<img class="w-100" src="./images/no-data.png"
+			 th:src="@{/resources/dist/image/no-data.png}" alt="尚無資料"
+			 aria-label="尚無資料">
+	</div>
+	<div class="box_preparation" th:download-status="2"
+		 th:prepare-id="${pr.prId}" th:id="'accordion'+${pr.prId}"
+		 th:each="pr : ${prExtList}" th:if="${not #lists.isEmpty(prExtList)}">
+		<!-- 卡片展開時，在 Class 'card' 旁加上 'show' -->
+		<div th:id="'card'+${pr.prId}" class="card shadow-sm " onclick="javascript:toggleClass(this);">
+			<div th:id="'card-header'+${pr.prId}" class="card-header collapsed" data-toggle="collapse" th:href="'#list'+${pr.prId}" th:title="${pr.name}+'(Enter展開)'" tabindex="0">
+				<a class="card-link">
+					<h4 class="household">
+						<span th:text="'◎ '+${pr.name}">個人戶籍資料查詢</span>
+						<span class="ml-2 mr-2 hidden-lg">-</span>
+						<span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+					</h4>
+					<i class="fa fa-chevron-down pull-right"></i>
+				</a>
+			</div>
+			<!-- collapse //  collapse show-->
+			<div th:id="'list'+${pr.prId}" class="collapse">
+				<div class="card-body pre-download" th:id="'cardstep1-'+${pr.prId}" th:if="${pr.downloadStatus==0}?'display:block;':'display:none;'">
+					<th:block th:if="${pr.downloadDesc!=null&&pr.downloadDesc!=''}">
+						<h5>簡述</h5>
+						<p>
+							<th:block th:text="${pr.downloadDesc}"></th:block>
+						</p>
+					</th:block>
+					<h5>您可下載的資料內容</h5>
+					<ol>
+						<li th:each="field : ${pr.fieldList}"
+							th:if="${not #lists.isEmpty(pr.fieldList)}"
+							th:text="${field.fieldName}">婚姻狀況</li>
+					</ol>
+					<h5>預計下載時間</h5>
+					<p>
+						<th:block th:if="${pr.batchTime == null or pr.batchTime == 0}">
+							約 1 分鐘
+						</th:block>
+						<th:block th:if="${pr.batchTime != null and pr.batchTime > 0}">
+							約&nbsp;<span th:text="${pr.batchTime}"></span>&nbsp;分鐘
+						</th:block>
+					</p>
+					<img class="inregular-img" src="./images/fail-to-log-in-m.jpg" alt="" th:if="${(pr.checkStat==1||pr.checkStat==9) && testing == false}" th:src="@{/resources/dist/image/fail-to-log-in-m.jpg}">
+					<div class="mt-4 mb-1 p-3 bg-gray" th:if="${(pr.checkStat==1||pr.checkStat==9) && testing == false}">
+						<strong class="alert">
+							此資料集目前維護中，暫時無法提供下載，請稍候再試，如需了解進一步資訊，請與客服聯繫!<br>
+<!-- 							電子化政府客服中心：02-2192-7111。或 -->
+							請寫信至mydata@ndc.gov.tw，我們會在最快的時間處理。</strong>
+					</div>
+					<div class="text-center" th:if="${pr.checkStat==0 || pr.checkStat==null || testing == true}" th:id="'applyBtn'+${pr.prId}">
+						<a href="javascript:void(0);"
+						   onclick="javascript:toStep2(this);"
+						   th:data-id="${pr.prId}"
+						   th:check-stat="${pr.checkStat}"
+						   th:testing="${testing}"
+						   th:disabled="${pr.checkStat==1}?'true':'false'"
+						   th:classappend="${pr.checkStat==1} ? 'false' : ''"
+						   class="btn theme-btn download flex-middle">
+							<p class="img">我要下載</p>
+						</a>
+					</div>
+                    <p class="bg-gray p-3 mb-4 alert-box hidden-desktop showMsgMobile" th:data-id="${pr.prId}" th:if="${pr.level == 0 || (pr.moecaCheck==1 and pr.level < 1)}">
+                        <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+                             alt="注意事項：" style="width: 15px; margin-right: 3px"> 此服務暫時無法使用手機下載。
+                    </p>
+					<p class="bg-gray p-3 mb-4 alert-box showMsgMobileOS" style="display: none;" th:data-id="${pr.prId}" th:data-level="${pr.level}" th:data-moecaCheck="${pr.moecaCheck}">
+						<img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+							 alt="注意事項：" style="width: 15px; margin-right: 3px">  你使用的載具作業系統版本不支援使用本系統，點擊連結<a th:href="@{/sp/about}" class="link" target="_blank" title="另開新頁前往關於Mydata">查看支援版本</a>。
+					</p>
+				</div>
+				<div class="card-body" th:id="'cardstep2-'+${pr.prId}"
+				 	th:style="${pr.downloadStatus==0}?'display:none;':'display:block;'">
+					<ul class="steps-wrap">
+						<th:blcok th:replace="fragment/agree-policy::agree-policy(id = ${pr.prId})"></th:blcok>
+						<li class="step step2">
+							<div class="disabled-mask"></div>
+							<hr>
+							<h5>基本資訊</h5>
+							<p class="mb-2">本次同意個人化資料自主運用（MyData）平臺取得的個人資料集為：</p>
+							<div id="collaspe-inner" class="mb-3">
+								<!-- 卡片展開時，在 Class 'card' 旁加上 'show' -->
+								<div class="card" onclick="javascript:toggleBasicClass(this);" data-id="52" th:data-id="${pr.prId}">
+									<div class="card-header collapsed" data-toggle="collapse"
+										 href="#data-delievery52" th:href="'#data-delievery'+${pr.prId}">
+										<a class="card-link"> <span th:text="${pr.name}">低收入戶及中低收入戶證明</span>
+											<i class="fa fa-chevron-down pull-right"></i>
+										</a>
+									</div>
+									<div id="data-delievery52" th:id="'data-delievery'+${pr.prId}" class="collapse" data-parent="#collaspe-inner">
+										<div class="card-body">
+											<p class="alert">您可下載的資料內容</p>
+											<ol>
+												<li th:each="field : ${pr.fieldList}" th:if="${not #lists.isEmpty(pr.fieldList)}"
+													th:text="${field.fieldName}">婚姻狀況</li>
+											</ol>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- tab 標籤容器 -->
+							<th:blcok th:replace="fragment/identity-verify::identity-info(id = ${pr.prId}, paramobj = ${pr.paramList}, showName = 'false', isSingle = 'true', showParamTitle = 'true', moecaCheck = ${pr.moecaCheck}, uidType = ${pr.uidType}, usePolicy = true)"></th:blcok>
+						</li>
+						<li th:id="'member-privacy'+${pr.prId}" class="step" style="display:none;">
+							<div th:id="'member-privacy-mask'+${pr.prId}" ></div>
+							<hr>
+							<h5>個人化資料自主運用(MyData)平臺服務條款暨隱私權保護政策</h5>
+							<th:blcok th:replace="fragment/member-privacy::member-privacy(id = ${pr.prId})"></th:blcok>
+						</li>
+						<li th:id="'member-verify'+${pr.prId}" class="step" style="display:none;">
+							<div th:id="'member-verify-mask'+${pr.prId}"></div>
+							<hr>
+							<h5>身分驗證</h5>
+							<th:blcok th:replace="fragment/identity-verify::identity-verify(id = ${pr.prId}, moecaCheck = ${pr.moecaCheck}, level = ${pr.level}, uidType = ${pr.uidType}, type=0, showTwca='true', isLogin='false')"></th:blcok>
+							<!-- <th:blcok th:replace="fragment/identity-verify::param-verify(id = ${pr.prId}, paramList = ${pr.paramList}, showName = 'false')"></th:blcok> -->
+							<div class="text-center">
+								<button th:id="'apply'+${pr.prId}" class="btn theme-btn" style="display:none;"
+										th:data-id="${pr.prId}" th:check-stat="${pr.checkStat}" title="確認"
+										th:onclick="'javascript:iWantApply(\''+${pr.prId}+'\');'">確認</button>
+							</div>
+							<p class="bg-gray p-3 mb-4 alert-box" th:id="'showMsgMobileOS2-'+${pr.prId}" style="display: none;">
+								<img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}"
+									 alt="注意事項：" style="width: 15px; margin-right: 3px"> 你使用的載具作業系統版本不支援使用本系統的 TW FidO 驗證方式，點擊連結<a th:href="@{/sp/about}" class="link" target="_blank" title="另開新頁前往關於Mydata">查看支援版本</a>。
+							</p>
+						</li>
+						<th:blcok th:replace="fragment/identity-verify::identity-append-double-verify(id = ${pr.prId})"></th:blcok>
+						<th:blcok th:replace="fragment/fill-member::fill-member(id = ${pr.prId})"></th:blcok>
+						<!-- 如為下載狀態，則在 Class " download-status " 旁加上 " laoding " -->
+						<li th:id="'download-status'+${pr.prId}" class="step download-status" style="display: none;">
+							<hr>
+							<h5 class="mb-2 get-data">取用資料
+								<th:block th:if="${pr.batchTime == null or pr.batchTime == 0}">（預計下載時間：約 1 分鐘）</th:block>
+								<th:block th:if="${pr.isBatch!=null and pr.isBatch==1 and pr.batchTime !=null and pr.batchTime>0}">（預計下載時間：約&nbsp;<th:block th:text="${pr.batchTime}"></th:block>&nbsp;分鐘）</th:block>
+							</h5>
+							<th:blcok th:replace="fragment/download-file::download-file(pr = ${pr})"></th:blcok>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 下載提示-->
+<div id="download-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+				<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div id="download-message-text" class="modal-body">此檔案轉存後，僅供您個人參考，不得作為業務申辦佐證文件，且本平臺將立即刪除該檔案。是否仍要轉存？</div>
+			<!-- <div id="download-message-text" class="modal-body">檔案轉存後，本平臺將立即刪除該檔案。是否確定要轉存嗎？</div> -->
+			<div class="modal-footer">
+				<button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+				<button id="download-btn" class="theme-btn" data-id="" onclick="javascript:downloadToCompany(this);">確定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--線上預覽檔案提示-->
+<div id="preview-pop-message" class="modal fade show" role="dialog" aria-labelledby="refuseModalLabel" style="display: none;" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+				<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div id="preview-message-text" class="modal-body">此畫面僅供您個人檢視參考，不得列印作為業務申辦佐證文件。</div>
+			<div class="modal-footer">
+				<button class="theme-btn false mr-3" data-dismiss="modal">取消</button>
+				<button id="preview-btn" class="theme-btn" data-id="" data-src="" onclick="javascript:previewToCompanyConfirmYes(this);">確定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--======= footer =======-->
+<footer th:replace="fragment/footer::footer"></footer>
+<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+   role="button" title="網頁置頂"
+   data-toggle="tooltip" data-placement="left" style="display: inline;">
+	<img class="arrow-position" src="images/top-arrow.png"
+		 th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+</a>
+<!--======= end footer =======-->
+
+<!--======= health-card =======-->
+<span th:replace="fragment/login-health::login-health"></span>
+<!--======= end health-card =======-->
+
+<!-- fragment-script -->
+<th:block th:replace="fragment/agree-policy::agree-policy-script"></th:block>
+<th:block th:replace="fragment/member-privacy::member-privacy-script"></th:block>
+<th:block th:replace="fragment/member-privacy::member-privacy-for-download-script"></th:block>
+<th:block th:replace="fragment/identity-verify::identity-info-script"></th:block>
+<th:block th:replace="fragment/identity-verify::identity-info-for-download-script"></th:block>
+<th:block th:replace="fragment/identity-verify::identity-verify-script"></th:block>
+<th:block th:replace="fragment/identity-verify::param-verify-script"></th:block>
+<th:block th:replace="fragment/fill-member::fill-member-script"></th:block>
+<th:block th:replace="fragment/fill-member::fill-member-for-download-script"></th:block>
+<th:block th:replace="fragment/fill-member::email-mobile-script"></th:block>
+<th:block th:replace="fragment/download-file::download-file-script"></th:block>
+<!-- end fragment-script -->
+
+<script type="text/javascript" th:inline="javascript">
+	//For Dropbox
+	var typing = false;
+	$(function(){
+		piiPrompt();
+
+		// 下載狀態檢查，初始化
+		if($('div.box_preparation').length>0){
+			setInterval(function(){ prepareCheck(); }, 1000);
+		}
+
+		var currentid = /*[[${param.get('current')}]]*/'';
+		if(currentid!=null&&currentid!=''){
+			$('#card'+currentid).addClass('show');
+			//card-header
+			$('#card'+currentid).find('.card-header').removeClass('collapsed');
+			$('#list'+currentid).addClass('show');
+			$('#list'+currentid).attr('aria-expanded','true');
+			$('html, body').animate({scrollTop: $('#card'+currentid).offset().top }, {duration: 100,easing: 'swing'});
+
+            showMsgMobile();
+			showMsgMobileOS();
+		}
+// 		var typing = false;
+		$('input').each((idx, element)=>{
+			$(element).on('compositionstart',function(){
+			    typing = true;
+			});
+			$(element).on('compositionend',function(){
+			    typing = false;
+			});
+			var oninputAttr = $(element).attr('oninput');
+			if(typeof oninputAttr!='undefined'){
+				if(oninputAttr.indexOf('MaskType.phone')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.phone);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.uid')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.uid);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.email')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.email);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.birthdate')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.birthdate);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.NHI')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.NHI);
+					        }
+					    },0);
+					})	
+				}
+				if(oninputAttr.indexOf('MaskType.domicile')>-1){
+					$(element).on('input',function(){
+					    setTimeout(function() {
+					        if(!typing) {
+					        	inputTypingEvent($(element), MaskType.domicile);
+					        }
+					    },0);
+					})	
+				}
+			}			
+    	});
+	});
+
+	function showMsgMobileOS() {
+		$('.showMsgMobileOS').each(function(idx, item) {
+			var $this = $(this);
+			var id = $this.attr('data-id');
+			var level = $this.attr('data-level');
+			var moecaCheck = $this.attr('data-moecaCheck');
+			if(isMobile() && checkMobileOs() == false) {
+				if(level == 3) {
+					$('#t-fido' + id).hide();
+					$('#showMsgMobileOS2-' + id).show();
+					$this.hide();
+				} else if(level == 0 || (moecaCheck==1 && level < 1)) {
+					$('#applyBtn' + id).hide();
+				} else {
+					$this.show();
+					$('#applyBtn' + id).hide();
+				}
+			}
+		});
+	}
+
+	function showMsgMobile() {
+        $('.showMsgMobile').each(function(idx, item) {
+            var $this = $(this);
+            var id = $this.attr('data-id');
+            if($this.is(":visible")) {
+                $('#applyBtn' + id).hide();
+            }
+        });
+    }
+
+	function toStep2(obj) {
+		var checkStat = $(obj).attr('check-stat');
+		var testing = $(obj).attr('testing');
+		var dataId = $(obj).attr('data-id');
+		if (checkStat == null || checkStat == 0 || testing == "true") {
+			$('#cardstep1-' + dataId).hide();
+			$('#cardstep2-' + dataId).show();
+		}
+		$(obj).parent().parent().parent().parent().parent().attr('download-status', '0');
+	}
+
+	function toggleClass(obj){
+		let id = '#' + $(obj).attr('id').replace('card','card-header');
+		setTimeout(function(){
+			showMsgMobile();
+			showMsgMobileOS();
+
+			if($(id).hasClass('collapsed')){
+				$(obj).removeClass('show');
+				$(id).find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+			}else{
+				$(obj).addClass('show');
+				$(id).find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+			}
+		}, 100);
+	}
+
+	$('div[data-toggle="collapse"], label').keydown(function(e) {
+		if (e.keyCode == 13) {
+			$(this).trigger('click');
+		}
+	});
+
+	function scrollToPosTag(id) {
+		var tag = $(id).attr('data-tag');
+		if(tag === undefined) {
+			$(id).attr('data-tag', 'move');
+			scrollToPos(id);
+		}
+	}
+
+	// 下載狀態檢查
+	function prepareCheck(){
+		if($('body').hasClass('after-login')){
+			$('div.box_preparation').each(function(){
+				var downloadStatus = $(this).attr('download-status');
+				if(downloadStatus==2){
+					var tmpDev = $(this);
+					var prId = $(this).attr('prepare-id');
+					var collapseNum = '#cardstep2-'+prId;
+					RiAPI.run({
+						type: 'GET',
+						url: '/rest/personal/countpercent/'+prId,
+						loadSpin : false,
+						success: function(resp) {
+							if (resp.code < 0) {
+								if(resp.code == -5) {
+									showTimeoutMessage(resp);
+									return;
+								}
+							} else {
+								var percent = resp.data.percent;
+								var httpcode = resp.data.httpcode;
+								//div.prepare_box_wrap .m-l-30 70%
+								//div.prepare_box_wrap .progress-bar style="width:70%;"
+								if(typeof percent!='undefined'){
+									console.log('percent -> ' + percent);
+									if(percent >= 0){
+										let id = '#uid' + prId;
+										let tmpUid = $(id).val();
+									}
+
+									if(percent==100){
+										//window.location.reload();
+										//cardstep1-25
+										$('#cardstep1-'+prId).hide();
+										//cardstep2-25
+										$('#cardstep2-'+prId).addClass('last-step');
+										$('#cardstep2-'+prId).show();
+										$('#cardstep2-'+prId).find('input[type=checkbox]').prop('checked',true) ;
+										var percentStr = percent + '%';
+										$(collapseNum).find('div.progress-bar').css('width',percentStr);
+										//關閉閃爍
+										$(collapseNum).find('div.progress-bar').removeClass('progress-bar-striped');
+										$(collapseNum).find('div.progress-bar').removeClass('progress-bar-animated');
+										$(collapseNum).find('div.flex-between span').empty().append(percentStr);
+										$(collapseNum).find('div.flex-between div.theme-btn').empty().append('下載完成').removeClass('false').addClass('true');
+										$('#cardstep2-'+prId).find('li.step p.descriptiontime').empty().append(resp.data.timedesc);
+										$('#cardstep2-'+prId).find('li.download-status').show();
+										scrollToPosTag('#download-status' + prId);
+										//button.btna true false
+										$('#cardstep2-'+prId).find('button.btna').attr('disabled', false);
+										$('#cardstep2-'+prId).find('button.btna').removeClass('false');
+										$('#cardstep2-'+prId).find('button.btna').attr('httpcode', httpcode);
+										var boxidurl = /*[[@{/sp/member}]]*/'';
+										boxidurl = 'window.location.href=\'' + boxidurl + '/' +resp.data.boxid + '\'';
+										$('#cardstep2-'+prId).find('button.boxid').attr('onclick', boxidurl);
+										$(tmpDev).attr('download-status','1');
+										$('#mStep' + prId).find('#download').addClass('pass');
+										$('#mStep' + prId).find('#agree').addClass('pass');
+										$('#mStep' + prId).find('#verify').addClass('pass');
+										$('#mStep' + prId).find('#member').addClass('pass');
+										//$('.download-status').addClass('step3');
+
+										if(httpcode == '204') {
+											show204Message(prId);
+										}
+									}else if(percent>=0){
+										//cardstep1-25
+										$('#cardstep1-'+prId).hide();
+										//cardstep2-25
+										$('#cardstep2-'+prId).addClass('last-step');
+										$('#cardstep2-'+prId).show();
+										$('#cardstep2-'+prId).find('input[type=checkbox]').prop('checked',true) ;
+										var percentStr = percent + '%';
+										$(collapseNum).find('div.progress-bar').css('width',percentStr);
+										$(collapseNum).find('div.flex-between span').empty().append(percentStr);
+										$('#cardstep2-'+prId).find('li.step p.descriptiontime').empty().append("資料下載中。");
+										$('#cardstep2-'+prId).find('li.download-status').show();
+										scrollToPosTag('#download-status' + prId);
+										//button.btna true false
+										$('#cardstep2-'+prId).find('button.btna').attr('disabled', true);
+										$('#cardstep2-'+prId).find('button.btna').addClass('false');
+										$('#cardstep2-'+prId).find('button.btna').attr('httpcode', httpcode);
+										$(tmpDev).attr('download-status','2');
+										//$('.download-status').addClass('step3');
+									}else{
+										console.log('download status error..');
+										//li.download-status
+										$('#cardstep2-'+prId).find('li.download-status').hide();
+										$('#cardstep2-'+prId).find('button.btna').attr('disabled', true);
+										$('#cardstep2-'+prId).find('button.btna').addClass('false');
+										$('#cardstep2-'+prId).find('button.btna').attr('httpcode', httpcode);
+										//cardstep1-25
+										$('#cardstep2-'+prId).removeClass('last-step');
+										$('#agree-policy'+prId).prop('checked', false);
+										$('#cardstep2-'+prId).find('div.form-group').removeClass('checked');
+										$('#cardstep2-'+prId).find('input[name=verification-level]').prop('checked', false);
+										$('#cardstep2-'+prId).find('dev.multifactor-active').removeClass('multifactor-active');
+										$('#apply'+prId).hide();
+										$('#cardstep1-'+prId).show();
+										$('#cardstep2-'+prId).hide();
+										$(tmpDev).attr('download-status','0');
+									}
+								}
+							}
+						}
+					});
+				}
+			});
+		}
+	}
+
+	function checkYesApply(prId){
+		var p = {};
+		$('#param'+prId).find('.param').each(function(){
+			var key = $(this).attr('name');
+			console.log('param key ->' + key);
+			if(key == 'mobile') {
+				if($(this).prop('disabled') == true) {
+					p[key] = $(this).data('value');
+				} else {
+					p[key] = $(this).val();
+				}
+			} else {
+				p[key] = $(this).val();
+			}
+		});
+
+		RiAPI.run({
+			type: 'POST',
+			url: '/rest/personal/apply/'+prId,
+			data: p,
+			loadSpin : true,
+			success: function(resp) {
+				console.log('check yes and reply resp -> ' +JSON.stringify(resp));
+				if (typeof resp=='undefined'||resp.code < 0) {
+					hideLoadSpinner();
+					$('#accordion'+prId).attr('download-status','2');
+					//登入失敗
+					if(resp.code==-1205){
+						$('#message-text').text('您的個人資料申請尚未過期，不需重新申請。');
+						$('#pop-message').modal('show');
+					}else{
+						//window.location.reload();
+						$('#message-text').text(resp.text);
+						$('#pop-message').modal('show');
+					}
+				} else {
+					console.log('------apply success------:'+prId);
+					$('#accordion'+prId).attr('download-status','2');
+					userInfoStatusCheck();
+				}
+			},
+			error: function(resp) {
+				hideLoadSpinner();
+				$('#message-text').text('系統錯誤，請重新操作！');
+				$('#pop-message').modal('show');				
+			},
+			complete: function (resp) {
+				hideLoadSpinner();
+			}
+		});
+	}
+
+	// 下載狀態檢查
+	function prepareCheckShowLoadSpin() {
+		if ($('body').hasClass('after-login')) {
+			$('div.box_preparation').each(function () {
+				var downloadStatus = $(this).attr('download-status');
+				if (downloadStatus == 0 || downloadStatus == 1 || downloadStatus == 2) {
+					var tmpDev = $(this);
+					var prId = $(this).attr('prepare-id');
+					var collapseNum = '#cardstep2-' + prId;
+					RiAPI.run({
+						type: 'GET',
+						url: '/rest/personal/countpercent/' + prId,
+						loadSpin: false,
+						success: function (resp) {
+							if (resp.code < 0) {
+								hideLoadSpinner();
+								if (resp.code == -5) {
+									showTimeoutMessage(resp);
+									return;
+								}
+							} else {
+								hideLoadSpinner();
+								var percent = resp.data.percent;
+								var httpcode = resp.data.httpcode;
+
+								if(httpcode == '429') {
+									var verificationListUrl = /*[[@{/sp/member/1}]]*/'';
+									$('#step3InformPrefix'+prId).hide();
+									if(tmpMember.informMethod=='email'){
+										$('#step3InformWarming'+prId).empty().append('此資料提供單位('+ resp.data.ppName +')需要較長時間準備，您無須在此頁面等待，待資料下載完成後會放在 <a class="link" href="' + verificationListUrl + '" target="_blank" title="資料條碼區(另開新頁)">資料條碼區</a> ，系統將自動發通知信至您的電子信箱 '+ maskEmailAddress(tmpMember.email) +'。如電子信箱有誤，或想變更電子信箱');
+									}else if(tmpMember.informMethod=='mobile'){
+										$('#step3InformWarming'+prId).empty().append('此資料提供單位('+ resp.data.ppName +')需要較長時間準備，您無須在此頁面等待，待資料下載完成後會放在 <a class="link" href="' + verificationListUrl + '" target="_blank" title="資料條碼區(另開新頁)">資料條碼區</a> ，系統將自動發通知簡訊至您的手機號碼 '+ maskPhoneNumber(tmpMember.mobile) +'。如手機號碼有誤，或想變更手機號碼');
+									}
+								} else {
+									if(tmpMember.informMethod=='email'){
+										$('#step3InformWarming'+prId).empty().append('系統將自動發通知信至您的電子信箱 '+ maskEmailAddress(tmpMember.email) +'。如電子信箱有誤，或想變更電子信箱');
+									}else if(tmpMember.informMethod=='mobile'){
+										$('#step3InformWarming'+prId).empty().append('系統將自動發通知簡訊至您的手機號碼 '+ maskPhoneNumber(tmpMember.mobile) +'。如手機號碼有誤，或想變更手機號碼');
+									}
+								}
+
+								if (typeof percent != 'undefined') {
+									if (percent == 100) {
+										//window.location.reload();
+										//cardstep1-25
+										$('#cardstep1-' + prId).hide();
+										//cardstep2-25
+										$('#cardstep2-' + prId).addClass('last-step');
+										$('#cardstep2-' + prId).show();
+										$('#cardstep2-' + prId).find('input[type=checkbox]').prop('checked', true);
+										var percentStr = percent + '%';
+										$(collapseNum).find('div.progress-bar').css('width', percentStr);
+										//關閉閃爍
+										$(collapseNum).find('div.progress-bar').removeClass('progress-bar-striped');
+										$(collapseNum).find('div.progress-bar').removeClass('progress-bar-animated');
+										$(collapseNum).find('div.flex-between span').empty().append(percentStr);
+										$(collapseNum).find('div.flex-between div.theme-btn').empty().append('下載完成').removeClass('false').addClass('true');
+										$('#cardstep2-' + prId).find('li.step p.descriptiontime').empty().append(resp.data.timedesc);
+										$('#cardstep2-' + prId).find('li.download-status').show();
+										//button.btna true false
+										$('#cardstep2-' + prId).find('button.btna').attr('disabled', false);
+										$('#cardstep2-' + prId).find('button.btna').removeClass('false');
+										$('#cardstep2-' + prId).find('button.btna').attr('httpcode', httpcode);
+										var boxidurl = /*[[@{/sp/member}]]*/'';
+										boxidurl = 'window.location.href=\'' + boxidurl + '/' + resp.data.boxid + '\'';
+										$('#cardstep2-' + prId).find('button.boxid').attr('onclick', boxidurl);
+										$(tmpDev).attr('download-status', '1');
+										$('#mStep' + prId).find('#download').addClass('pass');
+
+										if(httpcode == '204') {
+											show204Message(prId);
+										} else if(httpcode == '400'){
+											downloadToCompanyWarning400(prId);
+										}
+									} else if (percent >= 0) {
+										//cardstep1-25
+										$('#cardstep1-' + prId).hide();
+										//cardstep2-25
+										$('#cardstep2-' + prId).addClass('last-step');
+										$('#cardstep2-' + prId).show();
+										$('#cardstep2-' + prId).find('input[type=checkbox]').prop('checked', true);
+										var percentStr = percent + '%';
+										$(collapseNum).find('div.progress-bar').css('width', percentStr);
+										$(collapseNum).find('div.flex-between span').empty().append(percentStr);
+										$('#cardstep2-' + prId).find('li.step p.descriptiontime').empty().append("資料下載中。");
+										$('#cardstep2-' + prId).find('li.download-status').show();
+										scrollToPosTag('#download-status' + id);
+										//button.btna true false
+										$('#cardstep2-' + prId).find('button.btna').attr('disabled', true);
+										$('#cardstep2-' + prId).find('button.btna').addClass('false');
+										$('#cardstep2-' + prId).find('button.btna').attr('httpcode', httpcode);
+										$(tmpDev).attr('download-status', '2');
+									} else {
+										//li.download-status
+										$('#cardstep2-' + prId).find('li.download-status').hide();
+										//button.btna true false
+										$('#cardstep2-' + prId).find('button.btna').attr('disabled', true);
+										$('#cardstep2-' + prId).find('button.btna').addClass('false');
+										$('#cardstep2-' + prId).find('button.btna').attr('httpcode', httpcode);
+										//cardstep1-25
+										$('#cardstep2-' + prId).removeClass('last-step');
+										$('#agree-policy' + prId).prop('checked', false);
+										$('#cardstep2-' + prId).find('div.form-group').removeClass('checked');
+										$('#cardstep2-' + prId).find('input[name=verification-level]').prop('checked', false);
+										$('#cardstep2-' + prId).find('dev.multifactor-active').removeClass('multifactor-active');
+										$('#apply' + prId).hide();
+										$('#cardstep1-' + prId).show();
+										$('#cardstep2-' + prId).hide();
+										$(tmpDev).attr('download-status', '0');
+										//$('#message-text').text('資料暫時無法下載，請稍後再試');
+										//$('#pop-message').modal('show');
+									}
+								}
+							}
+						}
+					});
+				}
+			});
+		}
+	}
+
+	function downloadToCompanyWarning400(prId) {
+		$('#message-text').text('欄位內容有誤，請重新確認，謝謝');
+		$('#pop-message').modal('show');
+		RiAPI.run({
+			type : 'GET',
+			url : '/rest/personal/download/changestatone/'+prId,
+			loadSpin : false,
+			success : function(resp) {
+				if (resp.code < 0) {
+					if(resp.code == -5) {
+						showTimeoutMessage(resp);
+						return;
+					}
+					showPopMessage(resp.text);
+				} else {
+					//成功
+					console.log('------apply success------:'+prId);
+					$('#accordion'+prId).attr('download-status','2');
+					userInfoStatusCheck();
+				}
+			}
+		});
+	}
+
+	function downloadToCompanyWarning(obj){
+		var prId = $(obj).data('id');
+		var httpcode = $(obj).attr('httpcode');
+		if(httpcode=='200'){
+			$('#download-btn').attr('data-id',prId);
+			$('#download-pop-message').modal('show');
+		}else if(httpcode=='204'){
+			$('#message-text').text('點擊確認後，本平臺將立即刪除此資料檔案。');
+			$('#pop-message').modal('show');
+			//append change portal_resource_download stat=1 RiAPI
+			RiAPI.run({
+				type : 'GET',
+				url : '/rest/personal/download/changestatone/'+prId,
+				loadSpin : false,
+				success : function(resp) {
+					if (resp.code < 0) {
+						if(resp.code == -5) {
+							showTimeoutMessage(resp);
+							return;
+						}
+						showPopMessage(resp.text);
+					} else {
+						//成功
+						console.log('------apply success------:'+prId);
+						$('#accordion'+prId).attr('download-status','2');
+						userInfoStatusCheck();
+					}
+				}
+			});
+		} else {
+			console.log('httpcode '+httpcode+' 申請失敗！');
+			//$('#message-text').text('httpcode '+httpcode+' 申請失敗！');
+			$('#message-text').text('資料申請失敗，請重新操作。');
+			$('#pop-message').modal('show');
+			//append change portal_resource_download stat=1 RiAPI
+			RiAPI.run({
+				type : 'GET',
+				url : '/rest/personal/download/changestatone/'+prId,
+				loadSpin : false,
+				success : function(resp) {
+					if (resp.code < 0) {
+						if(resp.code == -5) {
+							showTimeoutMessage(resp);
+							return;
+						}
+						showPopMessage(resp.text);
+					} else {
+						//成功
+						console.log('------apply success------:'+prId);
+						$('#accordion'+prId).attr('download-status','2');
+						userInfoStatusCheck();
+					}
+				}
+			});
+		}
+	}
+
+	function downloadToCompany(obj){
+		var prId = $(obj).attr('data-id');
+		var downloadUrlpre = /*[[@{/personal/download}]]*/'';
+		var downloadUrl = downloadUrlpre + '/' +prId;
+		var intesting = /*[[${intesting}]]*/'';
+		console.log(intesting);
+		if(intesting==true){
+			downloadUrl = downloadUrl  + '/intesting';
+		}
+		window.open(downloadUrl);
+		$('#download-pop-message').modal('hide');
+		var toServiceUrl = /*[[@{/sp/service}]]*/'';
+		window.location.href=toServiceUrl;
+	}
+
+	function showDownloadBlock(id) {
+		$('#download-status' + id).addClass('step4');
+	}
+
+	function getScope(id) {
+		return `${id}`.replace('double','');
+	}
+
+	function checkDp(id) {
+		var checkStat = $('#apply'+id).attr('check-stat');
+		return checkStat!=0;
+	}
+
+	function maskInfo(id) {
+		$('#cardstep2-'+id).addClass('last-step');
+	}
+	
+    function toggleBasicClass(obj) {
+        setTimeout(function () {
+            if ($(obj).find('div.card-header').hasClass('collapsed')) {
+                $(obj).find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+            } else {
+                $(obj).find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+            }
+        }, 100);
+    }	
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<th:block id="basic-info" th:fragment="basic-info(moecaCheck, uidType)">
+    <div class="m-0 p-0">
+        <ul class="nav nav-tabs nav-fill mt-3 mb-3 flex-center w-100" th:if="${moecaCheck==1}">
+            <!-- tab personal -->
+            <li>
+                <a class="nav-item active" href="#personal" data-toggle="tab">個人戶
+                    <div class="twingle-down"></div>
+                </a>
+            </li>
+            <!-- tab company -->
+            <li>
+                <a class="nav-item" href="#company" data-toggle="tab">企業戶
+                    <div class="twingle-down"></div>
+                </a>
+            </li>
+        </ul>
+        <!--已登入就不需要再填入-->
+        <div class="tab-content" th:classappend="${moecaCheck} ? 'tab-show' : ''">
+            <div class="tab-pane active" id="personal">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="pt-2 pb-3 text-left">
+                            <label class="w-100" for="uid" >
+                                <span>身分證字號<th:block th:if="${uidType == 1}"> / 居留證號</th:block><small class="alert">(必填)</small><small class="alert">英文字母為大寫</small></span>
+                                <div class="w-100 position-r">
+                                    <input id="uid"
+                                           th:data-value="${pid!=null?pid:(session.SignedInUser==null||member.name==null||member.uid==null||session.SignedInUser.roleType=='0.5')?'':member.uid}"
+                                           th:value="${maskPid!=null?maskPid:(session.SignedInUser==null||member.name==null||member.uid==null||session.SignedInUser.roleType=='0.5')?'':session.SignedInUser.maskMember.uid}"
+                                           class="form-control" type="text" name="uid"
+                                           th:disabled="${pid!=null?'true':((session.SignedInUser!=null&&member.name!=null&&member.uid!=null&&session.SignedInUser.roleType!='0.5') ? 'true':'false')}"
+                                           placeholder="請輸入您的身分證字號" maxLength="10"
+                                           th:placeholder="${uidType == 1} ? '請輸入身分證字號 / 居留證號' : '請輸入身分證字號'"
+                                           th:data-uidType="${uidType}"
+                                           onfocus="inputFocusinEvent_1(this)"
+                                           oninput="inputTypingEvent(this, MaskType.uid)"
+                                           onblur="inputFocusoutEvent_1(this, MaskType.uid)"
+                                           autocomplete="off">
+                                    <i onclick="maskorUnMask_v2(this)" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="pt-2 pb-3 text-left">
+                            <label class="w-100" for="birthdate">
+                                    <span>生日<small class="alert">(必填)</small>
+                                        <small class="alert">請輸入民國年月日</small>
+                                    </span>
+                                <div class="w-100 position-r">
+                                    <input id="birthdate"
+                                           class="form-control" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate"
+                                           th:value="${(session.SignedInUser==null||member.name==null||session.SignedInUser.maskMember.birthdateForRE==null)?'':session.SignedInUser.maskMember.birthdateForRE}"
+                                           th:data-value="${(session.SignedInUser==null||member.name==null||member.birthdateForRE==null||session.SignedInUser.roleType=='0.5')?'':member.birthdateForRE}"
+                                           th:disabled="${(session.SignedInUser!=null&&member.name!=null&&session.SignedInUser.maskMember.birthdateForRE!=null)?'true':'false'}"
+                                           placeholder="例：0770101" maxLength="7"
+                                           onfocus="inputFocusinEvent_1(this)"
+                                           oninput="inputTypingEvent(this, MaskType.birthdate)"
+                                           onblur="inputFocusoutEvent_1(this, MaskType.birthdate)"
+                                           autocomplete="off">
+                                    <i onclick="maskorUnMask_v2(this)" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="company" th:if="${moecaCheck==1}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="pt-2 pb-3 text-left">
+                            <label class="w-100" for="uid">
+                                <span>統一編號<small class="alert">(必填)</small></span>
+                                <input id="muid"
+                                       th:value="${pid!=null?pid:(session.SignedInUser==null||member.name==null||member.uid==null||session.SignedInUser.roleType!='0.5')?'':member.uid}"
+                                       class="form-control" type="text" name="uid"
+                                       th:disabled="${pid!=null?'true':((session.SignedInUser!=null&&member.name!=null&&member.uid!=null&&session.SignedInUser.roleType!='0.5') ? 'true':'false')}"
+                                       placeholder="請輸入您的統一編號" maxLength="10"
+                                       autocomplete="off">
+                                <!-- <i onclick="maskorUnMask_v2(this)" th:id="'eye_muid'+${id}" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i> -->
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+<th:block th:fragment="basic-info-script">
+    <script type="text/javascript" th:inline="javascript">
+        function getPid() {
+            return getUnmaskValue('#uid');
+        }
+
+        function getBirthdate() {
+            return transferBirthDateToAD(getUnmaskValue('#birthdate'));
+        }
+
+        function getMUid() {
+            return $('#muid').val();
+        }
+
+        function getUidType() {
+            return $('#uid').attr('data-uidType');
+        }
+
+        function personalOrCompany() {
+            return $('.tab-content').find('.tab-pane.active').attr('id');
+        }
+
+        function checkMemberUrl() {
+            if(personalOrCompany() == 'personal') {
+                return '/rest/user/check/isMember';
+            } else {
+                return '/rest/user/check/isMemberWithMoec';
+            }
+        }
+
+        function getCheckMemberPostBody() {
+            if(personalOrCompany() == 'personal') {
+                return {
+                    uid: getPid(),
+                    birthdate: getBirthdate(),
+                    id: '',
+                }
+            } else {
+                return {
+                    uid: getMUid(),
+                    id: '',
+                }
+            }
+        }
+
+        function checkUid() {
+            var uid = getPid();
+            var uidType = getUidType();
+            if(uid == null || uid == ''){
+                showPopMessage(uidType == 1?'請輸入身分證字號 / 居留證號':'請輸入身分證字號', $('#uid'));
+                return false;
+            }else if(!verifyExpression(uid)){
+                showPopMessage(uidType == 1?'身分證字號 / 居留證號格式不正確':'身分證字號格式不正確', $('#uid'));
+                return false;
+            }
+            return true;
+        }
+
+        function checkBirthDate() {
+            var birthdate = getBirthdate();
+            if(birthdate == null || birthdate == ''){
+                showPopMessage('請輸入生日', $('#birthdate'));
+                return false;
+            }else if(!verifyBirthDateExpression(birthdate)){
+                showPopMessage('生日格式不正確', $('#birthdate'));
+                return false;
+            }
+            return true;
+        }
+
+        function checkMemberData() {
+            if(personalOrCompany() == 'personal') {
+                if(checkUid() == false) {
+                    return false;
+                } else if(checkBirthDate() == false) {
+                    return false;
+                }
+            } else {
+                var uid = getMUid();
+                if(checkTaxId(uid) == false) {
+                    showPopMessage('統編號碼未輸入或格式錯誤', $('#muid'));
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function checkUidAndBirthdate(callBackFun, nextFun) {
+            var p = {
+                "uid" : getPid(),
+                "birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+                "verificationlevel" : (personalOrCompany() == 'personal') ? 0 : 0.5
+            };
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/webservice/birthdate',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        const uidType = getUidType();
+                        if(resp.code == -5) {
+                            showTimeoutMessage(resp);
+                            return;
+                        } else if (resp.code == -4) {
+                            showPopMessage((uidType == 1?'目前移民署機關驗證身分服務異常，請稍後再試。':'目前戶政機關驗證身分服務異常，請稍後再試。'),$('#uid'));
+                            return;
+                        }
+                        // WebService驗證失敗
+
+                        showPopMessage((uidType == 1?'身分驗證失敗，請重新輸入。':'身分驗證失敗，請重新輸入。'),$('#uid'));
+                    } else {
+
+
+                        callBackFun(nextFun);
+                    }
+                },
+                error : function() {
+                    showPopMessage('戶政機關生日驗證失敗。',$('#uid'));
+                }
+            });
+        }
+    </script>
+</th:block>
+</html>

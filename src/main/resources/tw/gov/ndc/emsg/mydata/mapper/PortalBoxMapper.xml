@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalBoxMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalBox">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="download_sn" jdbcType="VARCHAR" property="downloadSn" />
+    <result column="verify_pwd" jdbcType="VARCHAR" property="verifyPwd" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="stat" jdbcType="INTEGER" property="stat" />
+    <result column="download_verify" jdbcType="VARCHAR" property="downloadVerify" />
+    <result column="batch_id" jdbcType="INTEGER" property="batchId" />
+    <result column="psd_id" jdbcType="INTEGER" property="psdId" />
+    <result column="agent_uid" jdbcType="VARCHAR" property="agentUid" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="agent_birthdate" jdbcType="DATE" property="agentBirthdate" />
+    <result column="agent_verify" jdbcType="VARCHAR" property="agentVerify" />
+    <result column="agree_agent" jdbcType="INTEGER" property="agreeAgent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, download_sn, verify_pwd, ctime, stat, download_verify, batch_id, psd_id, agent_uid, agent_birthdate, agent_verify, agree_agent
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from portal_box
+    where 1=1
+    <if test="sCtime != null">
+      and ctime <![CDATA[ >= ]]> #{sCtime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="downloadSn != null">
+      and download_sn = #{downloadSn,jdbcType=VARCHAR}
+    </if>
+    <if test="batchId != null">
+      and batch_id = #{batchId,jdbcType=INTEGER}
+    </if>
+    <if test="psdId != null">
+      and psd_id = #{psdId,jdbcType=INTEGER}
+    </if>
+    <if test="downloadVerify != null">
+      and download_verify = #{downloadVerify,jdbcType=VARCHAR}
+    </if>
+    <if test="verifyPwd != null">
+      and verify_pwd = #{verifyPwd,jdbcType=VARCHAR}
+    </if>
+    <if test="agentUid != null">
+      and agent_uid = #{agentUid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="agentBirthdate != null">
+      and agent_birthdate = #{agentBirthdate,jdbcType=DATE}
+    </if>
+    <if test="agentVerify != null">
+      and agent_verify = #{agentVerify,jdbcType=VARCHAR}
+    </if>
+    <if test="stat != null">
+      and stat = #{stat,jdbcType=INTEGER}
+    </if>
+    <if test="agreeAgent != null">
+      and agree_agent = #{agreeAgent,jdbcType=INTEGER}
+    </if>
+    <if test="idDesc != null">
+    		order by id desc
+    </if>
+    <if test="ctimeDesc != null">
+    		order by ctime desc
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portal_box
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from portal_box
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBox" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into portal_box (id, download_sn, verify_pwd, 
+      ctime, stat, download_verify, 
+      batch_id, psd_id, agent_uid, agent_birthdate, agent_verify, agree_agent)
+    values (#{id,jdbcType=INTEGER}, #{downloadSn,jdbcType=VARCHAR}, #{verifyPwd,jdbcType=VARCHAR}, 
+      #{ctime,jdbcType=TIMESTAMP}, #{stat,jdbcType=INTEGER}, #{downloadVerify,jdbcType=VARCHAR}, 
+      #{batchId,jdbcType=INTEGER}, #{psdId,jdbcType=INTEGER}, 
+      #{agentUid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, #{agentBirthdate,jdbcType=DATE},
+      #{agentVerify,jdbcType=VARCHAR}, #{agreeAgent,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBox" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into portal_box
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="downloadSn != null">
+        download_sn,
+      </if>
+      <if test="verifyPwd != null">
+        verify_pwd,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="stat != null">
+        stat,
+      </if>
+      <if test="downloadVerify != null">
+        download_verify,
+      </if>
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="psdId != null">
+        psd_id,
+      </if>
+	  <if test="agentUid != null">
+	    agent_uid,
+	  </if>
+	  <if test="agentBirthdate != null">
+	    agent_birthdate,
+	  </if>
+	  <if test="agentVerify != null">
+	    agent_verify,
+	  </if>
+      <if test="agreeAgent != null">
+        agree_agent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="downloadSn != null">
+        #{downloadSn,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyPwd != null">
+        #{verifyPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        #{stat,jdbcType=INTEGER},
+      </if>
+      <if test="downloadVerify != null">
+        #{downloadVerify,jdbcType=VARCHAR},
+      </if>
+      <if test="batchId != null">
+        #{batchId,jdbcType=INTEGER},
+      </if>
+      <if test="psdId != null">
+        #{psdId,jdbcType=INTEGER},
+      </if>
+	  <if test="agentUid != null">
+	    #{agentUid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+	  </if>
+	  <if test="agentBirthdate != null">
+	    #{agentBirthdate,jdbcType=DATE},
+	  </if>
+	  <if test="agentVerify != null">
+	    #{agentVerify,jdbcType=VARCHAR},
+	  </if>
+      <if test="agreeAgent != null">
+        #{agreeAgent,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBox">
+    update portal_box
+    <set>
+      <if test="downloadSn != null">
+        download_sn = #{downloadSn,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyPwd != null">
+        verify_pwd = #{verifyPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stat != null">
+        stat = #{stat,jdbcType=INTEGER},
+      </if>
+      <if test="downloadVerify != null">
+        download_verify = #{downloadVerify,jdbcType=VARCHAR},
+      </if>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=INTEGER},
+      </if>
+      <if test="psdId != null">
+        psd_id = #{psdId,jdbcType=INTEGER},
+      </if>
+	  <if test="agentUid != null">
+	    agent_uid = #{agentUid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+	  </if>
+	  <if test="agentUid == null">
+	    agent_uid = null,
+	  </if>
+	  <if test="agentBirthdate != null">
+	    agent_birthdate = #{agentBirthdate,jdbcType=DATE},
+	  </if>
+	  <if test="agentBirthdate == null">
+	    agent_birthdate = null,
+	  </if>
+	  <if test="agentVerify != null">
+	    agent_verify = #{agentVerify,jdbcType=VARCHAR},
+	  </if>
+	  <if test="agentVerify == null">
+	    agent_verify = null,
+	  </if>
+      <if test="agreeAgent != null">
+        agree_agent = #{agreeAgent,jdbcType=INTEGER},
+      </if>
+      <if test="agreeAgent == null">
+        agree_agent = null,
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalBox">
+    update portal_box
+    set download_sn = #{downloadSn,jdbcType=VARCHAR},
+      verify_pwd = #{verifyPwd,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      stat = #{stat,jdbcType=INTEGER},
+      download_verify = #{downloadVerify,jdbcType=VARCHAR},
+      batch_id = #{batchId,jdbcType=INTEGER},
+      psd_id = #{psdId,jdbcType=INTEGER},
+      agent_uid = #{agentUid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      agent_birthdate = #{agentBirthdate,jdbcType=DATE},
+      agent_verify = #{agentVerify,jdbcType=VARCHAR},
+      agree_agent = #{agreeAgent,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

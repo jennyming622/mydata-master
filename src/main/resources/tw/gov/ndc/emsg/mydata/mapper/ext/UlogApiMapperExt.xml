@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.ext.UlogApiMapperExt">
+	 
+	<resultMap type="tw.gov.ndc.emsg.mydata.entity.UlogApi" id="UlogApi" 
+		extends="tw.gov.ndc.emsg.mydata.mapper.UlogApiMapper.BaseResultMap">
+	</resultMap>
+
+	<select id="getLogByExample" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where 1=1
+		<if test="client_id != null">
+			and client_id = #{client_id}
+		</if>
+		<if test="resource_id != null">
+			and resource_id = #{resource_id}
+		</if>
+		<if test="stime != null">
+			and ctime <![CDATA[ >= ]]> #{stime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="etime != null">
+			and ctime <![CDATA[ <= ]]> #{etime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="transaction_uid != null">
+			and transaction_uid in <foreach collection="transaction_uid" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+		</if>
+		<if test="tx_id != null">
+			and tx_id in <foreach collection="tx_id" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+		</if>
+		<if test="eventList != null">
+			and action in <foreach collection="eventList" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+		</if>
+		<if test="eventIsNotNull != null">
+			and action is not null
+		</if>
+		order by ulog_api.ctime desc
+	</select>
+
+	<select id="getLogByAccount" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		order by ulog_api.ctime desc
+		limit 10
+	</select>
+	
+	<select id="getLogByAccountAndAuditEvent" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and ulog_api.audit_event in (1,2,3,7)
+		order by ulog_api.ctime desc
+		limit 10
+	</select>	
+	
+	<select id="getLogByAccountAndClientId" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and client_id = #{clientId}
+		order by ulog_api.ctime desc
+		limit 10
+	</select>
+	
+	<select id="getLogByAccountAndClientIdAndAuditEventForClient" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and ulog_api.audit_event in (1,2,3,7)
+		and client_id = #{clientId}
+		order by ulog_api.ctime desc
+		limit 10
+	</select>
+	<select id="getLogByAccountAndResourceIdAndAuditEventForResource" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and ulog_api.audit_event in (11,15,16,17,18,19,20,28,29,31,32,41,42,43,44,45,46,47,48,51,52,53,54,55,56)
+		and resource_id = #{resourceId}
+		order by ulog_api.ctime desc
+		limit 30
+	</select>
+	<select id="getLogByAccountAndResourceIdAndAuditEventForRow" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and ulog_api.audit_event in (11,51)
+		and resource_id = #{resourceId}
+		order by ulog_api.ctime desc
+		limit 7
+	</select>
+	<select id="getLogByAccountAndResourceIdAndAuditEventAndTransactionUidForResource" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and ulog_api.audit_event in (11,15,16,17,18,19,20,28,29,31,32,41,42,43,44,45,46,47,48,51,52,53,54,55,56)
+		and resource_id = #{resourceId}
+		and transaction_uid = #{transactionUid}
+		order by ulog_api.ctime desc
+	</select>
+	<select id="countLogByAccountAndResourceIdAndAuditEventForResource" resultType="java.lang.Integer">
+		select count(ulog_api.*)
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and ulog_api.audit_event in (11,15,16,17,18,19,20,28,29,31,32,41,42,43,44,45,46,47,48,51,52,53,54,55,56)
+		and resource_id = #{resourceId}
+	</select>
+	<select id="getLogByAccountAndClientIdAndGsp" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and client_id in (#{clientId},'login.cp.gov.tw')
+		order by ulog_api.ctime desc
+		limit 10
+	</select>
+	
+	<select id="getLogByAccountAndClientIdAndAuditEventForService" resultMap="UlogApi">
+		select ulog_api.*
+		from ulog_api
+		where ulog_api.provider_key = #{account}
+		and ulog_api.audit_event in (21,22,23,24,25,26,27)
+		and client_id = #{clientId}
+		order by ulog_api.ctime desc
+		limit 30
+	</select>
+</mapper>

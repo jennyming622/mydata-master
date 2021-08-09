@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>MyData | 最新消息</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<script th:src="@{/resources/dist/js/font-awesone.min.js}" ></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js" th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<script src="js/creative.js" th:src="@{/resources/dist/js/creative.js}"></script>
+<script type="text/javascript" th:src="@{/RiAPI.js}"></script>
+<script src="jquery-barcode.js" th:src="@{/resources/dist/js/jquery-barcode.js}"></script>
+<script src="js/functionkey.js" th:src="@{/resources/dist/js/functionkey.js}"></script>
+<!-- <script src="js/r_common.js" th:src="@{/resources/dist/js/r_common.js}"></script> -->
+<script src="js/certLogin.js" th:src="@{/resources/dist/js/certLogin.js}"></script>
+<script src="js/errorcode.js" th:src="@{/resources/dist/js/errorcode.js}"></script>
+<script src="js/qrcode.js" th:src="@{/resources/dist/js/qrcode.js}"></script>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<a href="#main_area" id="main_area" title="主要內容區塊"
+				class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item">
+				<a href="#" th:href="@{/}" title="回到MyData首頁"> 
+					<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">最新消息</li>
+		</ol>
+	</nav>
+
+	<div class="content-wrap latest-news-list pt-0">
+		<div class="landing-page">
+			<section class="barcode-wrap text-center section-wrap pb-3">
+				<h2 class="title-wrap">最新消息
+				</h2>
+			</section>
+		</div>
+		<div id="exTab2" class="container">
+			<!-- tab buttons -->
+			<ul class="nav nav-tabs nav-fill mb-3 flex-center w-100">
+				<li th:each="category,iter:${extList}">
+					<th:block th:if="${iter.index==0}"><a th:id="'navtabs'+${category.id}" class="nav-item" th:classappend="${category.id == 1} ? 'active' : ''" th:href="'#' + ${category.id}" data-toggle="tab">[[${category.name}]]<div class="twingle-down"></div></a></th:block>
+					<th:block th:if="${iter.index!=0}"><a th:id="'navtabs'+${category.id}" class="nav-item" th:classappend="${category.id == 1} ? 'active' : ''" th:href="'#' + ${category.id}" data-toggle="tab">[[${category.name}]]<div class="twingle-down"></div></a></th:block>				
+				</li>
+			</ul>
+
+
+			<div class="tab-content mt-3 w-100">
+				<div th:each="category,iter : ${extList}"
+					 th:id="${category.id}"
+					 class="tab-pane"
+					 th:classappend="${category.id == 1 } ? 'active' : ''">
+					<!-- 最新消息文章列表 -->
+					<ul>
+						<li th:each="news,iter1: ${category.newsList}">
+							
+							<a th:href="@{/news/detail} +'/'+${news.newsUid}" th:id="'tabcontent_'+${category.id}+'_'+(${iter1.last && category.id!=3}?'last':(${iter1.index}+1))" th:class="'category'+${category.id}" th:classappend="${iter1.last && category.id!=3}?'last-new':''" th:title="${news.title}" style="display:block;" tabindex="0">
+								<h3>
+									<span th:text="${news.title}">3分鐘了解MyData，個人化資料自主運用大解密</span>
+									<span class="ml-2 mr-2 hidden-lg">-</span>
+									<span th:text="${news.publishDate == null} ? '未定' : ${#dates.format(news.publishDate, 'yyy/MM/dd')}" class="pull-right">109/07/07</span>
+								</h3>
+							</a>
+							
+						</li>
+
+						<th:block th:replace="fragment/news-static::news-static(${category.id})"
+							 th:remove="tag">
+						</th:block>
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂" data-toggle="tooltip" data-placement="left"
+		style="display: inline;"> <img class="arrow-position"
+		src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+
+<script type="text/javascript" th:inline="javascript" >
+	$('#tabcontent_1_last').keydown(function(e) {
+		if(e.keyCode == 9 && !e.shiftKey){
+			e.preventDefault();
+			$('#navtabs2').focus();		
+		}
+	});
+	
+	$('#tabcontent_2_last').keydown(function(e) {
+		if(e.keyCode == 9 && !e.shiftKey){
+			e.preventDefault();
+			$('#navtabs3').focus();		
+		}
+	});
+	
+	$('#tabcontent_3_last').keydown(function(e) {
+		if(e.keyCode == 9 && !e.shiftKey){
+			e.preventDefault();
+			$('#navtabs4').focus();		
+		}
+	});
+	
+	$('#navtabs1').keydown(function(e) {
+		if(e.keyCode == 9 && !e.shiftKey){
+			if($('#1').is(":hidden") == true){
+				e.preventDefault();
+				$('#navtabs2').focus();
+			}else{
+				e.preventDefault();
+				$('#1').find('a.category1')[0].focus();
+			}
+		}		
+	});	
+	
+	$('#navtabs2').keydown(function(e) {
+		if(e.keyCode == 9 && !e.shiftKey){
+			if($('#2').is(":hidden") == true){
+				e.preventDefault();
+				$('#navtabs3').focus();
+			}else{
+				e.preventDefault();
+				$('#2').find('a.category2')[0].focus();
+			}
+		}		
+	});
+	
+	$('#navtabs3').keydown(function(e) {
+		if(e.keyCode == 9 && !e.shiftKey){
+			if($('#3').is(":hidden") == true){
+				e.preventDefault();
+				$('#navtabs4').focus();
+			} else{
+				e.preventDefault();
+				$('#3').find('a.category3')[0].focus();
+			}	
+		}		
+	});
+	
+	$('#navtabs4').keydown(function(e) {
+		if(e.keyCode == 9 && !e.shiftKey){
+			if($('#4').is(":hidden") == true){
+				e.preventDefault();
+				$('#footer_area').focus();
+			}else{
+				e.preventDefault();
+				$('#4').find('a.category4')[0].focus();
+			}				
+		}
+	});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.ChineseCharactersMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.ChineseCharacters">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="word" jdbcType="VARCHAR" property="word" />
+    <result column="stroke" jdbcType="INTEGER" property="stroke" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, word, stroke
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from chinese_characters
+  </select>
+  <select id="selectByWord" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from chinese_characters
+    where word = #{word,jdbcType=VARCHAR}
+  </select>
+</mapper>

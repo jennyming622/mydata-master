@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<title>MyData | 授權紀錄</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+</head>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+
+	<div class="page-title padding flex-center bg-gray authorization-record-page">
+		<h2 class="flex-middle">查看授權紀錄</h2>
+	</div>
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<a href="#main_area" id="main_area" title="主要內容區塊" class="show-lg-only aa-index">:::</a>
+			<li class="breadcrumb-item">
+				<a href="#" th:href="@{/}" title="回到MyData首頁">
+					<img src="images/breadcrumb-home.png" th:src="@{/resources/dist/image/breadcrumb-home.png}" alt="">首頁
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">查看授權紀錄</li>
+		</ol>
+	</nav>
+	<div class="content-wrap record-wrap" th:if="${#lists.isEmpty(psExtList) and #lists.isEmpty(prExtList)}">
+		<div class="no-data">
+			<img class="w-100" src="./images/no-search-resault.png" th:src="@{/resources/dist/image/no-data.png}" alt="尚無資料" aria-label="尚無資料">
+		</div>
+	</div>
+	<div class="content-wrap record-wrap" th:if="${not #lists.isEmpty(prExtList)}">
+		<h3>個人資料<hr></h3>
+		<!-- Collaspe -->
+		<div id="collaspe-wrapper" th:id="'collaspe-wrapper'+${pr.prId}" th:each="pr : ${prExtList}" th:if="${not #lists.isEmpty(prExtList) and not #lists.isEmpty(pr.ulogList)}">
+			<div class="card shadow-sm" onclick="javascript:toggleClass(this);">
+				<div class="card-header collapsed" data-toggle="collapse" href="#list1" th:href="'#list'+${pr.prId}" th:title="${pr.name}+'(Enter展開)'" tabindex="0">
+					<a class="card-link"> 
+						<!-- 參考 css 的 /* icon 檢索 */ -->
+						<!-- 戶役政 -->
+						<th:block th:if="${pr.cateId}==1">
+							<img class="dep-icon" src="./images/household.png" th:src="@{/resources/dist/image/household.png}" alt="">
+							<h4 class="household">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 地政 -->
+						<th:block th:if="${pr.cateId}==2">
+							<img class="dep-icon" src="./images/land.png" th:src="@{/resources/dist/image/land.png}" alt="">
+							<h4 class="land">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 財稅 -->
+						<th:block th:if="${pr.cateId}==3">
+							<img class="dep-icon" src="./images/fiscal-tax.png" th:src="@{/resources/dist/image/fiscal-tax.png}" alt="">
+							<h4 class="fiscal-tax">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 商工 -->
+						<th:block th:if="${pr.cateId}==4">
+							<img class="dep-icon" src="./images/business.png" th:src="@{/resources/dist/image/business.png}" alt="">
+							<h4 class="business">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 公路監理 -->
+						<th:block th:if="${pr.cateId}==5">
+							<img class="dep-icon" src="./images/highway.png" th:src="@{/resources/dist/image/highway.png}" alt="">
+							<h4 class="highway">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 勞保 -->
+						<th:block th:if="${pr.cateId}==6">
+							<img class="dep-icon" src="./images/labor.png" th:src="@{/resources/dist/image/labor.png}" alt="">
+							<h4 class="labor">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 健保 -->
+						<th:block th:if="${pr.cateId}==7">
+							<img class="dep-icon" src="./images/health-insurance.png" th:src="@{/resources/dist/image/health-insurance.png}" alt="">
+							<h4 class="health-insurance">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 醫療 -->
+						<th:block th:if="${pr.cateId}==8">
+							<img class="dep-icon" src="./images/medical.png" th:src="@{/resources/dist/image/medical.png}" alt="">
+							<h4 class="medical">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 金融 -->
+						<th:block th:if="${pr.cateId}==9">
+							<img class="dep-icon" src="./images/financial.png" th:src="@{/resources/dist/image/financial.png}" alt="">
+							<h4 class="financial">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 教育 -->
+						<th:block th:if="${pr.cateId}==10">
+							<img class="dep-icon" src="./images/education.png" th:src="@{/resources/dist/image/education.png}" alt="">
+							<h4 class="education">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 法務 -->
+						<th:block th:if="${pr.cateId}==11">
+							<img class="dep-icon" src="./images/legal.png" th:src="@{/resources/dist/image/legal.png}" alt="">
+							<h4 class="legal">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 社福 -->
+						<th:block th:if="${pr.cateId}==12">
+							<img class="dep-icon" src="./images/welfare.png" th:src="@{/resources/dist/image/welfare.png}" alt="">
+							<h4 class="military-service">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<!-- 其他 -->
+						<th:block th:if="${pr.cateId}==13">
+							<img class="dep-icon" src="./images/others.png" th:src="@{/resources/dist/image/others.png}" alt="">
+							<h4 class="others">
+								<span th:text="${pr.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${pr.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<i class="fa fa-chevron-up pull-right"></i>
+					</a>
+				</div>
+				<div id="list1" th:id="'list'+${pr.prId}" class="collapse" data-parent="#collaspe-wrapper" th:data-parent="'#collaspe-wrapper'+${pr.prId}">
+					<div class="card-body">
+						<table id="table" th:id="'table'+${pr.prId}" class="table text-center rwd-table">
+							<thead>
+								<tr>
+									<th scope="col">次序</th>
+									<th scope="col">時間</th>
+									<th scope="col">類別</th>
+									<th scope="col">說明</th>
+								</tr>
+							</thead>
+							<!-- 預設 <tbody> 旁有 Class " collapsed "，如點擊開啟表格則刪除 " collapsed " -->
+							<tbody class="collapsed">
+								<th:block th:each="ulog,iter : ${pr.ulogList}">
+								<tr data-toggle="collapse" data-target="#table-accordion-1" th:data-target="'#table-accordion-'+${pr.prId}+'-'+${iter.index+1}" class="pointer card-header collapsed">
+									<td scope="row"><span class="show-md-only">次序：</span><span th:text="${iter.index+1}">1</span>.</td>
+									<td><span class="show-md-only">時間：</span><span th:text="${ulog.ctimeStr}+'-'+${ulog.ctimeStr1}">2019年03月22日-14時22分22秒</span></td>
+									<td><span class="show-md-only">類別：</span><span>申請</span></td>
+									<td><span class="show-md-only">說明：</span>您選擇下載此項服務<i class="fa fa-chevron-up pull-right"></i></td>
+								</tr>
+								<tr>
+									<td class="table-loca p-3" colspan="4">
+										<div id="table-accordion-1" th:id="'table-accordion-'+${pr.prId}+'-'+${iter.index+1}" class="table-collaspe-wrap collapse">
+											<table>
+												<tbody>
+													<tr th:each="ulog1 : ${ulog.ulogApiExtList}">
+														<th></th>
+														<td><span class="show-md-only">時間：</span><span th:text="${ulog1.ctimeStr}+'-'+${ulog1.ctimeStr1}">2019年03月22日-14時22分22秒</span></td>
+														<td th:classappend="${ulog1.auditEvent==15||ulog1.auditEvent==16||ulog1.auditEvent==17} ? 'alert' : ''"><span class="show-md-only">類別：</span><span th:text="${ulog1.actionStr}">申請</span></td>
+														<td>
+															<span class="show-md-only">說明：</span>
+															<th:block th:if="${ulog1.auditEvent==11}">
+																<span>您申請此筆資料</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==12}">
+																<span>您同意服務條款</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==13}">
+																<span>您完成身分驗證</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==14}">
+																<span>您同意 MyData 傳送資料給服務提供者</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==15}">
+																<span>您下載資料</span>
+															</th:block>	
+															<th:block th:if="${ulog1.auditEvent==16}">
+																<span>機關取用資料</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==17}">
+																<span>MyData 將資料傳送給服務提供者</span>
+															</th:block>													
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+								</tr>
+								</th:block>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- MyData服務 -->
+	<div class="content-wrap record-wrap" th:if="${not #lists.isEmpty(psExtList)}">
+		<h3>MyData服務<hr></h3>
+		<div id="collaspe-wrapperS" th:id="'collaspe-wrapperS'+${ps.psId}" th:each="ps : ${psExtList}" th:if="${not #lists.isEmpty(psExtList) and not #lists.isEmpty(ps.ulogList)}">
+			<div class="card shadow-sm" onclick="javascript:toggleClass(this);">
+				<div class="card-header collapsed" data-toggle="collapse" href="#listS1" th:href="'#listS'+${ps.psId}" th:title="${ps.name}+'(Enter展開)'" tabindex="0">
+					<a class="card-link">
+						<!-- 參考 css 的 /* icon 檢索 */ -->
+						<!-- 戶役政 -->
+						<th:block th:if="${ps.cateId}">
+							<img class="dep-icon" src="./images/household.png" th:src="@{/resources/dist/image/household.png}" alt="">
+							<h4 class="household">
+								<span th:text="${ps.name}">個人戶籍資料查詢</span><span class="ml-2 mr-2 hidden-lg">-</span><span class="pull-right" th:text="'資料提供單位：'+${ps.providerName}">資料提供單位：內政部戶政司</span>
+							</h4>
+						</th:block>
+						<i class="fa fa-chevron-up pull-right"></i>
+					</a>
+				</div>
+				<div id="listS1" th:id="'listS'+${ps.psId}" class="collapse" data-parent="#collaspe-wrapperS" th:data-parent="'#collaspe-wrapperS'+${ps.psId}">
+					<div class="card-body">
+						<table id="tableS" th:id="'tableS'+${ps.psId}" class="table text-center rwd-table">
+							<thead>
+								<tr>
+									<th scope="col">次序</th>
+									<th scope="col">時間</th>
+									<th scope="col">類別</th>
+									<th scope="col">說明</th>
+								</tr>
+							</thead>
+							<tbody class="collapsed">
+								<th:block th:each="ulog,iter : ${ps.ulogList}">
+								<tr data-toggle="collapse" data-target="#table-accordion-s1" th:data-target="'#table-accordion-s'+${ps.psId}+'-'+${iter.index+1}" class="pointer card-header collapsed">
+									<td scope="row"><span class="show-md-only">次序：</span><span th:text="${iter.index+1}">1</span>.</td>
+									<td><span class="show-md-only">時間：</span><span th:text="${ulog.ctimeStr}+'-'+${ulog.ctimeStr1}">2019年03月22日-14時22分22秒</span></td>
+									<td><span class="show-md-only">類別：</span><span>申請</span></td>
+									<td><span class="show-md-only">說明：</span>您選擇下載此項服務<i class="fa fa-chevron-up pull-right"></i></td>
+								</tr>
+								<tr>
+									<td class="table-loca p-3" colspan="4">
+										<div id="table-accordion-1" th:id="'table-accordion-s'+${ps.psId}+'-'+${iter.index+1}" class="table-collaspe-wrap collapse">
+											<table>
+												<tbody>
+													<tr th:each="ulog1 : ${ulog.ulogApiExtList}">
+														<th></th>
+														<td><span class="show-md-only">時間：</span><span th:text="${ulog1.ctimeStr}+'-'+${ulog1.ctimeStr1}">2019年03月22日-14時22分22秒</span></td>
+														<td th:classappend="${ulog1.auditEvent==25||ulog1.auditEvent==26||ulog1.auditEvent==27} ? 'alert' : ''"><span class="show-md-only">類別：</span><span th:text="${ulog1.actionStr}">申請</span></td>
+														<td>
+															<span class="show-md-only">說明：</span>
+															<span class="show-md-only">說明：</span>
+															<th:block th:if="${ulog1.auditEvent==21}">
+																<span>您申請此筆資料</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==22}">
+																<span>您同意服務條款</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==23}">
+																<span>您完成身分驗證</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==24}">
+																<span>您同意 MyData 傳送資料給服務提供者</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==25}">
+																<span>您下載資料</span>
+															</th:block>	
+															<th:block th:if="${ulog1.auditEvent==26}">
+																<span>機關取用資料</span>
+															</th:block>
+															<th:block th:if="${ulog1.auditEvent==27}">
+																<span>MyData 將資料傳送給服務提供者</span>
+															</th:block>										
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+								</tr>
+								</th:block>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+	<!-- <div class="container c_box_s form_wrap">
+		<div id="accordion01" th:id="'accordion0'+${pr.prId}" th:each="pr : ${prExtList}" th:if="${not #lists.isEmpty(prExtList)}">
+			<div class="card">
+				<div onclick="javascript:checkArrow(this);" class="card-header for_m_mode download_bg"
+					data-toggle="collapse" href="#collapse01" th:href="'#collapse0'+${pr.prId}">
+					<a class="card-link">
+						<h6><span th:text="${pr.name}">求職與就業</span>-(服務提供單位：<span th:text="${pr.providerName}">國家發展委員會</span>)
+							<span class="service_arrow pull-right hidden_mobile"></span>
+						</h6>
+						<div class="hidden_desktop arrow_loca">
+							<span class="service_arrow pull-right"></span>
+						</div>
+					</a>
+				</div>
+				<div id="collapse01" class="collapse" data-parent="#accordion01" th:data-parent="'accordion0'+${pr.prId}" th:id="'collapse0'+${pr.prId}">
+					<div class="card-body">
+						<p class="title ">授權紀錄</p>
+						<div class="description_box">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th class="table_w">時 間</th>
+										<th class="table_w">類 別</th>
+										<th>說 明</th>
+									</tr>
+								</thead>
+								<tbody th:each="ulog,iter : ${pr.ulogList}">
+									<tr th:id="'tr'+${pr.prId}+'-'+${iter.index}" onclick="dpTrToggle(this);" class="agree">
+										<td data-label="時間："><span th:text="${ulog.ctimeStr}"></span><br><span th:text="${ulog.ctimeStr1}"></span></td>
+										<td data-label="類別：" th:text="${ulog.actionStr}">登入</td>
+										<td data-label="說明："><span th:each="item : ${ulog.scopeItemList}" th:if="${not #lists.isEmpty(ulog.scopeItemList)}" th:text="${item}"></span><span class="pull-right"><img src="image/arrow_up.png" alt="toggle icon" th:src="@{/resources/dist/image/arrow_down.png}" th:src-show="@{/resources/dist/image/arrow_up.png}" th:src-hide="@{/resources/dist/image/arrow_down.png}"></span></td>
+									</tr>
+									<tr th:each="ulog1 : ${ulog.ulogApiExtList}" style="background-color:#ffffff;display:none;" th:class="'tr'+${pr.prId}+'-'+${iter.index}">
+										<td data-label="時間："><span th:text="${ulog1.ctimeStr}"></span><br><span th:text="${ulog1.ctimeStr1}"></span></td>
+										<td data-label="類別：" th:text="${ulog1.actionStr}">登入</td>
+										<td data-label="說明："><span th:each="item1 : ${ulog1.scopeItemList}" th:if="${not #lists.isEmpty(ulog1.scopeItemList)}" th:text="${item1}"></span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	
+	<!-- <div class="container c_box_s h1_wrap content_box">
+		<div class="flex_middle">
+			<img src="image/mydata_h1_g.png" class="p-r-20" alt="MyData服務icon"
+				th:src="@{/resources/dist/image/mydata_h1_g.png}">
+			<h2 class="mb-0">MyData服務</h2>
+		</div>
+	</div> -->
+	
+	<!-- <div class="container c_box_s form_wrap">
+		Collaspe
+		<div id="accordion1"  th:id="'accordion'+${service.psId}" th:each="service : ${psExtList}" th:if="${not #lists.isEmpty(psExtList)}">
+			<div class="card">
+				<div onclick="javascript:checkArrow(this);" class="card-header bg_c_header for_m_mode service_bg"
+					data-toggle="collapse" href="#collapse1" th:href="'#collapse'+${service.psId}">
+					<a class="card-link">
+						<h6>
+							<span th:text="${service.name}">求職與就業</span>-(服務提供單位：<span th:text="${service.providerName}">國家發展委員會</span>)
+							<span class="service_arrow pull-right hidden_mobile"></span>
+						</h6>
+						<p class="note" th:text="${service.note}">您已授權本服務可於107年12月31日前取得您的個人資料</p>
+						<div class="hidden_desktop arrow_loca">
+							<span class="service_arrow pull-right"></span>
+						</div>
+					</a>
+				</div>
+				<div id="collapse1" class="collapse" data-parent="#accordion1" th:data-parent="'accordion'+${service.psId}" th:id="'collapse'+${service.psId}">
+					<div class="card-body">
+						<p class="title ">授權紀錄</p>
+						<div class="description_box">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th class="table_w">時 間</th>
+										<th class="table_w">類 別</th>
+										<th>說 明</th>
+									</tr>
+								</thead>
+								<tbody th:each="ulog : ${service.ulogList}">
+									<tr class="agree">
+										<td data-label="時間："><span th:text="${ulog.ctimeStr}"></span><br><span th:text="${ulog.ctimeStr1}"></span></td>
+										<td data-label="類別：" th:text="${ulog.actionStr}">登入</td>
+										<td data-label="說明："><p th:each="item : ${ulog.scopeItemList}" th:if="${not #lists.isEmpty(ulog.scopeItemList)}" th:text="${item}"></p></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	
+	<!-- <div class="container c_box_s h1_wrap content_box">
+		<div class="flex_middle">
+			<img src="image/w_cloud_verification.png" class="p-r-20" alt="MyData下載icon" style="width:72px;"
+				th:src="@{/resources/dist/image/w_cloud_verification.png}">
+			<h2 class="mb-0">取回MyBox雲端資料</h2>
+		</div>
+	</div> -->
+
+	<!-- <div class="container c_box_s form_wrap verify_wrap" th:if="${not #lists.isEmpty(finalPortalBoxLogExtList)}">
+		<div id="accordionA1">
+			<div class="card">
+				<div onclick="javascript:checkArrow(this);" class="card-header bg_c_header for_m_mode verify_bg"
+					data-toggle="collapse" href="#collapseA1" th:href="'#collapseA1'">
+					<a class="card-link">
+						<h6>
+							您儲存於MyBox的個人資料使用紀錄-(服務提供單位：國家發展委員會)
+							<span class="service_arrow pull-right hidden_mobile"></span>
+						</h6>
+						<div class="hidden_desktop arrow_loca">
+							<span class="service_arrow pull-right"></span>
+						</div>
+					</a>
+				</div>
+				<div id="collapseA1" class="collapse" data-parent="#accordionA1">
+					<div class="card-body">
+						<div class="description_box">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th class="table_w">時 間</th>
+										<th class="table_w">類 別</th>
+										<th>說 明</th>
+									</tr>
+								</thead>
+								<tbody th:each="blog : ${finalPortalBoxLogExtList}">
+									<tr class="agree">
+										<td data-label="時間："><span th:text="${blog.ctimeStr}"></span><br><span th:text="${blog.ctimeStr1}"></span></td>
+										<td data-label="類別：">取回資料</td>
+										<td data-label="說明：">您儲存於MyBox中<span th:text="${blog.prName}"></span>資料已取回</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+	<!-- Message -->
+	<div id="pop-message-refresh" class="modal fade show" role="dialog" data-backdrop="static" data-keyboard="false"
+		aria-labelledby="refuseModalLabel" style="display: none;">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="refuseModalLabel">MyData 提醒</h5>
+					<button type="button" class="close" title="關閉彈跳視窗" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div id="message-text-refresh" class="modal-body">如有問題請洽客服人員，
+					<br>客服電話<a href="tel:0800-009-868" title="致電Mydata客服電話">0800-009-868</a>，
+					<br>客服信箱<a href="mailto:mydata@ndc.gov.tw" class="footer_about" title="寫信至Mydata客服信箱">mydata@ndc.gov.tw</a></div>
+				<div class="modal-footer">
+					<button id="pop-message-close-btn" class="theme-btn"
+						data-dismiss="modal" onclick="javascript:window.location.reload();">關閉</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+		role="button" title="網頁置頂"
+		data-toggle="tooltip" data-placement="left" style="display: inline;">
+		<img class="arrow-position" src="images/top-arrow.png"
+		th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+	
+	<script type="text/javascript" th:inline="javascript">
+		function toggleClass(obj){
+			setTimeout(function(){
+				if($(obj).find('div.card-header').hasClass('collapsed')){
+					$(obj).removeClass('show');
+				}else{
+					$(obj).addClass('show');
+				}
+			}, 100);
+		}
+		
+		//覆蓋登入
+		function openLogin(obj) {
+			clearInterval(loginWindowTimer);
+			if(loginWindow){
+				loginWindow.close();
+			}
+			var popupWidth = 520;
+			var popupHeight = 635;
+			var xPosition = ($(window).width() - popupWidth) / 2;
+			var yPosition = ($(window).height() - popupHeight) / 2;
+			var loginUrl = /*[[@{/signin}]]*/'';
+			if(typeof obj!='undefined'&&obj!=''&&obj!=null){
+				loginUrl = obj;
+			}
+			//另開視窗
+			loginWindow = window.open(loginUrl, "LoginWindow",
+					"location=no,scrollbars=yes,resizable=yes," + "width="
+							+ popupWidth + ",height=" + popupHeight + ","
+							+ "left=" + xPosition + ",top=" + yPosition);
+			loginWindowTimer = setInterval(onTimerCallbackToCheckLoginWindowClosure, 500);
+		}
+
+		function onTimerCallbackToCheckLoginWindowClosure() {
+			try {
+				if (loginWindow && loginWindow.closed) {
+					RiAPI.run({
+			            type: 'POST',
+			            url: '/rest/user/info',
+			            loadSpin: true,
+			            success: function(resp) {
+							if (resp.code < 0) {
+								clearInterval(loginWindowTimer);
+							} else {
+								clearInterval(loginWindowTimer);
+								window.location.reload();
+							}
+			            }
+					});
+				}
+			} catch (ex) {
+				clearInterval(loginWindowTimer);
+			}
+		}
+		
+		$('div[data-toggle="collapse"], label').keydown(function(e) {
+			if (e.keyCode == 13) {
+	    			$(this).trigger('click');
+	    		}
+		});
+	</script>
+</body>
+</html>

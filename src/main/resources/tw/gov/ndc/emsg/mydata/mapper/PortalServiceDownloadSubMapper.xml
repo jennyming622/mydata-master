@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.PortalServiceDownloadSubMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.PortalServiceDownloadSub">
+    <id column="psd_id" jdbcType="INTEGER" property="psdId" />
+    <result column="pcs_id" jdbcType="INTEGER" property="pcsId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    psd_id, pcs_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from portal_service_download_sub
+    where psd_id = #{psdId,jdbcType=INTEGER}
+  </select>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.PortalServiceDownloadSub">
+    insert into portal_service_download_sub (psd_id, pcs_id)
+    values (#{psdId,jdbcType=INTEGER}, #{pcsId,jdbcType=INTEGER})
+  </insert>
+</mapper>

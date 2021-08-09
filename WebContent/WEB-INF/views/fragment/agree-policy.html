@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>agree-policy</title>
+</head>
+<body>
+    <th:block th:fragment="agree-policy(id)">
+        <ul class="flex-center w-100 hidden-desktop m-steps-box" th:id="'mStep' + ${id}">
+            <!-- 若該步驟已完成，則在 .m-steps 旁加上 .pass -->
+            <li class=" m-steps" id="agree">
+                <p class="mb-0 step1">Step</p> 同意<span class="br"></span>條款
+            </li>
+            <li class=" m-steps" id="verify">
+                <p class="mb-0 step2">Step</p> 身分<span class="br"></span>驗證
+            </li>
+            <li class=" m-steps" id="member" style="display: none">
+                <p class="mb-0 step3">Step</p> 註冊<span class="br"></span>資料
+            </li>
+            <li class=" m-steps" id="download">
+                <p class="mb-0 step3" >Step</p> 下載<span class="br"></span>完成
+            </li>
+        </ul>
+        <li class="step step1">
+            <div class="disabled-mask"></div>
+            <hr>
+            <h4 style="color: #212529;">資料下載及線上服務條款</h4>
+            <div th:replace="fragment/download-privacy::download-privacy"></div>
+            <div class="form">
+                <div class="form-group mb-0">
+                    <input type="checkbox" class="agree-policy" th:id="'agree-policy'+${id}" th:name="'agree-policy'+${id}" th:data-id="${id}">
+                    <label class="flex-middle mb-0" th:for="'agree-policy'+${id}"
+                           tabindex="0" title="勾選同意上述服務條款"><strong>我已了解此服務內容，並同意上述服務條款。</strong></label>
+                </div>
+            </div>
+        </li>
+    </th:block>
+    <th:block th:fragment="agree-policy-script">
+        <script type="text/javascript" th:inline="javascript">
+            $(function() {
+                $('.agree-policy').change(function() {
+                    var $this = $(this);
+                    var id = $this.data('id');
+                    var isAgree = ($this.prop("checked") == true);
+                    updateStepClass(id, '#agree', isAgree);
+                });
+            });
+
+            // 同一條款是否已勾選
+            function isAgreePolicy(id) {
+                return $('#agree-policy' + id.replace('double','')).prop('checked');
+            }
+
+            function updateStepClass(id, step, isPass) {
+                if(isPass == true) {
+                    $('#mStep' + id).find(step).addClass('pass');
+                } else {
+                    $('#mStep' + id).find(step).removeClass('pass');
+                }
+            }
+        </script>
+    </th:block>
+</body>
+</html>

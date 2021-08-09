@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:if="${_csrf}"
+	th:content="${_csrf.headerName}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>MyData | 登入</title>
+<link rel="icon" type="image/png" sizes="16x16"
+	href="image/smydatalogo.png"
+	th:href="@{/resources/dist/image/smydatalogo.png}">
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet"
+	th:href="@{/resources/dist/css/bootstrap.css}">
+<link href="css/style.css" rel="stylesheet" type="text/css"
+	th:href="@{/resources/dist/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+<script th:src="@{/resources/dist/js/font-awesone.min.js}" ></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.5.1.min.js"
+	th:src="@{/resources/dist/js/jquery-3.5.1.min.js}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"
+	th:src="@{/resources/dist/js/popper.min.js}"></script>
+<script src="js/bootstrap.js"
+	th:src="@{/resources/dist/js/bootstrap.js}"></script>
+<script src="js/scrollreveal.js"
+	th:src="@{/resources/dist/js/scrollreveal.js}"></script>
+<script src="js/certLogin.js" th:src="@{/resources/dist/js/certLogin.js}"></script>
+<script src="js/errorcode.js" th:src="@{/resources/dist/js/errorcode.js}"></script>
+<script src="js/qrcode.js" th:src="@{/resources/dist/js/qrcode.js}"></script>
+<!-- twca js-->
+<script th:src="@{/resources/dist/js/mydata.twca.ap.js}"></script>
+<script th:src="@{/resources/dist/js/tcw.api.js}"></script>
+<script th:src="@{/resources/dist/js/twcaCryptoLib.js}"></script>
+<!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+</head>
+<style>
+.modal {
+	position: relative;
+	-webkit-transform: none;
+}
+
+/*取消input type 為number的arrow*/
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+.grecaptcha-badge{
+	visibility: hidden;
+}
+</style>
+<body th:classappend="${session.SignedInUser!=null&&session.SignedInUser.maskMember!=null&&session.SignedInUser.maskMember.name!=null}?'after-login':''">
+	<!--======= header =======-->
+	<header th:replace="fragment/header::header"></header>
+	<!--======= header =======-->
+	<div class="loca login-wrap">
+		<div class="landing-page log-in-type-wrap shadow-sm my-area">
+			<section class="mt-3 p-3 pb-5">
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='cer'}">自然人憑證</h2>
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='fic'}">晶片金融卡</h2>
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='fch'}">硬體金融憑證</h2>
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='business'}">工商憑證</h2>
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='nhi'}">健保卡</h2>
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='fcs'}">軟體金融憑證</h2>
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='tfido'}">TW FidO</h2>
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='pii'}" hidden>雙證件驗證</h2>
+				<h2 class="mt-5 mb-5 pt-2" th:if="${level=='email'}">動態密碼</h2>
+				<div class="description text-center pt-2" th:if="${level=='email'}">
+					<p class="pb-3">請依下列步驟輸入資訊，即可完成驗證流程</p>
+				</div>
+				<!-- 自然人憑證 -->
+				<th:block th:if="${level=='cer'}">
+					<h3 class="title mt-2 mb-0">Step 1. 輸入個人資訊</h3>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="uid" class="word-4">身分證字號：</label>
+									<input type="text" class="form-control" id="uid" name="uid" placeholder="英文字母為大寫" maxLength="10"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.uid)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="birthdate" class="word-2">生 日：</label>
+									<input class="form-control" id="birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="民國年7碼(例：0770101)" maxLength="7"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.birthdate)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="digital">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="text-left">
+									<label class="w-100 mb-0">
+											<span>請插入您的自然人憑證，並輸入PIN碼
+												<small class="alert">(必填)</small>
+											</span>
+										<input type="password" pattern="[0-9]*" inputmode="numeric" id="digital-pin" class="form-control" placeholder="請輸入您的PIN碼" autocomplete="off">
+										<div class="text-right verify-tag-wrap ">
+											<a href="https://moica.nat.gov.tw/unblockcard.html" target="_blank" title="忘記 PIN 碼(另開新頁)"><small class="link">忘記 PIN 碼？</small></a>
+										</div>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6 text-left note-wrap">
+								<p class="mb-0 bold">初次使用自然人憑證驗證嗎？</p>
+								<p class="mb-2">請備妥晶片讀卡機並安裝<a class="link" href="https://moica.nat.gov.tw/download_1.html" target="_blank" title="HiCOS卡片管理工具(另開新頁)">HiCOS卡片管理工具</a>，插卡輸入 PIN 碼即可完成驗證。
+									<br>
+									<a class="link" href="https://moica.nat.gov.tw/ShowCardInfo.html" target="_blank" title="憑證IC卡檢測(另開新頁)">憑證IC卡檢測</a>
+								</p>
+
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2" onclick="javascript:loginByCer();">下一步</button>
+					<div id="step2Div" style="display: none;">
+						<!-- <p id="emailstep1alert" class="alert mt-2" style="display:none;">身分證字號錯誤！</p> -->
+						<h3 id="emailstep2" class="title mt-4 mb-0">Step 2. 填寫聯絡資料</h3>
+						<p class="mb-1">這是您第一次使用個人化資料自主運用（MyData）平臺，請填寫下列個人資訊供系統識別與通知用。</p>
+						<h4 class="mt-2 mb-0 secondary">系統識別</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<label class="w-100 eyes-switch-loca flex-center" for="name"> <span class="word-2">姓 名：</span>
+										<input id="name" class="form-control encparam" type="text"
+											   name="name" placeholder="請輸入您的姓名(例：林小華)"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.name)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_name" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									</label>
+								</div>
+							</div>
+						</div>
+						<h4 class="mt-2 mb-0 secondary">訊息通知</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left form-group multifactor radio notify">
+									<span> 請選擇聯絡方式 <small class="alert">(必填)</small>
+									</span>
+									<!-- 在 <label> 加上 .active 即表示該選項有被圈選 -->
+									<div>
+										<label id="emailradio2Label"
+											class="flex-middle mt-1 mb-0 radio active" for="emailradio2">
+											<input id="emailradio2" type="radio" name="emailradio"
+											value="email" onclick="javascript:changeemailradio();"
+											checked><span class="mr-2 ml-1">電子信箱</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<!-- flex-center -->
+									<label id="mobilelabel" for="mobile" class="w-100 eyes-switch-loca" style="display: none;"> 
+									<span>手機號碼<small class="alert">(必填)</small></span> 
+									<input id="mobile" class="form-control encparam flex-center" type="text" pattern="[0-9]*" inputmode="numeric" name="mobile" placeholder="請輸入您的手機10碼(例：09123456789)"
+										   onfocus="inputFocusinEvent(this)"
+										   onblur="inputFocusoutEvent(this, MaskType.phone)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_mobile" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									<input id="mobile40" class="form-control param" type="hidden" name="mobile" placeholder="請輸入綁定電話號碼(0900123456)" autocomplete="off">
+									</label>
+										<label id="emaillabel" for="email" class="w-100 eyes-switch-loca flex-center" style=""> 
+										<span class="word-4">電 子 信 箱：</span> 
+										<input id="email" class="form-control encparam" type="text" name="email" placeholder="請輸入您的電子信箱"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.email)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_email" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+										<input id="verifycode40" class="form-control param" type="hidden" name="verifycode" placeholder="請輸入您的電子信箱" value="" autocomplete="off">
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="text-center w-100">
+							<a id="loginByEmailOrMobileStep2Link"
+								class="btn theme-btn-border w-100 mb-2" style=""
+								href="javascript:fillMember();" title="下一步">下一步</a>
+						</div>
+					</div>
+				</th:block>
+				<!-- 晶片金融卡 -->
+				<th:block th:if="${level=='fic'}">
+					<h3 class="title mt-2 mb-0">Step 1. 輸入個人資訊</h3>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="uid" class="word-4">身分證字號：</label>
+									<input type="text" class="form-control" id="uid" name="uid" placeholder="英文字母為大寫" maxLength="10"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.uid)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="birthdate" class="word-2">生 日：</label>
+									<input class="form-control" id="birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="民國年7碼(例：0770101)" maxLength="7"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.birthdate)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="digital">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="text-left">
+									<label class="w-100 mb-0">
+											<span>請插入您的晶片金融卡，並輸入密碼
+												<small class="alert">(必填)</small>
+											</span>
+										<input type="password" pattern="[0-9]*" inputmode="numeric" id="fic-pin" class="form-control" placeholder="請輸入您的密碼" autocomplete="off">
+                                            <img src="/resources/dist/image/ps-icon.svg" th:src="@{/resources/dist/image/ps-icon.svg}" alt="注意事項：" style="width: 15px; margin-right: 3px">
+                                            <small style="display: initial;">密碼連續3次錯誤後，將會鎖卡，如需解鎖卡片請洽原發卡銀行</small>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6 text-left note-wrap">
+								<p class="mb-0 bold">初次使用晶片金融卡驗證嗎？</p>
+								<p class="mb-2">
+								    Windows作業系統：請備妥晶片讀卡機並安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.exe}" target="_blank" title="Windows版TWCA金融憑證元件.exe">Windows版TWCA金融憑證元件</a>。<br>
+                                    Mac作業系統：請備妥晶片讀卡機並安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.pkg}" target="_blank" title="Mac版TWCA金融憑證元件.pkg">Mac版TWCA金融憑證元件</a>。
+									<div class="learning-wrap inline">
+										<div class="absolute-center shadow-sm" style="width: 264px;top: -185px;">
+											<p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援銀行列表</p>
+											<div>臺灣銀行、臺灣土地銀行、合作金庫商業銀行、第一商業銀行、華南商業銀行、彰化商業銀行、上海商業儲蓄銀行、台北富邦商業銀行、國泰世華商業銀行、兆豐國際商業銀行、王道商業銀行、臺灣中小企業銀行、臺灣新光商業銀行、聯邦商業銀行、遠東國際商業銀行、元大商業銀行、永豐商業銀行、凱基商業銀行、台新國際商業銀行、日盛國際商業銀行、中國信託商業銀行。</div>
+											<div class="twingle-down"></div>
+										</div>
+										<a href="javascript:showLearning(this);" style="color: #0c7eb1;text-decoration: underline;">可以用哪些銀行的晶片金融卡</a>
+									</div>
+								</p>
+
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2" onclick="javascript:loginByFic();">下一步</button>
+					<div id="step2Div" style="display: none;">
+						<!-- <p id="emailstep1alert" class="alert mt-2" style="display:none;">身分證字號錯誤！</p> -->
+						<h3 id="emailstep2" class="title mt-4 mb-0">Step 2. 填寫聯絡資料</h3>
+						<p class="mb-1">這是您第一次使用個人化資料自主運用（MyData）平臺，請填寫下列個人資訊供系統識別與通知用。</p>
+						<h4 class="mt-2 mb-0 secondary">系統識別</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<label class="w-100 eyes-switch-loca flex-center" for="name"> <span class="word-2">姓 名：</span>
+										<input id="name" class="form-control encparam" type="text"
+											   name="name" placeholder="請輸入您的姓名(例：林小華)"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.name)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_name" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									</label>
+								</div>
+							</div>
+						</div>
+						<h4 class="mt-2 mb-0 secondary">訊息通知</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left form-group multifactor radio notify">
+									<span> 請選擇聯絡方式 <small class="alert">(必填)</small>
+									</span>
+									<!-- 在 <label> 加上 .active 即表示該選項有被圈選 -->
+									<div>
+										<label id="emailradio2Label"
+											class="flex-middle mt-1 mb-0 radio active" for="emailradio2">
+											<input id="emailradio2" type="radio" name="emailradio"
+											value="email" onclick="javascript:changeemailradio();"
+											checked><span class="mr-2 ml-1">電子信箱</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<!-- flex-center -->
+									<label id="mobilelabel" for="mobile" class="w-100 eyes-switch-loca" style="display: none;"> 
+									<span>手機號碼<small class="alert">(必填)</small></span> 
+									<input id="mobile" class="form-control encparam flex-center" type="text" pattern="[0-9]*" inputmode="numeric" name="mobile" placeholder="請輸入您的手機10碼(例：09123456789)"
+										   onfocus="inputFocusinEvent(this)"
+										   onblur="inputFocusoutEvent(this, MaskType.phone)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_mobile" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									<input id="mobile40" class="form-control param" type="hidden" name="mobile" placeholder="請輸入綁定電話號碼(0900123456)" autocomplete="off">
+									</label>
+										<label id="emaillabel" for="email" class="w-100 eyes-switch-loca flex-center" style=""> 
+										<span class="word-4">電 子 信 箱：</span> 
+										<input id="email" class="form-control encparam" type="text" name="email" placeholder="請輸入您的電子信箱"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.email)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_email" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+										<input id="verifycode40" class="form-control param" type="hidden" name="verifycode" placeholder="請輸入您的電子信箱" value="" autocomplete="off">
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="text-center w-100">
+							<a id="loginByEmailOrMobileStep2Link"
+								class="btn theme-btn-border w-100 mb-2" style=""
+								href="javascript:fillMember();" title="下一步">下一步</a>
+						</div>
+					</div>
+				</th:block>
+				<!-- 硬體金融憑證 -->
+				<th:block th:if="${level=='fch'}">
+					<h3 class="title mt-2 mb-0">Step 1. 輸入個人資訊</h3>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="uid" class="word-4">身分證字號：</label>
+									<input type="text" class="form-control" id="uid" name="uid" placeholder="英文字母為大寫" maxLength="10"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.uid)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="birthdate" class="word-2">生 日：</label>
+									<input class="form-control" id="birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="民國年7碼(例：0770101)" maxLength="7"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.birthdate)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="digital">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="text-left">
+									<label class="w-100 mb-0">
+											<span>請插入您的憑證卡，並輸入PIN碼
+												<small class="alert">(必填)</small>
+											</span>
+										<input type="password" id="fch-pin" class="form-control" placeholder="請輸入您的PIN碼" autocomplete="off">
+										<!-- <div class="text-right verify-tag-wrap ">
+											<a href="https://moica.nat.gov.tw/unblockcard.html" target="_blank" title="忘記 PIN 碼(另開新頁)"><small class="link">忘記 PIN 碼？</small></a>
+										</div> -->
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6 text-left note-wrap">
+								<p class="mb-0 bold">初次使用硬體金融憑證驗證嗎？</p>
+								<p class="mb-2">
+								    Windows作業系統：請備妥晶片讀卡機並安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.exe}" target="_blank" title="Windows版TWCA金融憑證元件.exe">Windows版TWCA金融憑證元件</a>。<br>
+                                    Mac作業系統：請備妥晶片讀卡機並安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.pkg}" target="_blank" title="Mac版TWCA金融憑證元件.pkg">Mac版TWCA金融憑證元件</a>。
+									<div class="learning-wrap inline">
+										<div class="absolute-center shadow-sm" style="width: 264px;top: -165px;">
+											<p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援銀行列表</p>
+											<div>玉山銀行、日商三菱日聯銀行、日盛國際商業銀行、王道商業銀行、台中商業銀行、永豐商業銀行、兆豐國際商業銀行、合作金庫商業銀行、京城商業銀行、板信商業銀行、國泰世華銀行、華泰商業銀行、陽信商業銀行、滙豐(台灣)商業銀行、臺灣土地銀行、臺灣新光商業銀行、臺灣銀行、聯邦商業銀行。</div>
+											<div class="twingle-down"></div>
+										</div>
+										<a href="javascript:showLearning(this);" style="color: #0c7eb1;text-decoration: underline;">可以用哪些銀行的硬體金融憑證</a>
+									</div>
+								</p>
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2" onclick="javascript:loginByFch();">下一步</button>
+					<div id="step2Div" style="display: none;">
+						<!-- <p id="emailstep1alert" class="alert mt-2" style="display:none;">身分證字號錯誤！</p> -->
+						<h3 id="emailstep2" class="title mt-4 mb-0">Step 2. 填寫聯絡資料</h3>
+						<p class="mb-1">這是您第一次使用個人化資料自主運用（MyData）平臺，請填寫下列個人資訊供系統識別與通知用。</p>
+						<h4 class="mt-2 mb-0 secondary">系統識別</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<label class="w-100 eyes-switch-loca flex-center" for="name"> <span class="word-2">姓 名：</span>
+										<input id="name" class="form-control encparam" type="text"
+											   name="name" placeholder="請輸入您的姓名(例：林小華)"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.name)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_name" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									</label>
+								</div>
+							</div>
+						</div>
+						<h4 class="mt-2 mb-0 secondary">訊息通知</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left form-group multifactor radio notify">
+									<span> 請選擇聯絡方式 <small class="alert">(必填)</small>
+									</span>
+									<!-- 在 <label> 加上 .active 即表示該選項有被圈選 -->
+									<div>
+										<label id="emailradio2Label"
+											class="flex-middle mt-1 mb-0 radio active" for="emailradio2">
+											<input id="emailradio2" type="radio" name="emailradio"
+											value="email" onclick="javascript:changeemailradio();"
+											checked><span class="mr-2 ml-1">電子信箱</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<!-- flex-center -->
+									<label id="mobilelabel" for="mobile" class="w-100 eyes-switch-loca" style="display: none;"> 
+									<span>手機號碼<small class="alert">(必填)</small></span> 
+									<input id="mobile" class="form-control encparam flex-center" type="text" name="mobile" placeholder="請輸入您的手機10碼(例：09123456789)"
+										   onfocus="inputFocusinEvent(this)"
+										   onblur="inputFocusoutEvent(this, MaskType.phone)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_mobile" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									<input id="mobile40" class="form-control param" type="text" pattern="[0-9]*" inputmode="numeric" name="mobile" placeholder="請輸入綁定電話號碼(0900123456)" autocomplete="off">
+									</label>
+										<label id="emaillabel" for="email" class="w-100 eyes-switch-loca flex-center" style=""> 
+										<span class="word-4">電 子 信 箱：</span> 
+										<input id="email" class="form-control encparam" type="text" name="email" placeholder="請輸入您的電子信箱"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.email)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_email" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+										<input id="verifycode40" class="form-control param" type="hidden" name="verifycode" placeholder="請輸入您的電子信箱" value="" autocomplete="off">
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="text-center w-100">
+							<a id="loginByEmailOrMobileStep2Link"
+								class="btn theme-btn-border w-100 mb-2" style=""
+								href="javascript:fillMember();" title="下一步">下一步</a>
+						</div>
+					</div>
+				</th:block>
+				<!-- 工商憑證 -->
+				<th:block th:if="${level=='business'}">
+					<h3 class="title mt-2 mb-0">Step 1. 工商驗證</h3>
+					<div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="business">
+						<div	 class="row">
+							<div class="col-md-6">
+								<div class="text-left">
+									<label class="w-100 mb-0">
+											<span>請插入您的工商憑證，並輸入PIN碼
+												<small class="alert">(必填)</small>
+											</span>
+										<input type="password" id="business-pin" class="form-control" placeholder="請輸入您的PIN碼" autocomplete="off">
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6 text-left note-wrap">
+								<p class="mb-0 bold">初次使用工商憑證驗證嗎？</p>
+								<p class="mb-2">
+									備妥晶片讀卡機及<a class="link" href="http://moica.nat.gov.tw/download_1.html" target="_blank" title="安裝元件(另開新頁)">安裝元件</a>，插卡輸入 PIN 碼就可以完成驗證，完整說明請參考<a class="link" href="http://moica.nat.gov.tw/download/File/HiCOS.pdf" target="_blank" title="內政部憑證管理中心說明(另開新頁)">內政部憑證管理中心說明</a>。
+								</p>
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2" onclick="javascript:loginByBusiness();">下一步</button>
+				</th:block>
+				<!-- 健保卡 -->
+				<th:block th:if="${level=='nhi'}">
+					<h3 class="title mt-2 mb-0">Step 1. 輸入個人資訊</h3>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="uid" class="word-4">身分證字號：</label>
+									<input type="text" class="form-control" id="uid" name="uid" placeholder="英文字母為大寫" maxLength="10"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.uid)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="birthdate" class="word-2">生 日：</label>
+									<input class="form-control" id="birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="民國年7碼(例：0770101)" maxLength="7"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.birthdate)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="health">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="text-left">
+									<label class="w-100 mb-0">
+											<span>請插入您的健保卡，並輸入註冊密碼
+												<small class="alert">(必填)</small>
+											</span>
+										<input type="password" id="health-pwd" class="form-control" placeholder="請輸入您的註冊密碼" autocomplete="off">
+										<div class="text-right verify-tag-wrap ">
+											<a href="https://cloudicweb.nhi.gov.tw/cloudic/system/mUserForget.aspx" target="_blank" title="忘記註冊密碼(另開新頁)"><small class="link">忘記註冊密碼？</small></a>
+										</div>
+									</label>
+								</div>
+								<div class="text-left mt-2">
+									<label for="captcha" class="w-100 mb-0"><span>
+									    驗證碼<small class="alert">(必填)</small></span></label>
+									<input type="text" id="captcha" th:id="captcha" name="captcha" class="w-100" autocomplete="off">
+									<br>
+									<img id="captchaImg" alt="captcha" th:src="@{/captcha.jpg}" class="mt-1">
+									<button class="btn p-0 speaker" title="語音播放驗證碼" onclick="javascript:captchaGoogleSounfPlay();">
+										<img th:src="@{/resources/dist/image/speaker-icon.svg}" alt="語音播放">
+									</button>
+									<a href="javascript:void(0);" class="link" th:onclick="'javascript:refreshCaptchaImage();'">
+									    <small class=" link m-0 mt-3 ml-1">刷新驗證碼</small>
+									</a>
+								</div>
+							</div>
+							<div class="col-md-6 text-left note-wrap">
+								<p class="mb-0 bold">初次使用健保卡驗證嗎？</p>
+								<p class="mb-2">請備妥健保卡、晶片讀卡機，並請依照您的作業系統版本(OS)選擇元件安裝檔下載<a class="link" href="https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/mEventesting.htm" target="_blank" title="安裝元件(另開新頁)">安裝元件</a>，插卡輸入註冊密碼就可以完成驗證，請詳<a class="link" target="_blank" title="健保卡網路服務註冊(另開新頁)" href="https://cloudicweb.nhi.gov.tw/cloudic/system/mlogin.aspx">健保卡網路服務註冊</a>。
+									<br>
+									<a class="link" target="_blank" title="健保卡檢測(另開新頁)" href="https://cloudicweb.nhi.gov.tw/cloudic/system/SMC/webtesting/SampleY.aspx">健保卡檢測</a>
+								</p>
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2" onclick="javascript:loginByNhi();">下一步</button>
+				</th:block>
+				<!-- 軟體金融憑證 -->
+				<th:block th:if="${level=='fcs'}">
+					<h3 class="title mt-2 mb-0">Step 1. 輸入個人資訊</h3>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="uid" class="word-4">身分證字號：</label>
+									<input type="text" class="form-control" id="uid" name="uid" placeholder="英文字母為大寫" maxLength="10"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.uid)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="birthdate" class="word-2">生 日：</label>
+									<input class="form-control" id="birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="民國年7碼(例：0770101)" maxLength="7"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.birthdate)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="digital">
+						<div class="row">
+<!-- 							<div class="col-md-6"> -->
+<!-- 								<div class="text-left"> -->
+<!-- 									<label class="w-100 mb-0"> -->
+<!-- 											<span>請選擇您的軟體金融憑證 -->
+<!-- 												<small class="alert">(必填)</small> -->
+<!-- 											</span> -->
+<!-- 									</label> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+							<div class="col-md-12 text-left note-wrap">
+								<p class="mb-0 bold">初次使用軟體金融憑證驗證嗎？</p>
+								<p class="mb-2">
+                                    Windows作業系統：請安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.exe}" target="_blank" title="Windows版TWCA金融憑證元件.exe">Windows版TWCA金融憑證元件</a>。<br>
+                                    Mac作業系統：請安裝<a class="link" th:href="@{/resources/dist/twca/AgentSetup.pkg}" target="_blank" title="Mac版TWCA金融憑證元件.pkg">Mac版TWCA金融憑證元件</a>。
+									<div class="learning-wrap inline">
+										<div class="absolute-center shadow-sm" style="width: 264px;top:-235px;">
+											<p class="mb-0 text-center" style="font-size:1.125rem !important;padding: 4px;">支援金融機構列表</p>
+											<div>大展證券、大慶證券、元大證券金融、元富證券、日盛證券、台中銀證券、台新綜合證券、台灣土地銀行證券部、永全證券、永興證券、永豐金證券、玉山綜合證券、兆豐證券、光和證券、合作金庫證券、宏遠證券、亞東證券、致和證券、國泰綜合證券、國票綜合證券、康和綜合證券、第一金證、統一綜合證券、凱基證券、富邦綜合證券、犇亞證券網路公司、華南永昌綜合證券、陽信證券、新百王證券、群益金鼎證券、福邦證券、福勝證券、臺銀綜合證券、臺灣中小企業銀行證券部、遠智證券、德信綜合證券、聯邦商業銀行證券部。</div>
+											<div class="twingle-down"></div>
+										</div>
+										<a href="javascript:showLearning(this);" style="color: #0c7eb1;text-decoration: underline;">可以用哪些銀行的軟體金融憑證</a>
+									</div>
+								</p>
+
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2" onclick="javascript:loginByFcs();">下一步</button>
+					<div id="step2Div" style="display: none;">
+						<!-- <p id="emailstep1alert" class="alert mt-2" style="display:none;">身分證字號錯誤！</p> -->
+						<h3 id="emailstep2" class="title mt-4 mb-0">Step 2. 填寫聯絡資料</h3>
+						<p class="mb-1">這是您第一次使用個人化資料自主運用（MyData）平臺，請填寫下列個人資訊供系統識別與通知用。</p>
+						<h4 class="mt-2 mb-0 secondary">系統識別</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<label class="w-100 eyes-switch-loca flex-center" for="name"> <span class="word-2">姓 名：</span>
+										<input id="name" class="form-control encparam" type="text"
+											   name="name" placeholder="請輸入您的姓名(例：林小華)"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.name)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_name" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									</label>
+								</div>
+							</div>
+						</div>
+						<h4 class="mt-2 mb-0 secondary">訊息通知</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left form-group multifactor radio notify">
+									<span> 請選擇聯絡方式 <small class="alert">(必填)</small>
+									</span>
+									<!-- 在 <label> 加上 .active 即表示該選項有被圈選 -->
+									<div>
+										<label id="emailradio2Label"
+											class="flex-middle mt-1 mb-0 radio active" for="emailradio2">
+											<input id="emailradio2" type="radio" name="emailradio"
+											value="email" onclick="javascript:changeemailradio();"
+											checked><span class="mr-2 ml-1">電子信箱</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<!-- flex-center -->
+									<label id="mobilelabel" for="mobile" class="w-100 eyes-switch-loca" style="display: none;"> 
+									<span>手機號碼<small class="alert">(必填)</small></span> 
+									<input id="mobile" class="form-control encparam flex-center" type="text" pattern="[0-9]*" inputmode="numeric" name="mobile" placeholder="請輸入您的手機10碼(例：09123456789)"
+										   onfocus="inputFocusinEvent(this)"
+										   onblur="inputFocusoutEvent(this, MaskType.phone)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_mobile" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									<input id="mobile40" class="form-control param" type="hidden" name="mobile" placeholder="請輸入綁定電話號碼(0900123456)" autocomplete="off">
+									</label>
+										<label id="emaillabel" for="email" class="w-100 eyes-switch-loca flex-center" style=""> 
+										<span class="word-4">電 子 信 箱：</span> 
+										<input id="email" class="form-control encparam" type="text" name="email" placeholder="請輸入您的電子信箱"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.email)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_email" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+										<input id="verifycode40" class="form-control param" type="hidden" name="verifycode" placeholder="請輸入您的電子信箱" value="" autocomplete="off">
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="text-center w-100">
+							<a id="loginByEmailOrMobileStep2Link"
+								class="btn theme-btn-border w-100 mb-2" style=""
+								href="javascript:fillMember();" title="下一步">下一步</a>
+						</div>
+					</div>
+				</th:block>
+				<!-- TW FidO -->
+				<th:block th:if="${level=='tfido'}">
+					<h3 class="title mt-2 mb-0">Step 1. 輸入個人資訊</h3>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="uid">身分證字號：</label>
+									<input type="text" class="form-control" id="uid" name="uid" placeholder="英文字母為大寫" maxLength="10"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.uid)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="birthdate" class="word-2">生 日：</label>
+									<input class="form-control" id="birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="民國年7碼(例：0770101)" maxLength="7"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.birthdate)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2" onclick="javascript:loginByTfido(this);">下一步</button>
+					<div class="bg-gray m-0 mt-2 mb-4 p-3 hidden verify" data-type="t-fido" style="display:none;">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="text-left hidden-mobile">
+									<p class="w-100 mb-0 twqrshow">請掃描／點擊您的 TW FidO 驗證 QRcode</p>
+									<div class="text-center qr-code-wrap m-3" style="height:200px;">
+										<div id="tfido-QRcode" style="text-align: -webkit-center;"></div>
+									</div>
+									<a href="javascript:refreshTFidoQRcode();" class="link twqrshow"><small class="link">點此重新產生QRcode</small></a>
+									<input type="hidden" id="qrid"/>
+								</div>
+								<div class="text-left note-wrap hidden-desktop">
+									<p class="mb-0 bold alert">MyData 已發送驗證通知至您的 TW FidO</p>
+	               					<p class="mb-0">(1) 請確認您有開啟 TW FidO APP 的通知功能。</p>
+	               					<p class="mb-0">(2) 請點擊 TW FidO APP，並完成身分驗證。</p>
+	               					<a href="javascript:refreshTFidoQRcode();" class="link mt-3 block">點此重新推播</a>
+									<input type="hidden" th:id="qrid"/>
+	               					<hr>
+	          					</div>
+							</div>
+							<div class="col-md-6">
+								<div class="text-left note-wrap">
+									<p class="mb-0 bold">初次使用TW FidO驗證嗎？</p>
+									<!-- <p class="mb-0">＊我的手機支援 TW FidO 嗎？點擊連結查看<a href="https://fido.moi.gov.tw/devices" target="_blank" title="支援手機版本(另開新頁)" class="link">支援手機版本</a>。</p>
+									<p class="mb-0">＊還沒有下載/註冊 TW FidO 嗎？請點擊連結<a href="https://play.google.com/store/apps/details?id=tw.gov.moi.tfido" target="_blank" title="下載 Android 版本(另開新頁)" class="link">下載 Android 版本</a>、<a href="https://apps.apple.com/tw/app/id1462866416" target="_blank" title="下載 iOS 版本(另開新頁)" class="link">下載 iOS 版本</a>。</p> -->
+									<p class="mb-0">＊不知道怎麼操作嗎？請點擊<a href="https://fido.moi.gov.tw/qa" target="_blank" title="常見問題(另開新頁)" class="link">常見問題</a>。</p>
+									<p class="mb-0 alert">＊於 TW FidO APP 完成身分驗證後，請點擊下方的「下一步」按鈕。</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2 verify" onclick="javascript:confirmTFido();" style="display:none;">下一步</button>
+				</th:block>
+
+				<!-- 雙證件驗證 -->
+				<th:block th:if="${level=='pii'}">
+					<h3 class="title mt-2 mb-0">Step 1. 輸入個人資訊</h3>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="uid" class="word-4">身分證字號：</label>
+									<input type="text" class="form-control" id="uid" name="uid" placeholder="英文字母為大寫" maxLength="10"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.uid)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="birthdate" class="word-2">生 日：</label>
+									<input class="form-control" id="birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="民國年7碼(例：0770101)" maxLength="7"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.birthdate)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button class="btn theme-btn-border w-100 mb-2"
+						onclick="javascript:loginByPii();">下一步</button>
+					<!--				<button class="gsp-btn" onclick="javascript:loginByPii();">確定</button>-->
+				</th:block>
+
+				<!-- email -->
+				<th:block th:if="${level=='email'}">
+					<h3 id="emailstep1" class="title mt-2 mb-0">Step 1. 輸入個人資訊</h3>
+					<small class="w-100 text-left alert mt-1">*僅有 MyData 會員可使用此驗證方式</small>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="uid" class="word-4">身分證字號：</label>
+									<input type="text" class="form-control" id="uid" name="uid" placeholder="英文字母為大寫" maxLength="10"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.uid)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_uid" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="pt-1 text-left">
+								<div class="form-group mt-3 mb-0 flex-center w-100">
+									<label for="birthdate" class="word-2">生 日：</label>
+									<input class="form-control" id="birthdate" type="text" pattern="[0-9]*" inputmode="numeric" name="birthdate" placeholder="民國年7碼(例：0770101)" maxLength="7"
+                                           onfocus="inputFocusinEvent(this)"
+                                           onblur="inputFocusoutEvent(this, MaskType.birthdate)"
+										   autocomplete="off">
+									<i onclick="maskorUnMask_v2(this);" th:id="eye_birthdate" class="fas fa-eye eye-switch pen-edit eye-switch-login" alt="點擊輸入框即可開始編輯"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="text-center w-100">
+						<a id="loginByEmailOrMobileStep1Link"
+							class="btn theme-btn-border w-100 mb-2" style=""
+							href="javascript:loginByEmailOrMobileStep1();" title="下一步">下一步</a>
+					</div>
+					<div id="step2Div" style="display: none;">
+						<!-- <p id="emailstep1alert" class="alert mt-2" style="display:none;">身分證字號錯誤！</p> -->
+						<h3 id="emailstep2" class="title mt-4 mb-0">Step 2. 填寫聯絡資料</h3>
+						<p class="mb-1">這是您第一次使用個人化資料自主運用（MyData）平臺，請填寫下列個人資訊供系統識別與通知用。</p>
+						<h4 class="mt-2 mb-0 secondary">系統識別</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<label class="w-100 eyes-switch-loca flex-center" for="name"> <span class="word-2">姓 名：</span>
+										<input id="name" class="form-control encparam" type="text"
+												name="name" placeholder="請輸入您的姓名(例：林小華)"
+												onfocus="inputFocusinEvent(this)"
+												onblur="inputFocusoutEvent(this, MaskType.name)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_name" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+									</label>
+
+								</div>
+							</div>
+						</div>
+						<h4 class="mt-2 mb-0 secondary">訊息通知</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pt-1 text-left form-group multifactor radio notify">
+									<span> 請選擇聯絡方式 <small class="alert">(必填)</small>
+									</span>
+									<!-- 在 <label> 加上 .active 即表示該選項有被圈選 -->
+									<div>
+										<label id="emailradio2Label"
+											class="flex-middle mt-1 mb-0 radio active" for="emailradio2">
+											<input id="emailradio2" type="radio" name="emailradio"
+											value="email" onclick="javascript:changeemailradio();"
+											checked><span class="mr-2 ml-1">電子信箱</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="pt-1 text-left">
+									<!-- flex-center -->
+									<label id="mobilelabel" class="w-100 eyes-switch-loca" for="mobile" style="display: none;"> <span>手機號碼<span
+											class="alert">*</span></span>
+										<input id="mobile" class="form-control encparam flex-center" type="text" pattern="[0-9]*" inputmode="numeric" name="mobile" 
+											   placeholder="請輸入您的手機10碼(例：09123456789)"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.phone)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_mobile" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+										<input id="mobile40" class="form-control param" type="hidden" name="mobile" placeholder="請輸入綁定電話號碼(0900123456)" autocomplete="off">
+									</label>
+										<label id="emaillabel" for="email" class="w-100 eyes-switch-loca flex-center" style=""> 
+										<span class="word-4">電 子 信 箱：</span> 
+										<input id="email" class="form-control encparam" type="text" name="email" placeholder="請輸入您的電子信箱"
+											   onfocus="inputFocusinEvent(this)"
+											   onblur="inputFocusoutEvent(this, MaskType.email)"
+											   autocomplete="off">
+										<i onclick="maskorUnMask_v2(this);" th:id="eye_email" class="fas fa-eye eye-switch pen-edit" alt="點擊輸入框即可開始編輯"></i>
+										<input id="verifycode40" class="form-control param" type="hidden" name="verifycode" placeholder="請輸入您的電子信箱" value="" autocomplete="off">
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="text-center w-100">
+							<a id="loginByEmailOrMobileStep2Link"
+								class="btn theme-btn-border w-100 mb-2" style=""
+								href="javascript:loginByEmailOrMobileStep2();" title="下一步">下一步</a>
+						</div>
+					</div>
+					<div id="step3Div" style="display: none;">
+						<h3 id="step3h3" class="title mt-4 mb-0">Step 3. 請輸入動態密碼</h3>
+						<div class="form-group mt-3 mb-0 flex-center w-100">
+							<label for="checkCode" class="word-4">動 態 密 碼：</label> <input
+								id="checkCode" type="text" pattern="[0-9]*" inputmode="numeric" class="form-control"
+								placeholder="請輸入動態密碼" autocomplete="off">
+						</div>
+						<div class="text-center w-100">
+							<a id="apply52" class="btn theme-btn w-100" style=""
+								href="javascript:loginByemailOrMobileLoginStepCheck();"
+								title="確定">確定</a>
+						</div>
+						<a id="resendOTPBtn" href="javascript:resendOTP();" class="text-left w-100 underline">
+							<small id="resendOTPText" class="link" temp-value="">點此重新發送動態密碼</small>
+						</a>
+						<p id="emailstep3alert" class="alert mt-2 mb-0" style="display: none;">動態密碼錯誤！</p>
+					</div>
+				</th:block>
+			</section>
+			<div class="text-left pl-4">
+				<a href="https://mydata.nat.gov.tw/signin" th:href="@{/signin}"><small class="link">選擇其他驗證方式</small></a>
+			</div>
+		</div>
+		<div class="text-right hidden-mobile login-img-wrap">
+			<img src="./images/login-img.png" th:src="@{/resources/dist/image/login-img.png}" alt="">
+		</div>
+	</div>
+		
+<!-- 	<div id="recaptcha" class="g-recaptcha" data-sitekey="6Lc-G-IUAAAAADhDfGxbSqfoBnQ30qVTdaIXlnt0" data-callback="verifyRecaptcha" data-size="invisible"></div> -->
+	 
+	<!--======= footer =======-->
+	<footer th:replace="fragment/footer::footer"></footer>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top"
+	   role="button" title="網頁置頂"
+	   data-toggle="tooltip" data-placement="left" style="display: inline;">
+		<img class="arrow-position" src="images/top-arrow.png"
+			 th:src="@{/resources/dist/image/top-arrow.png}" alt="向上置頂">
+	</a>
+	<!--======= end footer =======-->
+	
+	<!--======= health-card =======-->
+	<span th:replace="fragment/login-health::login-health"></span>
+	<!--======= end health-card =======-->
+	
+	<script type="text/javascript" th:inline="javascript">
+		var level = /*[[${level}]]*/'';
+		var uuidcheck;
+		var waitOTPsecInterval;
+		var informMethod = '';
+		var tfidos = [];
+		var toPage = /*[[${toPage}]]*/'';
+		var qrcodeIntervalObj;
+		
+		function redirectPage() {
+			if(toPage != null && toPage!='') {
+				var tmpboxId = '';
+				if(toPage.startsWith('verification')){
+					tmpboxId = toPage.replace('verification', '');
+				}
+				var tmpReturnUrl = /*[[@{/sp/member/1}]]*/'';
+				if(tmpboxId==''){
+					return tmpReturnUrl;
+				}else{
+					tmpReturnUrl = /*[[@{/sp/member}]]*/'';
+					tmpReturnUrl = tmpReturnUrl + '/' + tmpboxId;
+					return tmpReturnUrl;
+				}
+			}
+			return /*[[@{/sp/member}]]*/'';
+		}
+
+
+		/**
+		 * 組成驗證登入參數
+		 */
+		function loginParam() {
+			return {
+				"uid" : getUnmaskValue('#uid'),
+				"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+				"scope" : "basic"
+			};
+		}
+
+		/**
+		 * 驗證欄位
+		 * @param checkFlag
+		 * @returns {boolean}
+		 */
+		function verifyCheckFlag(checkFlag) {
+			if (checkFlag && (typeof getUnmaskValue('#uid') == 'undefined' || getUnmaskValue('#uid') == '')) {
+				$('#message-text').text('請輸入身分證字號');
+				$('#pop-message').modal('show');
+				checkFlag = false;
+				focusBefore = $('#uid');
+			}
+			if (checkFlag && !verifyExpression(getUnmaskValue('#uid'))) {
+				$('#message-text').text('身分證字號格式不正確');
+				$('#pop-message').modal('show');
+				checkFlag = false;
+				focusBefore = $('#uid');
+			}
+			if (checkFlag && (typeof getUnmaskValue('#birthdate') == 'undefined' || getUnmaskValue('#birthdate') == '')) {
+				$('#message-text').text('請輸入生日');
+				$('#pop-message').modal('show');
+				checkFlag = false;
+				focusBefore = $('#birthdate');
+			}
+			if (checkFlag && !verifyBirthDateExpression(getUnmaskValue('#birthdate'))) {
+				$('#message-text').text('生日格式不正確');
+				$('#pop-message').modal('show');
+				checkFlag = false;
+				focusBefore = $('#birthdate');
+			}
+
+			return checkFlag;
+		}
+
+		//自然人憑證登入
+		function loginByCer() {
+			var checkFlag = true;
+			if (verifyCheckFlag(checkFlag)) {
+				//自然人憑證
+				var pin =  $('#digital-pin').val();
+				if(pin == null || pin == ''){
+					$('#message-text').text('請輸入PIN碼');
+					$('#pop-message').modal('show');
+					focusBefore = $('#digital-pin');
+					return;
+				}
+
+
+				var p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+				};
+
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/webservice/birthdate',
+					loadSpin : true,
+					data : p,
+					success : function(resp) {
+						if (resp.code < 0) {
+							if (resp.code == -4) {
+								showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+								return;
+							}
+							// WebService驗證失敗
+							$('#message-text').text('身分驗證失敗，請重新輸入。');
+							$('#pop-message').modal('show');
+							focusBefore = $('#uid');
+						} else {
+							//在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+							makeSignature(pin, function(ret){
+								if(ret.ret_code!=0){
+									$('#message-text').text(ret.errorMsg);
+									$('#pop-message').modal('show');
+									return;
+								}
+								var pkcs7 = ret.signature;
+								var p = {
+									"uid" : getUnmaskValue('#uid'),
+									"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+									"scope" : "basic",
+									"pkcs7" : pkcs7
+								};
+								if(checkFlag){
+									RiAPI.run({
+										type : 'POST',
+										url : '/rest/user/verifyCert',
+										loadSpin : true,
+										data : p,
+										success : function(resp) {
+											if (resp.code < 0) {
+												//登入失敗
+												$('#message-text').text('自然人憑證驗證失敗，請重新操作。');
+												$('#pop-message').modal('show');
+											} else {
+												//var memberUrl = /*[[@{/sp/member}]]*/'';
+												if(showMultiMemberModal(resp.data.member) == false) {
+													window.location.href = redirectPage();
+												}
+											}
+										},
+										error : function() {
+											$('#message-text').text('自然人憑證驗證失敗，請重新操作。');
+											$('#pop-message').modal('show');
+										}
+									});
+								}
+							});
+
+						}
+					},
+					error : function() {
+						$('#message-text').text('戶政機關生日驗證失敗。');
+						$('#pop-message').modal('show');
+					}
+				});
+			}
+		}
+
+		//晶片金融卡
+		function loginByFic(){
+			//自然人憑證
+			var pin =  $('#fic-pin').val();
+			if(pin == null || pin == ''){
+				$('#message-text').text('請輸入密碼');
+				$('#pop-message').modal('show');
+				focusBefore = $('#fic-pin');
+				return;
+			}
+
+			var p = {
+				"uid" : getUnmaskValue('#uid'),
+				"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+			};
+			
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/webservice/birthdate',
+				loadSpin : true,
+				data : p,
+				success : function(resp) {
+					if (resp.code < 0) {
+						if (resp.code == -4) {
+							showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+							return;
+						}
+						// WebService驗證失敗
+						$('#message-text').text('身分驗證失敗，請重新輸入。');
+						$('#pop-message').modal('show');
+						focusBefore = $('#uid');
+					} else {
+						//在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+	                    //ATM Login
+						console.log('----ficAtmLogin----');
+	                    RiAPI.run({
+	                        type : 'POST',
+	                        url : '/rest/user/ficAtmLogin',
+	                        loadSpin : true,
+	                        data : {"uid" : getUnmaskValue('#uid')},
+	                        success : function(resp) {
+	                            if (resp.code < 0) {
+	                                //登入失敗
+	                                showPopMessage('晶片金融卡驗證失敗，請重新操作。');
+	                            } else {
+	                            		mydataTWCALib.ATMVerifyInvoke(
+	                            				pin,
+	                            				resp.data.BusinessNo,
+	                            				resp.data.ApiVersion,
+	                            				resp.data.HashKeyNo,
+	                            				resp.data.VerifyNo,
+	                            				resp.data.Token,
+	                            				resp.data.IdentifyNo, 
+	                            				resp.data.proxyURL,
+	                            				ATMVerifyInvokeCallback);
+	                            }
+	                        },
+	                        error : function() {
+	                            showPopMessage('晶片金融卡功能暫時無法使用，請改用其他驗證方式。');
+	                        }
+	                    });
+					}
+				},
+				error : function() {
+					$('#message-text').text('戶政機關生日驗證失敗。');
+					$('#pop-message').modal('show');
+				}
+			});
+		}
+		
+		//硬體金融憑證
+		function loginByFch(){
+			//硬體金融憑證
+			var pin =  $('#fch-pin').val();
+			if(pin == null || pin == ''){
+				$('#message-text').text('請輸入PIN碼');
+				$('#pop-message').modal('show');
+				focusBefore = $('#fch-pin');
+				return;
+			}
+
+			var p = {
+				"uid" : getUnmaskValue('#uid'),
+				"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+			};
+			
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/webservice/birthdate',
+				loadSpin : true,
+				data : p,
+				success : function(resp) {
+					if (resp.code < 0) {
+						if (resp.code == -4) {
+							showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+							return;
+						}
+						// WebService驗證失敗
+						$('#message-text').text('身分驗證失敗，請重新輸入。');
+						$('#pop-message').modal('show');
+						focusBefore = $('#uid');
+					} else {
+						//在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+	                    //ATM Login
+						console.log('----fchInitParam----');
+	                    RiAPI.run({
+	                        type : 'POST',
+	                        url : '/rest/user/fchInitParam',
+	                        loadSpin : true,
+	                        data : {"uid" : getUnmaskValue('#uid')},
+	                        success : function(resp) {
+	                            if (resp.code < 0) {
+	                                //登入失敗
+	                                showPopMessage('硬體金融憑證驗證失敗，請重新操作。');
+	                            } else {                            		
+	                                 mydataTWCALib.HWSignPKCS7(
+	                                		 	resp.data.VerifyNo,
+	                                 		pin,
+	                                 		resp.data.proxyURL,
+	                                 		HWSignPKCS7Callback);
+	                            }
+	                        },
+	                        error : function() {
+	                            showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+	                        }
+	                    });
+					}
+				},
+				error : function() {
+					$('#message-text').text('戶政機關生日驗證失敗。');
+					$('#pop-message').modal('show');
+				}
+			});
+		}		
+		
+		//工商憑證登入
+		function loginByBusiness() {
+			var checkFlag = true;
+			if (checkFlag) {
+				//工商憑證
+				var pin =  $('#business-pin').val();
+				if(pin == null || pin == ''){
+					$('#message-text').text('請輸入PIN碼');
+					$('#pop-message').modal('show');
+					focusBefore = $('#business-pin');
+					return;
+				}
+				//在client端做自然人憑證pkcs7, makeSignature function in certLogin.js
+				makeSignature(pin, function(ret){
+					if(ret.ret_code!=0){
+						$('#message-text').text(ret.errorMsg);
+						$('#pop-message').modal('show');
+						return;
+					}
+					var pkcs7 = ret.signature;
+					var p = {
+						"scope" : "basic",
+						"pkcs7" : pkcs7
+					};
+					if(checkFlag){
+						RiAPI.run({
+							type : 'POST',
+							url : '/rest/user/verifyMOECA',
+							loadSpin : true,
+							data : p,
+							success : function(resp) {
+								if (resp.code < 0) {
+									//登入失敗
+									$('#message-text').text('工商憑證驗證失敗，請重新操作。');
+									$('#pop-message').modal('show');
+								} else {
+									//檢測成功直接申請
+									//var memberUrl = /*[[@{/sp/member}]]*/'';
+									if(showMultiMemberModal(resp.data.member) == false) {
+										window.location.href = redirectPage();
+									}
+								}
+							},
+							error : function() {
+								$('#message-text').text('工商憑證驗證失敗，請重新操作。');
+								$('#pop-message').modal('show');
+							}
+						});
+					}
+				});
+			}
+		}		
+		
+		
+		
+		//健保卡登入
+		function loginByNhi() {
+			var checkFlag = true;
+			if (verifyCheckFlag(checkFlag)) {
+				//健保卡
+				var checkFlag = true;
+				var pwd =  $('#health-pwd').val();
+				if(pwd == null || pwd == ''){
+					$('#message-text').text('請輸入註冊密碼');
+					$('#pop-message').modal('show');
+					checkFlag = false;
+					focusBefore = $('#health-pwd');
+					return;
+				}
+				
+				var captcha = $('#captcha').val();
+				if(captcha == null || captcha.length == 0) {
+					$('#message-text').text("請輸入驗證碼");
+					$('#pop-message').modal('show');
+					focusBefore = $('#captcha');
+					return;
+				}
+
+				var p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+				};
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/webservice/birthdate',
+					loadSpin : true,
+					data : p,
+					success : function(resp) {
+						if (resp.code < 0) {
+							if (resp.code == -4) {
+								showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+								return;
+							}
+							// WebService驗證失敗
+							$('#message-text').text('身分驗證失敗，請重新輸入。');
+							$('#pop-message').modal('show');
+						} else {
+
+							if(healthCardCanVerify){
+								// 檢驗健保卡，verifyHealth function in fragment/login-health
+								verifyHealth(pwd, function(ret){
+									var p = {
+										"uid" : getUnmaskValue('#uid'),
+										"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+										"scope" : "basic",
+										"captcha" : captcha.toUpperCase()
+									};
+									p.health = ret;
+									if(checkFlag){
+										RiAPI.run({
+											type : 'POST',
+											url : '/rest/user/verifyNHICard',
+											loadSpin : true,
+											data : p,
+											success : function(resp) {
+												if (resp.code < 0) {
+													refreshCaptchaImage();
+													//登入失敗
+													$('#message-text').text(resp.text);
+													$('#pop-message').modal('show');
+												} else {
+													//檢測成功直接申請
+													//var memberUrl = /*[[@{/sp/member}]]*/'';
+													if(showMultiMemberModal(resp.data.member) == false) {
+														window.location.href = redirectPage();
+													}
+												}
+											},
+											error : function() {
+												$('#message-text').text('健保卡驗證失敗，請重新操作。');
+												$('#pop-message').modal('show');
+											}
+										});
+									}
+								});
+							}else{
+								$('#message-text').text("未安裝健保卡檢測元件，請重新確認或安裝");
+								$('#pop-message').modal('show');
+								return;
+							}
+
+						}
+					},
+					error : function() {
+						$('#message-text').text('戶政機關生日驗證失敗。');
+						$('#pop-message').modal('show');
+					}
+				});
+
+
+			}
+		}
+		
+		//軟體金融憑證
+		function loginByFcs(){
+			//軟體金融憑證
+// 			var pin =  $('#fcs-pin').val();
+// 			if(pin == null || pin == ''){
+// 				$('#message-text').text('請輸入PIN碼');
+// 				$('#pop-message').modal('show');
+// 				focusBefore = $('#fcs-pin');
+// 				return;
+// 			}
+			var pin = '';
+			var p = {
+				"uid" : getUnmaskValue('#uid'),
+				"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+			};
+			
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/webservice/birthdate',
+				loadSpin : true,
+				data : p,
+				success : function(resp) {
+					if (resp.code < 0) {
+						if (resp.code == -4) {
+							showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+							return;
+						}
+						// WebService驗證失敗
+						$('#message-text').text('身分驗證失敗，請重新輸入。');
+						$('#pop-message').modal('show');
+						focusBefore = $('#uid');
+					} else {
+						console.log('---軟體金融憑證 Init---');
+	                    RiAPI.run({
+	                        type : 'POST',
+	                        url : '/rest/user/fcsInitParam',
+	                        loadSpin : true,
+	                        data : {"uid" : getUnmaskValue('#uid')},
+	                        success : function(resp) {
+	                            if (resp.code < 0) {
+	                                //登入失敗
+	                                showPopMessage('軟體金融憑證驗證失敗，請重新操作。');
+	                            } else {                            		
+	                                 mydataTWCALib.SWSignPKCS7(
+	                                		 	resp.data.VerifyNo,
+	                                 		pin,
+	                                 		resp.data.MemberNo,
+	                                 		SWSignPKCS7Callback);
+	                            }
+	                        },
+	                        error : function() {
+	                            showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+	                        }
+	                    });
+					}
+				},
+				error : function() {
+					$('#message-text').text('戶政機關生日驗證失敗。');
+					$('#pop-message').modal('show');
+				}
+			});
+		}			
+
+		//TFIDO登入
+		function loginByTfido(obj) {
+			$(obj).prop('disabled', true);
+			var checkFlag = true;
+			if (verifyCheckFlag(checkFlag)) {
+				var p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+				};
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/webservice/birthdate',
+					loadSpin : true,
+					data : p,
+					success : function(resp) {
+						if (resp.code < 0) {
+							if (resp.code == -4) {
+								showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+								return;
+							}
+							$(obj).prop('disabled', false);
+							// WebService驗證失敗
+							$('#message-text').text('身分驗證失敗，請重新輸入。');
+							$('#pop-message').modal('show');
+						} else {
+							createTFidoQRcode();
+						}
+					},
+					error : function() {
+						$('#message-text').text('戶政機關生日驗證失敗。');
+						$('#pop-message').modal('show');
+					}
+				});
+
+			}else{
+				$('div.verify').hide();
+				$(obj).prop('disabled', false);
+			}
+		}
+
+		//雙證件驗證登入
+		function loginByPii() {
+			var checkFlag = true;
+			// 身分證發證日期+健保卡卡號 12
+			// 設籍戶口名簿戶號+健保卡卡號 10
+			var checkFields = '12';
+
+			console.log('--pii--');
+			if (verifyCheckFlag(checkFlag)) {
+				RiAPI
+						.run({
+							type : 'POST',
+							url : '/rest/user/piiVerifyUrl/' + checkFields,
+							loadSpin : true,
+							data : loginParam(),
+							success : function(resp) {
+								if (resp.code < 0) {
+									//登入失敗
+									//$('#message-text').text('自然人憑證驗證未完成，請重新操作。');
+									//$('#pop-message').modal('show');
+								} else {
+									// console.log(resp.data.verifyUrl);
+									// console.log(resp.data.uuidcheck);
+									if (typeof resp.data.verifyUrl != 'undefined'
+											&& typeof resp.data.uuidcheck != 'undefined') {
+										var uuidcheck = resp.data.uuidcheck;
+										window.location.href = resp.data.verifyUrl;
+									}
+								}
+							}
+						});
+			}
+		}
+
+		function confirmTFido(){
+			//TW FidO
+			var checkFlag = true;
+			var qrid =  $('#qrid').val();
+			var p = {
+				"uid" : getUnmaskValue('#uid'),
+				"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+				"scope" : "basic",
+				"qrid" : qrid
+			};
+			if (verifyCheckFlag(checkFlag)) {
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/confirmTFido',
+					data: p,
+					loadSpin : true,
+					success : function(resp) {
+						if (resp.code < 0) {
+							$('#message-text').text('TW FidO認證失敗，請重新操作。');
+							$('#pop-message').modal('show');
+						}else{
+							//檢測成功直接申請
+							//var memberUrl = /*[[@{/sp/member}]]*/'';
+							if(showMultiMemberModal(resp.data.member) == false) {
+								window.location.href = redirectPage();
+							}
+						}
+					}
+				});
+			}
+		}
+		
+		
+		function loginByEmailOrMobileStep1() {
+			var checkFlag = true;
+			if (verifyCheckFlag(checkFlag)) {
+
+				var p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : addZeroPrefixForBirthdate(getUnmaskValue('#birthdate')),
+				};
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/webservice/birthdate',
+					loadSpin : true,
+					data : p,
+					success : function(resp) {
+						if (resp.code < 0) {
+							if (resp.code == -4) {
+								showPopMessage('目前戶政機關驗證身分服務異常，請稍後再試。');
+								return;
+							}
+							// WebService驗證失敗
+							$('#message-text').text('身分驗證失敗，請重新輸入。');
+							$('#pop-message').modal('show');
+						} else {
+							RiAPI.run({
+								type : 'POST',
+								url : '/rest/user/emailOrMobileLoginStep1',
+								loadSpin : true,
+								data : loginParam(),
+								success : function(resp) {
+									if (resp.code < 0) {
+										$('#message-text').text('您非 MyData 會員，請使用其他身分驗證方式登入');
+										$('#pop-message').modal('show');
+									} else {
+										if (typeof resp.data.uuidcheck != 'undefined') {
+											// console.log(resp.data.uuidcheck);
+											$('#step3h3').empty().append('Step 2. 請輸入動態密碼');
+											$('#step3Div').show();
+											$('#uid').attr('disabled', 'disabled');
+											$('#birthdate').attr('disabled','disabled');
+											//click emailradio2Label
+											$('#emailradio2Label').click();
+											$('#loginByEmailOrMobileStep1Link').addClass('disabled');
+											$('#loginByEmailOrMobileStep1Link').attr('disabled', 'disabled');
+											//$('html, body').animate({scrollTop : $('#step3Div').offset().top}, 100);
+											uuidcheck = resp.data.uuidcheck;
+											//初次發送，一樣等一分鐘後，才可重送
+											var hint = '';
+											var hinttmp = '';
+											if (resp.data.inform_method === 'mobile') {
+												hint = '動態密碼已發送至您的手機號碼：' + maskPhoneNumber(resp.data.member.mobile) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼(120秒)';
+												hinttmp = '動態密碼已發送至您的手機號碼：' + maskPhoneNumber(resp.data.member.mobile) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼';
+												$('#resendOTPText').empty().append(hint);
+												$('#resendOTPText').attr('data-value',hinttmp);
+												$('#resendOTPText').removeClass('link');
+											} else {
+												hint = '動態密碼已發送至您的電子信箱：' + maskEmailAddress(resp.data.member.email) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼(120秒)';
+												hinttmp = '動態密碼已發送至您的電子信箱：' + maskEmailAddress(resp.data.member.email) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼';
+												$('#resendOTPText').empty().append(hint);
+												$('#resendOTPText').attr('data-value',hinttmp);
+												$('#resendOTPText').removeClass('link');
+											}
+											$('#resendOTPBtn').css('cssText','cursor: default;text-decoration:none !important;color:#414141 !important;');
+											$('#resendOTPBtn').attr('href','javascript:void(0);');
+											$('#resendOTPText').attr('data-time', 120);
+											waitOTPsecInterval = setInterval(function() {checkOTPWaitTime();}, 1000);
+										} else {
+
+											//$('#message-text').empty().append('您非 MyData 會員，請使用其他身分驗證方式登入');
+											$('#message-text').empty().append('您尚未設定主要聯絡方式，請先以其他方式進行登入並設定主要聯絡資料，才能使用動態密碼登入');
+											$('#pop-message').modal('show');
+
+											//false 補會員資料
+											// $('#uid').attr('data-value',getUnmaskValue('#uid'));
+											// maskUidAfterVerify(false,null);
+											// $('#uid').attr('disabled', 'disabled');
+											// $('#birthdate').attr('disabled','disabled');
+											// $('#loginByEmailOrMobileStep1Link').addClass('disabled');
+											// $('#loginByEmailOrMobileStep1Link').attr('disabled', 'disabled');
+											// $('#step2Div').show();
+											// if(typeof resp.data.member != 'undefined'){
+											// 	//姓名
+											// 	if(typeof resp.data.member.name != 'undefined' && resp.data.member.name != ''){
+											// 		$('#name').val(maskName(resp.data.member.name));
+											// 		$('#name').attr('data-value', resp.data.member.name);
+											// 	}
+											// 	//電子信箱：
+											// 	if(typeof resp.data.member.email != 'undefined' && resp.data.member.email != ''){
+											// 		$('#email').val(maskEmailAddress(resp.data.member.email));
+											// 		$('#email').attr('data-value', resp.data.member.email);
+											// 	}
+											// 	//電話
+											// 	if(typeof resp.data.member.mobile != 'undefined' && resp.data.member.mobile != ''){
+											// 		$('#mobile').val(maskPhoneNumber(resp.data.member.mobile));
+											// 		$('#mobile').attr('data-value', resp.data.member.mobile);
+											// 	}
+											// }
+											// $('html, body').animate({scrollTop : $('#step2Div').offset().top}, 100);
+										}
+									}
+								}
+							});
+						}
+					},
+					error : function() {
+						$('#message-text').text('戶政機關生日驗證失敗。');
+						$('#pop-message').modal('show');
+					}
+				});
+
+
+
+
+			}
+		}
+
+		function loginByEmailOrMobileStep2() {
+			var checkFlag = true;
+			var p;
+			var emailradioVal = $('input[name=emailradio]:checked').val();
+
+			if (emailradioVal == 'email') {
+				p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+					"name" : getUnmaskValue('#name'),
+					"informMethod" : "email",
+					"email" : getUnmaskValue('#email')
+				};
+			}
+			if (emailradioVal == 'mobile') {
+				p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+					"name" : getUnmaskValue('#name'),
+					"informMethod" : "mobile",
+					"mobile" : getUnmaskValue('#mobile')
+				};
+			}
+			if (checkFlag && (typeof getUnmaskValue('#name') == 'undefined' || getUnmaskValue('#name') == '')) {
+				$('#message-text').text('請輸入姓名');
+				$('#pop-message').modal('show');
+				focusBefore = $('#name');
+				checkFlag = false;
+			}
+			if (checkFlag && (emailradioVal == 'email' || emailradioVal == 'mobile')) {
+				if (checkFlag && emailradioVal == 'email' && (typeof getUnmaskValue('#email') == 'undefined' || getUnmaskValue('#email') == '')) {
+					$('#message-text').text('請輸入電子信箱');
+					$('#pop-message').modal('show');
+					focusBefore = $('#email');
+					checkFlag = false;
+				}
+				if (checkFlag && emailradioVal == 'mobile' && (typeof getUnmaskValue('#mobile') == 'undefined' || getUnmaskValue('#mobile') == '')) {
+					//alert('請輸入手機號碼');
+					$('#message-text').text('請輸入手機號碼');
+					$('#pop-message').modal('show');
+					focusBefore = $('#mobile');
+					checkFlag = false;
+				}
+				if (checkFlag) {
+					RiAPI.run(
+					{
+						type : 'POST',
+						url : '/rest/user/emailOrMobileLoginStep2',
+						loadSpin : true,
+						data : p,
+						success : function(resp) {
+							if (resp.code < 0) {
+								//登入失敗
+								//alert('登入失敗，請重新操作！');
+								//window.close();
+								$('#message-text').text('登入失敗，請重新操作！');
+								$('#pop-message').modal('show');
+								var siginUrl = /*[[@{/signin}]]*/'';
+								window.location.href = siginUrl;
+							} else {
+								RiAPI.run(
+								{
+									type : 'POST',
+									url : '/rest/user/emailOrMobileLoginStep1',
+									loadSpin : true,
+									data : p,
+									success : function(resp) {
+										if (resp.code < 0) {
+											//登入失敗
+											//alert('登入失敗，請重新操作！');
+											//window.close();
+											$('#message-text').text('登入失敗，請重新操作！');
+											$('#pop-message').modal('show');
+											var siginUrl = /*[[@{/signin}]]*/'';
+											window.location.href = siginUrl;
+										} else {
+											// console.log(resp.data);
+											if (typeof resp.data.uuidcheck != 'undefined') {
+												// console.log(resp.data.uuidcheck);
+												$('#step3Div').show();
+												$('#uid').attr('disabled','disabled');
+												$('#birthdate').attr('disabled','disabled');
+												$('#loginByEmailOrMobileStep1Link').addClass('disabled');
+												$('#loginByEmailOrMobileStep1Link').attr('disabled','disabled');
+												$('#name').attr('disabled','disabled');
+												$('#loginByEmailOrMobileStep2Link').addClass('disabled');
+												$('#loginByEmailOrMobileStep2Link').attr('disabled','disabled');
+												$('#emailradio1').attr('disabled','disabled');
+												$('#emailradio2').attr('disabled','disabled');
+												$('#email').attr('disabled','disabled');
+												$('#mobile').attr('disabled','disabled');
+												$('html, body').animate({scrollTop : $('#step3Div').offset().top},100);
+												uuidcheck = resp.data.uuidcheck;
+												//初次發送，一樣等一分鐘後，才可重送
+												var hint = '';
+												var hinttmp = '';
+												if (resp.data.inform_method === 'mobile') {
+													hint = '動態密碼已發送至您的手機號碼：' + maskPhoneNumber(resp.data.member.mobile) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼(120秒)';
+													hinttmp = '動態密碼已發送至您的手機號碼：' + maskPhoneNumber(resp.data.member.mobile) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼';
+													$('#resendOTPText').empty().append(hint);
+													$('#resendOTPText').attr('data-value',hinttmp);
+													$('#resendOTPText').removeClass('link');
+												} else {
+													hint = '動態密碼已發送至您的電子信箱：' + maskEmailAddress(resp.data.member.email) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼(120秒)';
+													hinttmp = '動態密碼已發送至您的電子信箱：' + maskEmailAddress(resp.data.member.email) + '，請於 2 分鐘內輸入動態密碼<br> 2 分鐘後才能再次重新發送新動態密碼';
+													$('#resendOTPText').empty().append(hint);
+													$('#resendOTPText').attr('data-value',hinttmp);
+													$('#resendOTPText').removeClass('link');
+												}
+												$('#resendOTPBtn').css('cssText','cursor: default;text-decoration:none !important;color:#414141 !important;');
+												$('#resendOTPBtn').attr('href','javascript:void(0);');
+												$('#resendOTPText').attr('data-time', 120);
+												waitOTPsecInterval = setInterval(function() {checkOTPWaitTime();}, 1000);
+											}
+										}
+									}
+								});
+							}
+						}
+					});
+				}
+			} else {
+				if (checkFlag) {
+					$('#message-text').text('請選擇聯絡方式');
+					$('#pop-message').modal('show');
+				}
+			}
+		}
+
+		function fillMember(){
+			var checkFlag = true;
+			var p;
+			var emailradioVal = $('input[name=emailradio]:checked').val();
+			if (emailradioVal == 'email') {
+				p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+					"name" : getUnmaskValue('#name'),
+					"informMethod" : "email",
+					"email" : getUnmaskValue('#email')
+				};
+			}
+			if (emailradioVal == 'mobile') {
+				p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+					"name" : getUnmaskValue('#name'),
+					"informMethod" : "mobile",
+					"mobile" : getUnmaskValue('#mobile')
+				};
+			}
+			if (checkFlag && (typeof getUnmaskValue('#name') == 'undefined' || getUnmaskValue('#name') == '')) {
+				$('#message-text').text('請輸入姓名');
+				$('#pop-message').modal('show');
+				focusBefore = $('#name');
+				checkFlag = false;
+			}
+			if (checkFlag && (emailradioVal == 'email' || emailradioVal == 'mobile')) {
+				if (checkFlag && emailradioVal == 'email' && (typeof getUnmaskValue('#email') == 'undefined' || getUnmaskValue('#email') == '')) {
+					$('#message-text').text('請輸入電子信箱');
+					$('#pop-message').modal('show');
+					c
+					checkFlag = false;
+				}
+				if (checkFlag && emailradioVal == 'mobile' && (typeof getUnmaskValue('#mobile') == 'undefined' || getUnmaskValue('#mobile') == '')) {
+					$('#message-text').text('請輸入手機號碼');
+					$('#pop-message').modal('show');
+					focusBefore = $('#mobile');
+					checkFlag = false;
+				}
+				if (checkFlag) {
+					RiAPI.run(
+					{
+						type : 'POST',
+						url : '/rest/user/emailOrMobileLoginStep2',
+						loadSpin : true,
+						data : p,
+						success : function(resp) {
+							if (resp.code < 0) {
+								//登入失敗
+								//alert('登入失敗，請重新操作！');
+								//window.close();
+								$('#message-text').text('登入失敗，請重新操作！');
+								$('#pop-message').modal('show');
+								var siginUrl = /*[[@{/signin}]]*/'';
+								window.location.href = siginUrl;
+							} else {
+								//var memberUrl = /*[[@{/sp/member}]]*/'';
+								if(showMultiMemberModal(resp.data.member) == false) {
+									window.location.href = redirectPage();
+								}
+							}
+						}
+					});
+				}
+			} else {
+				if (checkFlag) {
+					$('#message-text').text('請選擇聯絡方式');
+					$('#pop-message').modal('show');
+				}
+			}
+		}
+		
+		///emailOrMobileLoginStep/check
+		function loginByemailOrMobileLoginStepCheck() {
+			var checkFlag = true;
+			$('#emailstep3alert').hide();
+			p = {
+				"uuidcheck" : uuidcheck,
+				"checkCode" : $('#checkCode').val()
+			};
+			if (checkFlag && (typeof $('#checkCode').val() == 'undefined' || $('#checkCode').val() == '')) {
+				$('#message-text').text('請輸入動態密碼');
+				$('#pop-message').modal('show');
+				checkFlag = false;
+				focusBefore = $('#checkCode');
+			}
+
+
+			if (checkFlag) {
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/emailOrMobileLoginStep/check',
+					loadSpin : true,
+					data : p,
+					success : function(resp) {
+						if (resp.code < 0) {
+							$('#checkCode').val('');
+							if(resp.code == -1209) {
+								$('#message-text').text('動態密碼不正確或已失效');
+								$('#pop-message').modal('show');
+							} else {
+								$('#message-text').text('動態密碼錯誤！');
+								$('#pop-message').modal('show');	
+							}
+						} else {
+							//window.close();
+							//var memberUrl = /*[[@{/sp/member}]]*/'';
+							if(showMultiMemberModal(resp.data.member) == false) {
+								window.location.href = redirectPage();
+							}
+						}
+					}
+				});
+			}
+		}
+
+		function changeemailradio() {
+			var emailradioVal = $('input[name=emailradio]:checked').val();
+			if (emailradioVal == 'email') {
+				$('#emailradio1Label').removeClass('active');
+				$('#emailradio2Label').addClass('active');
+				$('#mobilelabel').removeClass('flex-center');
+				$('#mobilelabel').hide();
+				$('#emaillabel').addClass('flex-center');
+				$('#emaillabel').show();
+			}
+			if (emailradioVal == 'mobile') {
+				$('#emailradio1Label').addClass('active');
+				$('#emailradio2Label').removeClass('active');
+				$('#mobilelabel').addClass('flex-center');
+				$('#mobilelabel').show();
+				$('#emaillabel').removeClass('flex-center');
+				$('#emaillabel').hide();
+			}
+		}
+		
+		
+		//製作T-Fido QRcode
+		function createTFidoQRcode(){
+			var dataId = '0';
+			//若已有生成QRcode，則直接顯示
+			if($('#tfido-QRcode').find('img').length > 0){
+				return;
+			}
+
+			var uid = getUnmaskValue('#uid');
+			var birthdate = transferBirthDateToAD(getUnmaskValue('#birthdate'));
+			var checkData = true;
+			if(uid == null || uid == ''){
+				$('#message-text').text('請輸入身分證字號');
+				checkData = false;
+				focusBefore = $('#uid');
+			}else if(!verifyUidExpression(uid)){
+				$('#message-text').text('身分證字號格式不正確');
+				checkData = false;
+				focusBefore = $('#uid');
+			}else if(birthdate == null || birthdate == ''){
+				$('#message-text').text('請輸入生日');
+				checkData = false;
+				focusBefore = $('#birthdate');
+			}else if(!verifyBirthDateExpression(birthdate)){
+				$('#message-text').text('生日格式不正確');
+				checkData = false;
+				focusBefore = $('#birthdate');
+			}
+			if(checkData == false){
+				$('#pop-message').modal('show');
+				$('div.verify').hide();
+				$('#apply'+dataId).hide();
+				return;
+			}
+
+			var data = {
+				uid: uid
+			};
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/notifyTFido',
+				data: data,
+				loadSpin : true,
+				success : function(resp) {
+					if (resp.code < 0) {
+						$('#tfido-message-text').text(resp.text);
+						$('#tfido-message').modal('show');
+					}else{
+						$('div.verify').show();
+						$('button.verify').show();
+						//產生QRcode
+						var qc = new QRCode(document.getElementById('tfido-QRcode'), {
+							text: resp.data.TFidoResp,
+							width : 190,
+							height : 190
+						});
+						$('#qrid').val(resp.data.qrid);
+						//計時一分鐘
+						var countId = countQRcodeSecond($('#tfido-second'));
+						// 將QRcode及計時器存入陣列，以便重新產生
+						tfidos.push({
+							dataId: dataId,
+							qrcode: qc,
+							countId: countId
+						});
+						$('#uid, #birthdate').attr('disabled','disabled');
+						$('#tfido-QRcode').attr('title','請掃描 QRcode');
+						autoCheckQRcode();
+						$('.verify').attr('disabled','disabled');
+						$('#tfido-overtime-btn').attr('onclick','javascript:refreshTFidoQRcode();');
+					}
+				}
+			});
+		}		
+		
+		//重新產生T-Fido QRcode
+		function refreshTFidoQRcode(){
+			$('#tfido-overtime-message').modal('hide');
+			var dataId = '0';
+			var uid = getUnmaskValue('#uid');
+			var data = {
+				uid: uid
+			};
+			RiAPI.run({
+				type : 'POST',
+				url : '/rest/user/notifyTFido',
+				data: data,
+				loadSpin : true,
+				success : function(resp) {
+					if (resp.code < 0) {
+						$('#tfido-message-text').text(resp.text);
+						$('#tfido-message').modal('show');
+					}else{
+						var qc = tfidos.find(e => e.dataId == dataId);
+						//清除舊的計時器
+						clearInterval(qc.countId);
+						//產生新的QRcode
+						qc.qrcode.makeCode(resp.data.TFidoResp);
+						$('#qrid').val(resp.data.qrid);
+						//產生新的計時器
+						qc.countId = countQRcodeSecond($('#tfido-second'));
+						$('#tfido-QRcode').attr('title','請掃描 QRcode');
+						autoCheckQRcode();
+						$('.verify').attr('disabled','disabled');
+						$('#tfido-overtime-btn').attr('onclick','javascript:refreshTFidoQRcode();');
+					}
+				},
+				error : function() {
+					$('#message-text').text('TW FidO認證失敗。');
+					$('#pop-message').modal('show');
+				}
+			});
+		}
+		
+		//120秒失敗，每5秒檢查
+		function autoCheckQRcode(){
+			var countConfirmTFido = 0; // 120 sec / 5sec = 24 times
+			var prIdEncode = $('#apply').attr('prid-list');
+			qrcodeIntervalObj = window.setInterval(function(){
+				//TW FidO
+				var checkFlag = true;
+				var qrid =  $('#qrid').val();
+				var p = {
+					"uid" : getUnmaskValue('#uid'),
+					"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+					"scope" : "basic",
+					"qrid" : qrid
+				};
+				RiAPI.run({
+					type : 'POST',
+					url : '/rest/user/confirmTFido',
+					data: p,
+					loadSpin : false,
+					success : function(resp) {
+						if (resp.code < 0) {
+							//$('#message-text').text('TW FidO認證失敗，請重新操作。');
+							//$('#pop-message').modal('show');
+							countConfirmTFido = countConfirmTFido + 1;
+							console.log('countConfirmTFido = '+ countConfirmTFido);
+							if(countConfirmTFido>=24){
+								clearInterval(qrcodeIntervalObj);
+								$('#tfido-overtime-message-text').text('TW FidO認證已逾兩分鐘，請重新操作。');
+								$('#tfido-overtime-message').modal('show');
+							}
+						}else{
+							//檢測成功直接申請
+							clearInterval(qrcodeIntervalObj);
+							//var memberUrl = /*[[@{/sp/member}]]*/'';
+							if(showMultiMemberModal(resp.data.member) == false) {
+								window.location.href = redirectPage();
+							}
+						}
+					}
+				});
+			},5000);
+		}	
+		
+		//倒數60秒
+		function countQRcodeSecond(){
+			var obj = $('#tfido-second');
+			var second = 59;
+			var countId;
+			return countId = window.setInterval(function(){
+				obj.html(second);
+				if (second == 0){
+					clearInterval(countId);
+				}
+				second--;
+			},1000);
+		}		
+		
+		function refreshCaptchaImage() {
+			var url = /*[[@{/captcha.jpg}]]*/"";
+			url += "?" + "ctime=" + new Date().getTime();
+			$('#captchaImg').attr('src', url);
+			$('#captcha').val('');
+		}
+		
+        function captchaGoogleSounfPlay(){
+			var m = '連線失敗'; 
+			///rest/user/captchainfo
+			var p = {};
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/captchainfo',
+                data : p,
+                loadSpin : false,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //$('#message-text').text(resp.text);
+                        //$('#pop-message').modal('show');
+                    		m = '連線失敗';
+            				var msg = new SpeechSynthesisUtterance();
+            				var synth = window.speechSynthesis;
+            				setVoices();
+            				msg.voiceURI = "native";
+            				msg.volume = 1;
+            				msg.rate = 1;
+            				msg.pitch = 0.8;
+            				msg.text = m;
+            				msg.lang = 'zh-TW';
+            				speechSynthesis.speak(msg);
+                    } else {
+                        //成功
+                        m=resp.data;
+            				var msg = new SpeechSynthesisUtterance();
+            				var synth = window.speechSynthesis;
+            				setVoices();
+            				msg.voiceURI = "native";
+            				msg.volume = 1;
+            				msg.rate = 1;
+            				msg.pitch = 0.8;
+            				msg.text = m;
+            				msg.lang = 'zh-TW';
+            				speechSynthesis.speak(msg);
+                    }
+                },
+                error:function(resp) {
+                		m = '連線失敗';
+        				var msg = new SpeechSynthesisUtterance();
+        				var synth = window.speechSynthesis;
+        				setVoices();
+        				msg.voiceURI = "native";
+        				msg.volume = 1;
+        				msg.rate = 1;
+        				msg.pitch = 0.8;
+        				msg.text = m;
+        				msg.lang = 'zh-TW';
+        				speechSynthesis.speak(msg);
+                }
+            });
+        }
+        
+		function setVoices() {
+			var synth = window.speechSynthesis;
+			return new Promise((resolve, reject) => {
+				let timer;
+				timer = setInterval(() => {
+					if(synth.getVoices().length !== 0) {
+						resolve(synth.getVoices());
+						clearInterval(timer);
+					}
+				}, 10);
+			})
+		}
+		
+    	function checkTwcaLibIsAlive(){
+    		mydataTWCALib.IsAlive(twcaIsAliveCallback);
+    	}
+    	
+    	function twcaIsAliveCallback(code, msg, reserved, data){
+    		if(code!=0){
+    			showPopMessage('請下載並安裝TWCA金融憑證元件，再重新操作。');
+    		}
+    	}
+    	function ATMVerifyInvokeCallback(code, msg, reserved, data){
+    		if(code==0){
+    			var dataObj = JSON.parse(data);
+    			var strContent = mydataTWCALib.verifyNo + dataObj.atm_sn;
+    			mydataTWCALib.ATMSignPKCS7(strContent,ATMSignPKCS7Callback);
+    		}else{
+    			var check = true;
+    			if(code=='2038001'){
+    				showPopMessage('未偵測到讀卡機或晶片卡。');
+    				check = false;
+    			}
+    			if(code=='2038002'){
+    				showPopMessage('晶片卡密碼錯誤。');
+    				check = false;
+    			}
+    			if(code=='2038005'){
+    				showPopMessage('晶片卡已鎖住。');
+    				check = false;
+    			}
+    			if(check){
+    				//showPopMessage('晶片金融卡：'+ msg);
+    				showPopMessage('驗證失敗，請洽原發卡銀行客服詢問。');
+    			}
+    		}
+    	}
+    	function ATMSignPKCS7Callback(code, msg, reserved, data){
+    		if(code==0){
+    			//上傳server登入驗證
+            var p = {
+    			"uid" : getUnmaskValue('#uid'),
+    			"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+                "scope" : "basic",
+                "signCer" : data,
+                "verifyNo" : mydataTWCALib.verifyNo,
+                "token" : mydataTWCALib.token
+            };
+
+            RiAPI.run({
+                type : 'POST',
+                url : '/rest/user/verifyFic',
+                loadSpin : true,
+                data : p,
+                success : function(resp) {
+                    if (resp.code < 0) {
+                        //登入失敗
+                        showPopMessage('晶片金融卡驗證失敗，請重新操作。');
+                    } else {
+						//var memberUrl = /*[[@{/sp/member}]]*/'';
+						if(showMultiMemberModal(resp.data.member) == false) {
+							window.location.href = redirectPage();
+						}
+                    }
+                },
+                error : function() {
+                    showPopMessage('晶片金融卡驗證功能暫時無法使用，請改用其他驗證方式。');
+                }
+            });
+    		}else{
+    			showPopMessage('晶片金融卡：'+ msg);
+    		}
+    	}
+    	function HWSignPKCS7Callback(code, msg, reserved, data){
+    		if(code==0){
+    			//上傳server登入驗證
+	            var p = {
+	    			"uid" : getUnmaskValue('#uid'),
+	    			"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+	                "scope" : "basic",
+	                "signCer" : data
+	            };
+	
+	            RiAPI.run({
+	                type : 'POST',
+	                url : '/rest/user/verifyFch',
+	                loadSpin : true,
+	                data : p,
+	                success : function(resp) {
+	                    if (resp.code < 0) {
+	                        //登入失敗
+	                        showPopMessage('硬體金融憑證驗證失敗，請重新操作。');
+	                    } else {
+							//var memberUrl = /*[[@{/sp/member}]]*/'';
+							if(showMultiMemberModal(resp.data.member) == false) {
+								window.location.href = redirectPage();
+							}
+	                    }
+	                },
+	                error : function() {
+	                    showPopMessage('硬體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+	                }
+	            });
+    		}else{
+    			showPopMessage('硬體金融憑證：'+msg);
+    		}
+    	}
+    	function SWSignPKCS7Callback(code, msg, reserved, data){
+    		if(code==0){
+    			//上傳server登入驗證
+	            var p = {
+	    				"uid" : getUnmaskValue('#uid'),
+	    				"birthdate" : transferBirthDateToAD(getUnmaskValue('#birthdate')),
+	                "scope" : "basic",
+	                "signCer" : data
+	            };
+	
+	            RiAPI.run({
+	                type : 'POST',
+	                url : '/rest/user/verifyFcs',
+	                loadSpin : true,
+	                data : p,
+	                success : function(resp) {
+	                    if (resp.code < 0) {
+	                        //登入失敗
+	                        showPopMessage('軟體金融憑證驗證失敗，請重新操作。');
+	                    } else {
+							//var memberUrl = /*[[@{/sp/member}]]*/'';
+							if(showMultiMemberModal(resp.data.member) == false) {
+								window.location.href = redirectPage();
+							}
+	                    }
+	                },
+	                error : function() {
+	                    showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+	                }
+	            });
+    		}else{
+                if(code!='1002'){
+                	showPopMessage('軟體金融憑證功能暫時無法使用，請改用其他驗證方式。');
+                }
+    		}
+    	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.UlogMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.Ulog">
+    <id column="seq" jdbcType="INTEGER" property="seq" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="action" jdbcType="VARCHAR" property="action" />
+    <result column="action_text" jdbcType="VARCHAR" property="actionText" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="scope" jdbcType="VARCHAR" property="scope" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    seq, uid, action, action_text, client_id, scope, ctime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ulog
+    where seq = #{seq,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ulog
+    where seq = #{seq,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.Ulog">
+    insert into ulog (seq, uid, action, 
+      action_text, client_id, scope, 
+      ctime)
+    values (#{seq,jdbcType=INTEGER}, #{uid,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, 
+      #{actionText,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, #{scope,jdbcType=VARCHAR}, 
+      #{ctime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.Ulog">
+    insert into ulog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="seq != null">
+        seq,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="action != null">
+        action,
+      </if>
+      <if test="actionText != null">
+        action_text,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="scope != null">
+        scope,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="seq != null">
+        #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null">
+        #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="actionText != null">
+        #{actionText,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="scope != null">
+        #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.Ulog">
+    update ulog
+    <set>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null">
+        action = #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="actionText != null">
+        action_text = #{actionText,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="scope != null">
+        scope = #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where seq = #{seq,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.Ulog">
+    update ulog
+    set uid = #{uid,jdbcType=VARCHAR},
+      action = #{action,jdbcType=VARCHAR},
+      action_text = #{actionText,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      scope = #{scope,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP}
+    where seq = #{seq,jdbcType=INTEGER}
+  </update>
+</mapper>

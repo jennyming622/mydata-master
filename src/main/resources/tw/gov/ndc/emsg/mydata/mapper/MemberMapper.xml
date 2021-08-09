@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.MemberMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.Member">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="name" jdbcType="VARCHAR" property="name" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="birthdate" jdbcType="DATE" property="birthdate" />
+    <result column="gender" jdbcType="VARCHAR" property="gender" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="uid_verified" jdbcType="BIT" property="uidVerified" />
+    <result column="email" jdbcType="VARCHAR" property="email" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="email_verified" jdbcType="BIT" property="emailVerified" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" typeHandler="tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler" />
+    <result column="mobile_verified" jdbcType="BIT" property="mobileVerified" />
+    <result column="inform_method" jdbcType="VARCHAR" property="informMethod" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+    <result column="pre_login_time" jdbcType="TIMESTAMP" property="preLoginTime" />
+    <result column="is_double_verify" jdbcType="BIT" property="isDoubleVerify" />
+    <result column="is_double_verify_time" jdbcType="TIMESTAMP" property="isDoubleVerifyTime" />
+    <result column="is_old" jdbcType="BIT" property="isOld" />
+    <result column="stat" jdbcType="INTEGER" property="stat" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, account, name, birthdate, gender, uid, uid_verified, email, email_verified, mobile, 
+    mobile_verified, inform_method, ctime, login_time, pre_login_time, is_double_verify, is_double_verify_time,is_old, stat
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from member
+    where 1=1
+    <if test="id != null">
+      and id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="account != null">
+      and account = #{account,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null">
+      and name = #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="birthdate != null">
+      and birthdate = #{birthdate,jdbcType=DATE}
+    </if>
+    <if test="gender != null">
+      and gender = #{gender,jdbcType=VARCHAR}
+    </if>
+    <if test="uid != null">
+      and uid = #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="uidVerified != null">
+      and uid_verified = #{uidVerified,jdbcType=BIT}
+    </if>
+    <if test="email != null">
+      and email = #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="emailVerified != null">
+      and email_verified = #{emailVerified,jdbcType=BIT}
+    </if>
+    <if test="mobile != null">
+      and mobile = #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}
+    </if>
+    <if test="mobileVerified != null">
+      and mobile_verified = #{mobileVerified,jdbcType=BIT}
+    </if>
+    <if test="informMethod != null">
+      and inform_method = #{informMethod,jdbcType=VARCHAR}
+    </if>
+    <if test="ctime != null">
+      and ctime = #{ctime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="loginTime != null">
+      and login_time = #{loginTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="preLoginTime != null">
+      and pre_login_time = #{preLoginTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="isDoubleVerify != null">
+      and is_double_verify = #{isDoubleVerify,jdbcType=BIT}
+    </if>
+    <if test="isDoubleVerifyTime != null">
+      and is_double_verify_time = #{isDoubleVerifyTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="isOld != null">
+      and is_old = #{isOld,jdbcType=BIT}
+    </if>
+    <if test="stat != null">
+      and stat = #{stat,jdbcType=INTEGER}
+    </if>
+    <if test="statIsNullorZero != null">
+      and (stat is null or stat = 0)
+    </if>
+  </select>
+  <select id="selectNotFinishMember" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from member
+    where name is null or inform_method is null
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.Member" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into member (id, account, name, 
+      birthdate, gender, uid, 
+      uid_verified, email, 
+      email_verified, mobile, 
+      mobile_verified, inform_method,
+      ctime, login_time, pre_login_time, is_double_verify, is_double_verify_time, is_old, stat)
+    values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{birthdate,jdbcType=DATE}, #{gender,jdbcType=VARCHAR}, #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{uidVerified,jdbcType=BIT}, #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{emailVerified,jdbcType=BIT}, #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler}, 
+      #{mobileVerified,jdbcType=BIT}, #{informMethod,jdbcType=VARCHAR}, #{ctime,jdbcType=TIMESTAMP}, #{preLoginTime,jdbcType=TIMESTAMP},
+      #{loginTime,jdbcType=TIMESTAMP}, #{isDoubleVerify,jdbcType=BIT}, #{isDoubleVerifyTime,jdbcType=TIMESTAMP}, #{isOld,jdbcType=BIT},#{stat,jdbcType=INTEGER})
+      <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+		SELECT currval('member_id_seq');
+	  </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.Member" useGeneratedKeys="true"  keyProperty="id" keyColumn="id">
+    insert into member
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="birthdate != null">
+        birthdate,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="uidVerified != null">
+        uid_verified,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="emailVerified != null">
+        email_verified,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="mobileVerified != null">
+        mobile_verified,
+      </if>
+      <if test="informMethod != null">
+        inform_method,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="loginTime != null">
+        login_time,
+      </if>
+      <if test="preLoginTime != null">
+        pre_login_time,
+      </if>
+      <if test="isDoubleVerify != null">
+        is_double_verify,
+      </if>
+      <if test="isDoubleVerifyTime != null">
+        is_double_verify_time,
+      </if>
+      <if test="isOld != null">
+        is_old,
+      </if>
+      <if test="stat != null">
+        stat,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="birthdate != null">
+        #{birthdate,jdbcType=DATE},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="uidVerified != null">
+        #{uidVerified,jdbcType=BIT},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="emailVerified != null">
+        #{emailVerified,jdbcType=BIT},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="mobileVerified != null">
+        #{mobileVerified,jdbcType=BIT},
+      </if>
+      <if test="informMethod != null">
+        #{informMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginTime != null">
+        #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="preLoginTime != null">
+        #{preLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDoubleVerify != null">
+        #{isDoubleVerify,jdbcType=BIT},
+      </if>
+      <if test="isDoubleVerifyTime != null">
+        #{isDoubleVerifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isOld != null">
+        #{isOld,jdbcType=BIT},
+      </if>
+      <if test="stat != null">
+        #{stat,jdbcType=INTEGER},
+      </if>
+    </trim>
+    <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+		SELECT currval('member_id_seq');
+  	</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.Member">
+    update member
+    <set>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="birthdate != null">
+        birthdate = #{birthdate,jdbcType=DATE},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="uidVerified != null">
+        uid_verified = #{uidVerified,jdbcType=BIT},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="emailVerified != null">
+        email_verified = #{emailVerified,jdbcType=BIT},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      </if>
+      <if test="mobileVerified != null">
+        mobile_verified = #{mobileVerified,jdbcType=BIT},
+      </if>
+      <if test="informMethod != null">
+        inform_method = #{informMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginTime != null">
+        login_time = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="preLoginTime != null">
+        pre_login_time = #{preLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDoubleVerify != null">
+        is_double_verify = #{isDoubleVerify,jdbcType=BIT},
+      </if>
+      <if test="isDoubleVerifyTime != null">
+        is_double_verify_time = #{isDoubleVerifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isOld != null">
+        is_old = #{isOld,jdbcType=BIT},
+      </if>
+      <if test="stat != null">
+        stat = #{stat,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.Member">
+    update member
+    set account = #{account,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      birthdate = #{birthdate,jdbcType=DATE},
+      gender = #{gender,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      uid_verified = #{uidVerified,jdbcType=BIT},
+      email = #{email,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      email_verified = #{emailVerified,jdbcType=BIT},
+      mobile = #{mobile,jdbcType=VARCHAR,typeHandler=tw.gov.ndc.emsg.dbencrypt.EncryptTypeHandler},
+      mobile_verified = #{mobileVerified,jdbcType=BIT},
+      inform_method = #{informMethod,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      login_time = #{loginTime,jdbcType=TIMESTAMP},
+      pre_login_time = #{preLoginTime,jdbcType=TIMESTAMP},
+      is_double_verify = #{isDoubleVerify,jdbcType=BIT},
+      is_double_verify_time = #{isDoubleVerifyTime,jdbcType=TIMESTAMP},
+      is_old = #{isOld,jdbcType=BIT},
+      stat = #{stat,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.gov.ndc.emsg.mydata.mapper.AuthcodeMapper">
+  <resultMap id="BaseResultMap" type="tw.gov.ndc.emsg.mydata.entity.Authcode">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pid" jdbcType="VARCHAR" property="pid" />
+    <result column="client_id" jdbcType="VARCHAR" property="clientId" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="access_token" jdbcType="VARCHAR" property="accessToken" />
+    <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken" />
+    <result column="scope" jdbcType="VARCHAR" property="scope" />
+    <result column="nonce" jdbcType="VARCHAR" property="nonce" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pid, client_id, code, access_token, refresh_token, scope, nonce, state, ctime, 
+    etime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from authcode
+    where 1=1
+    <if test="pid != null">
+      and pid = #{pid,jdbcType=VARCHAR}
+    </if>
+    <if test="clientId != null">
+      and client_id = #{clientId,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from authcode
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from authcode
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tw.gov.ndc.emsg.mydata.entity.Authcode">
+    insert into authcode (id, pid, client_id, 
+      code, access_token, refresh_token, 
+      scope, nonce, state, 
+      ctime, etime)
+    values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, #{refreshToken,jdbcType=VARCHAR}, 
+      #{scope,jdbcType=VARCHAR}, #{nonce,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
+      #{ctime,jdbcType=TIMESTAMP}, #{etime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="tw.gov.ndc.emsg.mydata.entity.Authcode">
+    insert into authcode
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="accessToken != null">
+        access_token,
+      </if>
+      <if test="refreshToken != null">
+        refresh_token,
+      </if>
+      <if test="scope != null">
+        scope,
+      </if>
+      <if test="nonce != null">
+        nonce,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null">
+        #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="refreshToken != null">
+        #{refreshToken,jdbcType=VARCHAR},
+      </if>
+      <if test="scope != null">
+        #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="nonce != null">
+        #{nonce,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tw.gov.ndc.emsg.mydata.entity.Authcode">
+    update authcode
+    <set>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null">
+        access_token = #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="refreshToken != null">
+        refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      </if>
+      <if test="scope != null">
+        scope = #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="nonce != null">
+        nonce = #{nonce,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tw.gov.ndc.emsg.mydata.entity.Authcode">
+    update authcode
+    set pid = #{pid,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      access_token = #{accessToken,jdbcType=VARCHAR},
+      refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      scope = #{scope,jdbcType=VARCHAR},
+      nonce = #{nonce,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      etime = #{etime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

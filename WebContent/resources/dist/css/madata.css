@@ -1,0 +1,1680 @@
+@charset "UTF-8";
+
+
+
+
+html,
+body {
+  height: 100%;
+  max-width: 100%;
+	background-color: #E3EAEE;
+	color: #555;
+}
+body, nav {
+	min-width: 320px;
+}
+body {
+  font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
+}
+.txtSmail {
+	font-size: 0.9em;
+}
+.txtBig {
+	font-size: 1.1em;
+}
+hr {
+  border-color: #F05F40;
+  border-width: 3px;
+  /*max-width: 50px;*/
+}
+hr.light {
+  border-color: white;
+}
+a {
+  -webkit-transition: all 0.35s;
+  -moz-transition: all 0.35s;
+  transition: all 0.35s;
+  /*color: #F05F40;*/
+}
+a:hover,
+a:focus {
+  /*color: #eb3812;*/
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
+}
+p {
+  font-size: 1em;
+  line-height: 1.5;
+  margin-bottom: 20px;
+	letter-spacing: 0.05em;
+}
+.bg-primary {
+  background-color: #F05F40;
+}
+.bg-dark {
+  background-color: #222222;
+  color: white;
+}
+.text-faded {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+}
+h1, h2, h3, h4, h5, h6, p, span{
+	font-family: "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif", "微軟正黑體", "黑體";
+	font-size: bold;
+	color: var(--t1);
+}
+
+p {
+    font-size: 1em;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+}
+
+
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+
+/*背景圖01*/
+
+
+
+#section01 {
+    position: relative;
+    text-align: center;
+    height: auto;
+
+
+
+
+}
+
+.backcenter{
+       margin-bottom: 11%;
+}
+
+.backcenter img{
+       margin:1% ;
+}
+
+
+.mylogin img:hover{
+    
+ -webkit-filter:brightness(1.1);
+}
+
+.mydatalogo{
+    width: 100%;
+    height: auto;
+}
+
+
+/*按鈕區塊01*/
+
+#section01 .caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin: 0px 10px 0px 10px;
+    border-top: 1.3vw solid;
+    border-right: 1.3vw solid transparent;
+    border-left:1.3vw solid transparent;
+}
+
+
+/*註冊登入按鈕*/
+
+.mylogin {
+    position: absolute;
+    top: 68%;
+    left: 41%;
+    width: 17%;
+}
+
+.mylogin button{
+    border-style: solid; 
+    border-width: 0; 
+    padding-left: 0; 
+    padding-right: 0; 
+    padding-top: 0; 
+    padding-bottom: 0;
+    background: none;
+}
+
+/*文字區塊01*/
+.mydataview01 h1 {
+    position: absolute;
+    top: 40%;
+    left: 23%;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 6vw;
+    font-weight: bold;
+    text-shadow: 10px 10px 50px #0a1659;
+}
+
+/*背景圖02*/
+
+#section02, #why-mydata {
+    position: relative;
+    text-align: center;
+    height: auto;
+    
+}
+
+/* why mydata 為甚麼有mydata*/
+#why-mydata [class*='mydataLock']{
+	padding: 0;
+	margin: 0;
+	display: initial;
+
+}
+
+#why-mydata [class*='mydataLock'] img{
+	width: inherit;
+	height: 220px;
+	margin: 0;
+	padding: 0;
+}
+
+#why-mydata .hp_widerImg img{
+}
+
+#why-mydata .mydataview02{
+	top:4%;
+}
+
+
+/*按鈕區塊02*/
+
+#section02 .caret , #why-mydata .caret{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin: 0px 10px 0px 10px;
+    border-top: 1.3vw solid;
+    border-right: 1.3vw solid transparent;
+    border-left:1.3vw solid transparent;
+}
+
+
+#section02.demo a, #why-mydata a {
+  background-color: #2299fc;
+}
+
+
+#section02.demo a:hover, #why-mydata a:hover{
+  background-color: #62bbf9;
+}
+
+
+/*文字區塊02*/
+
+.mydataview02 {
+    position: absolute;
+    top: 15%;
+    left: 6;
+    /* left: 15%; */
+    text-align: center;
+    margin: auto;
+    width: 100%;
+}
+
+
+.MydataLockv{
+    margin: 0 auto;
+    width: 85%;
+}
+
+
+.mydatastext p{
+    width: 100%;
+}
+#section02 h2,  #why-mydata h2{
+    color: #8c8c8c;
+    text-align: center;
+    font-size: 3.1VW;
+    margin-top: 0px;
+    font-weight:bold;
+}
+
+.mydataview02 .mydatastext p{
+       font-size:1.8vw; 
+        color: #8c8c8c;
+ 
+    
+}
+
+
+.mydataview02 .MydataLockv p {
+    font-size: 1.4vw;
+    color: #8c8c8c;
+    margin-top: 8%;
+    line-height: 145%;
+}
+
+.mydataview02 .MydataLockv .mydataLock1 p {
+    margin-top: 9%;
+}
+
+.mydataview02 .MydataLockv .mydataLock1 p {
+    margin-top: 9%;
+}
+.mydataview02 .MydataLockv .mydataLock3 p {
+    margin-top: 7%;
+}
+
+
+
+.mydataview02 .MydataLockv .mydataLock4 p {
+    margin-top: 7%;
+}
+
+
+.mydataLock1 img {
+
+    width: 63%;
+}
+
+
+.mydataLock2 img {
+
+    width: 58%;
+}
+
+
+.mydataLock3 img {
+
+    width: 49%;
+}
+
+
+
+.mydataLock4 img {
+    margin-left: 12%;
+    width: 60%;
+}
+
+
+/*背景圖03*/
+#section03 {
+    position: relative;
+    text-align: center;
+    height: auto;
+    
+}
+
+/*按鈕區塊03*/
+#section03 .caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin: 0px 10px 0px 10px;
+    border-top: 1.3vw solid;
+    border-right: 1.3vw solid transparent;
+    border-left:1.3vw solid transparent;
+}
+
+#section03.demo a {
+  background-color: #2299fc;
+}
+
+
+#section03.demo a:hover {
+  background-color: #62bbf9;
+}
+
+
+/*文字區塊03*/
+.mydataview03 {
+    position: absolute;
+    top: 12.5%;
+    margin: auto;
+    width: 100%;
+}
+
+
+#section03 h2{
+   color: #8c8c8c;
+    text-align: center;
+    font-size: 2.9VW;
+    margin-top: 0px;
+    font-weight:bold;
+}
+
+#section03 p{
+    color: #8c8c8c;
+    text-align: center;
+    font-size: 27px;
+    margin-top: 43px;
+}
+
+#section03 h3{
+    color: #8c8c8c;
+    font-size: 1.6vw;
+
+}
+
+#section03 h2{
+    color: #8c8c8c;
+    text-align: center;
+    font-size: 3.1VW;
+    margin-top: 0px;
+    font-weight:bold;
+	line-height: 1.3;
+}
+
+/*影片區塊03*/
+.video {
+	border: solid 1px #b9c3c9;
+	padding: 4%;
+	border-radius: 3px;
+}
+.video iframe {
+	width: 100%;
+    height:300px;
+}
+
+.mtopX {
+    padding: 4% 0% 0% 0%;
+    width: 90%;
+    margin: 0 auto;
+}
+
+
+/*背景圖04*/
+#section04 {
+    position: relative;
+    text-align: center;
+    height: auto;
+
+}
+
+/*按鈕區塊04*/
+
+.mydataLock1{
+    text-align: center;
+    height:100%;
+       margin-top: 12%;
+}
+
+.mydataLock2{
+    text-align: center;
+    height:100%;
+    margin-top: 12%;
+}
+
+
+.mydataLock3{
+    text-align: center;
+    height:100%;
+        margin-top: 12%;
+}
+.mydataLock4{
+    text-align: center;
+    height:100%;
+        margin-top: 12%;
+}
+
+
+
+
+.loginicon{
+    text-align: center;
+    margin-top: 5%;
+    padding: 0% 4% 0% 4%;
+}
+
+.loginicon img{
+width:100%; 
+}
+
+.loginicon img:hover{
+opacity:0.6; 
+transform:-ms- scale(1.01);
+transform:-moz- scale(1.01);
+transition: .3s;    
+    
+}
+
+.loginx{
+    width: 88%;
+    margin: 0 auto;
+
+}
+
+.loginicon h1{
+    color:#8c8c8c;
+    
+}
+.loginicon button{
+   border-style: solid; 
+   border-width: 0; 
+   padding-left: 0; 
+   padding-right: 0; 
+   padding-top: 0;
+   padding-bottom: 0;
+   width:300; 
+   height:300 ;
+   background: none;
+}
+
+
+
+
+/*文字區塊04*/
+
+.mydataview04 {
+    position: absolute;
+    top: 5%;
+    margin: auto;
+    width: 100%;
+
+}
+
+#section04 h2{
+    color: #8c8c8c;
+    text-align: center;
+    font-size: 3.1VW;
+    margin-top: 0px;
+    font-weight: bold;
+}
+
+
+#section04 h1 {
+    color: #8c8c8c;
+    text-align: center;
+    font-size: 2.5vw;
+    margin-top: 12%;
+    margin-bottom: 8%;
+    font-weight: bold;
+}
+#section04 p{
+    color: #8c8c8c;
+    font-size: 1.7vw;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+
+
+
+
+
+
+/*共用按鈕區塊*/
+
+#section01.demo a {
+    position: absolute;
+    z-index: 99999;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 7.5%;
+    padding-top: 0.7%;
+    /* line-height: 5%; */
+    text-align: center;
+    display: inline-block;
+    background-color: #5252ff;
+    text-decoration: none;
+    font-size: 1.8vw;
+    color: aliceblue;
+}
+
+#section02.demo a,  #why-mydata.demo a {
+    position: absolute;
+    z-index: 99999;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 7.5%;
+    padding-top: 0.7%;
+    /* line-height: 5%; */
+    text-align: center;
+    display: inline-block;
+    background-color: #2299fc;
+    text-decoration: none;
+    font-size: 1.8vw;
+    color: aliceblue;
+}
+
+#section03.demo a {
+    position: absolute;
+    z-index: 99999;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 7.5%;
+    padding-top: 0.7%;
+    /* line-height: 5%; */
+    text-align: center;
+    display: inline-block;
+    background-color: #2299fc;
+    text-decoration: none;
+    font-size: 1.8vw;
+    color: aliceblue;
+}
+
+
+.demo a:hover{
+    height: 78px;
+    background-color: #62bbf9;
+}
+
+
+.center {
+
+    bottom: 80;
+    max-width: 70%;
+    max-height: 70%;
+}
+
+
+
+/*共用彩色線*/
+.mydatacolorline{
+    margin: 0 auto;
+    text-align: center;
+}
+
+
+.colorline{
+    margin: 0 auto;
+    width:469px;
+    height: 10px;
+    margin-bottom:1.5%; 
+}
+
+.rline{
+    
+
+    height: 10px;
+    background-color: #FF0004;
+}
+
+.oline{
+
+    height: 10px;
+    background-color: #cccc5e;
+}
+
+
+.bline{
+    
+
+    height: 10px;
+
+       background-color: #0087ff;
+}
+
+
+
+
+.gline{
+    
+
+    height: 10px;
+        background-color: #3db800;
+ 
+}
+
+
+
+
+
+
+
+
+
+
+/*頁尾*/
+
+
+
+footer, .indexPage footer {
+    background-color: #F1F1F1;
+    padding: 25px 10px;
+    border-top: solid 2px #E1E1E1;
+    background-color:#8e8e8e ;
+}
+
+footer p{
+    font-size: 2rem;
+    margin-top:20px; 
+    color: aliceblue;
+}
+
+
+
+
+footer a{
+    color:#322dfc; 
+}
+
+
+
+
+strong {
+   color:#322dfc; 
+}
+
+
+
+
+
+
+/** Footer **/
+
+.footerBottom {
+    background-color: #8e8e8e;
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
+
+.footerBottom a{
+	color: blue;
+}
+
+.footerBleft{
+	padding-left: 5em;
+}
+
+.footerBright{
+
+
+}
+
+.col-md-2{
+	padding-left: 0;
+}
+
+.footerBottom h4 {
+    color: #FFFFFF;
+    font-weight: lighter;
+    line-height: 1.8em;
+}
+
+
+.Frfooter{
+    float: right;
+    padding-right: 3em;
+}
+
+@media (max-width: 1199px){
+
+.footerBleft{
+	padding-left: 3em;
+}
+
+.footerBright{
+	padding-right: 3em;
+}
+    
+    
+.Frfooter{
+    float: none;
+
+}    
+   
+.footerBright {
+    padding-right: 0em;
+}    
+ 
+    
+.footerBottom h4 {
+    font-size: 1.1em;
+}    
+    
+    
+    
+}
+
+@media (max-width:991px){
+.footerBright{
+		text-align: left;
+		padding-left: 3rem;
+	}
+.footerBleft h4{
+	font-size: 1.2em;
+     line-height: 1.5em;
+}
+
+    
+.footerBright h4{
+	font-size: 1.2em;
+     line-height: 1.5em;
+}
+}
+	
+
+
+@media (max-width:767px){
+
+.footerBleft h4{
+	font-size: 1em;
+     line-height: 1.5em;
+}
+
+    
+.footerBright h4{
+	font-size: 1em;
+     line-height: 1.5em;
+}
+}
+	
+
+
+
+@media (max-width: 530px) {
+    .footerBleft {
+    padding-left: 2em;
+}     
+     
+    
+.footerBright {
+    padding-left: 2em;
+}  
+    
+    
+.footerBleft h4{
+	font-size: 0.7em;
+     line-height: 1.5em;
+}
+
+    
+.footerBright h4{
+	font-size: 0.7em;
+     line-height: 1.5em;
+}    
+    
+.footerBleft h4 a{
+	display: table-cell;
+}
+
+    
+}
+
+
+
+@media (max-width: 1920px){
+
+.loginWay .backcenter{
+ padding-left: 15px;
+}
+
+}
+
+
+@media (max-width: 1440px) {
+    .backcenter {
+    height:50%;
+    transition: .3s;    
+}
+
+.backcenter img {
+    width: 20%;
+
+}
+    
+    
+}
+
+/*SECTION01*/
+
+
+
+/*SECTION01*/
+
+ @media (max-width: 500px) {
+
+.mydataview01 h1 {
+    position: absolute;
+    top: 30%;
+    left: 15%;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 7.5vw;
+    font-weight: bold;
+    text-shadow: 10px 10px 50px #0a1659;
+}
+     
+.mylogin {
+    position: absolute;
+    top:64%;
+    left:36%;
+    width:30%;
+
+
+
+}
+     
+#section01.demo a {
+    font-size: 3.3vw;
+    height: 11%;
+
+} 
+     
+ #section01 .caret {
+
+    border-top: 2vw solid;
+    border-right: 2vw solid transparent;
+    border-left: 2vw solid transparent;
+} 
+     
+     
+
+
+     
+     
+}
+
+/*SECTION02*/
+
+ @media (max-width: 1200px) {
+
+.mydataview02 {
+    position: relative;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    padding: 5% 2% 12% 2%;
+}
+
+
+.Whiteback img{
+         display: none;
+}
+
+#section02, #why-mydata{
+         background-image: url(../img/wbg.png);
+         background-size: 1920px;
+         background-position: center;
+}
+     
+     
+.mydataLock1 img {
+
+    width: 68%;
+}
+
+
+.mydataLock2 img {
+
+    width: 64%;
+}
+
+
+.mydataLock3 img {
+
+    width: 54%;
+}
+
+
+
+.mydataLock4 img {
+    margin-left: 50px;
+    width: 65%;
+}     
+     
+
+     
+#section02.demo a,#why-mydata.demo a{
+
+    height: 4%;
+    padding-top: 1.1%;
+   
+} 
+     
+#section02 h2, #why-mydata h2{
+
+    font-size: 5VW;
+
+}
+     
+.mydataview02 .MydataLockv p {
+    font-size: 2vw;
+
+}   
+     
+     
+.mydataview02 .mydatastext p {
+    font-size: 2.4vw;
+    margin-top: 2%;
+}     
+     
+     
+     
+
+}   
+
+
+
+@media (max-width: 768px) {
+
+.mydataview02 {
+    position: relative;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    padding: 5% 0% 12% 0%;
+}
+
+
+.Whiteback img{
+         display: none;
+}
+
+
+     
+     
+.mydataLock1 img {
+
+    width: 45%;
+}
+
+
+.mydataLock2 img {
+
+    width: 41%;
+}
+
+
+.mydataLock3 img {
+
+    width: 31%;
+}
+
+
+
+.mydataLock4 img {
+    margin-left: 30px;
+    width: 42%;
+}     
+     
+.MydataLockv p {
+    font-size: 2.7vw;
+}
+
+    
+.mydatastext p {
+    font-size: 2.7vw;
+    margin-top: 2%;
+}         
+     
+     
+#section02.demo a, #why-mydata.demo a {
+    height: 4.8%;
+    padding-top: 1.1%;
+
+} 
+     
+#section02 h2, #why-mydata h2 {
+
+    font-size: 5VW;
+
+}         
+
+     
+     
+}
+
+@media (max-width: 767px) {
+
+#section02.demo a, #why-mydata.demo a {
+    height: 1.7%;
+    padding-top: 1.1%;
+
+} 
+     
+}
+@media (max-width: 500px) {
+    
+ #section02 h2, #why-mydata h2 {
+    font-size: 6VW;
+}
+     
+.mydataview02 .mydatastext p {
+    font-size: 3.6vw;
+
+}
+     
+.mydataLock1 img {
+
+    width: 75%;
+}
+
+
+.mydataLock2 img {
+
+    width: 71%;
+}
+
+
+.mydataLock3 img {
+
+    width: 65%;
+}
+
+
+
+.mydataLock4 img {
+    margin-left: 30px;
+    width: 77%;
+} 
+    
+.mydataview02 .MydataLockv p {
+    font-size: 4vw;
+}    
+    
+#section02.demo a, #why-mydata a {
+    font-size: 3.3vw;
+    height: 2%;
+    padding-top: 2%;
+
+} 
+     
+ #section02 .caret, #why-mydata .caret {
+
+    border-top: 2vw solid;
+    border-right: 2vw solid transparent;
+    border-left: 2vw solid transparent;
+}      
+
+    
+
+}
+
+
+/*SECTION02*/
+
+
+/*SECTION03*/
+
+ @media (max-width: 1600px) {
+
+
+.video iframe {
+    height:200px;
+}
+
+}
+
+
+ @media (max-width: 1200px) {
+
+.mydataview03 {
+    position: relative;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    padding: 5% 2% 5% 2%;
+}
+
+
+.Whiteback img{
+         display: none;
+}
+
+#section03{
+         background-image: url(../img/wbg.png);
+         background-size: 1920px;
+         background-position: center;
+}
+     
+     
+
+     
+#section03.demo a {
+    height: 7.7%;
+    padding-top: 1.1%;
+}
+     
+#section03 h2{
+
+    font-size: 5VW;
+
+}     
+ 
+#section03 h3 {
+    color: #8c8c8c;
+    font-size: 1.7vw;
+}     
+     
+     
+}   
+
+ @media (max-width: 991px) {
+
+#section03.demo a {
+    height: 3.2%;
+
+}
+
+}
+
+@media (max-width: 768px) {
+
+.mydataview03 {
+    position: relative;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    padding: 5% 0% 12% 0%;
+}
+
+
+.Whiteback img{
+         display: none;
+}
+
+
+
+     
+     
+#section03.demo a {
+
+    height: 3%;
+    padding-top: 1.1%;
+
+} 
+     
+#section03 h2{
+
+    font-size: 4VW;
+
+}         
+
+ .mtopX {
+
+    width: 60%;
+
+}    
+     
+#section03 h3 {
+    font-size: 2.6vw;
+}     
+     
+}   
+
+
+ @media (max-width: 500px) {
+
+#section03 h2 {
+    font-size: 6VW;
+}     
+     
+.mtopX {
+    width: 90%;
+}
+     
+#section03.demo a {
+    font-size: 3.3vw;
+    height: 3%;
+    padding-top: 1.6%;
+}
+     
+ #section03 .caret {
+
+    border-top: 2vw solid;
+    border-right: 2vw solid transparent;
+    border-left: 2vw solid transparent;
+}           
+     
+    
+}
+
+
+ @media (max-width: 400px) {
+
+.video iframe {
+    height: 170px;
+}
+}
+
+ @media (max-width: 350px) {
+.video iframe {
+    height: 120px;
+}
+}
+
+/*SECTION03*/
+
+
+/*SECTION04*/
+
+ @media (max-width: 1200px) {
+
+.mydataview04 {
+    position: relative;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    padding: 5% 2% 5% 2%;
+}
+
+
+.Whiteback img{
+         display: none;
+}
+
+#section04{
+         background-image: url(../img/wbg.png);
+         background-size: 1920px;
+         background-position: center;
+}
+     
+     
+
+     
+#section04.demo a {
+
+    height: 2.5%;
+    padding-top: 1.1%;
+
+} 
+     
+#section04 h2{
+
+    font-size: 5VW;
+
+}     
+ 
+#section04 h3 {
+    color: #8c8c8c;
+    font-size: 3vw;
+}     
+     
+     
+}   
+
+
+
+@media (max-width: 991px) {
+
+
+.loginicon img {
+    width: 75%;
+}
+    
+    
+#section04 p {
+    font-size: 2.5vw;
+}
+    
+    
+#section04 h1 {
+
+    font-size: 3vw;
+    margin-top: 5%;
+    margin-bottom: 4%;
+
+}    
+    
+
+}
+
+@media (max-width: 768px) {
+
+.mydataview04 {
+    position: relative;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    padding: 5% 0% 12% 0%;
+}
+
+
+.Whiteback img{
+         display: none;
+}
+
+
+     
+     
+
+
+ 
+     
+
+
+
+     
+     
+#section04.demo a {
+
+    height: 4%;
+    padding-top: 1.1%;
+
+} 
+     
+#section04 h2{
+
+    font-size: 6VW;
+
+}         
+
+
+     
+     
+}   
+
+
+
+
+@media (max-width: 500px) {
+
+#section04 h2 {
+    font-size: 6VW;
+}     
+
+ #section04 h1 {
+    color: #8c8c8c;
+    text-align: center;
+    font-size: 6vw;
+    margin-top: 5%;
+    margin-bottom: 4%;
+    font-weight: bold;
+}   
+      
+#section04 p {
+    font-size: 4vw;
+}
+    
+    
+}
+
+
+
+
+/*SECTION04*/
+
+
+
+
+
+@media (max-width: 991px) {
+.video {
+		margin-bottom: 10px;
+	}
+
+.video h5 {
+	font-weight: 400;
+}
+
+    
+
+
+
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 768px){
+
+
+    
+
+
+
+
+
+
+.mydataview02 {
+
+    padding:40px 20px 50px 20px; 
+    margin-bottom:0px;
+        
+}
+    
+.mydataview03 {
+
+    padding:40px 20px 50px 20px; 
+    margin-bottom:0px;
+        
+}
+    
+.mydataview04 {
+    padding: 40px 20px 30px 20px;
+    margin-bottom: 0px;
+}
+.mydatacolorline {
+display: none;
+}
+
+
+    
+
+
+
+
+
+ 
+    
+.video {
+
+	padding: 20px;
+
+}    
+
+
+.mtopX{
+    padding:10px;  
+}
+
+
+ .colorline {
+    margin: 0 auto;
+    width: 50%;
+     height: 7px;
+}
+    
+     
+
+
+.rline{
+    
+    height: 7px;
+}
+
+.oline{
+    height: 7px;
+}
+
+
+.bline{
+    
+    height: 7px;
+}
+
+
+
+
+.gline{
+    height: 7px;
+}
+        
+    
+
+
+
+
+} 
+
+
+
+@media (max-width: 500px){
+
+
+
+
+
+    
+
+
+
+
+.loginicon{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.mydataview04 .loginx{
+     padding:0px;  
+}
+
+    
+
+
+    
+    
+.loginicon h1{
+    color:#8c8c8c;
+    font-size: 23px;
+}
+    
+
+
+    
+   
+#section03 h3{
+    font-size: 17px;
+
+    
+}
+
+    
+    
+footer p, .indexPage footer p {
+    font-size: 0.9em;
+    color: aliceblue;
+    margin-top:0px; 
+    margin-bottom: 0px;
+    line-height: 24px;
+    letter-spacing: 1px;
+}
+
+
+ .colorline {
+    margin: 0 auto;
+    width: 70%;
+
+}
+    
+     
+
+
+.rline{
+    
+    height: 4px;
+}
+
+.oline{
+    height: 4px;
+}
+
+
+.bline{
+    
+    height: 4px;
+}
+
+
+
+
+.gline{
+    height: 4px;
+}       
+
+    
+
+
+
+
+} 
+
+
+
+	#why-mydata .MydataLockv img{
+		max-width: 48%!important;
+	}
+
+	#why-mydata .mydataview02{
+		margin-bottom: 0!important;
+	}
+
+@media (max-width: 1200px){
+	#why-mydata.demo a {
+	padding-top: 0;	
+	}
+	#why-mydata .MydataLockv img{
+		padding-bottom: 24px;
+		max-width: 60%!important;
+	}
+}
+
+@media (max-width: 1199px){
+	#why-mydata .mydataview02 {
+    padding-bottom: 58px;
+}
+	#why-mydata.demo a {
+    height: 6%!important;
+	padding-top: 6px;
+}
+}
+
+@media (max-width: 805px){
+	
+		#why-mydata .mydataview02 {
+    padding-bottom: 30px;
+}
+	
+	#why-mydata .MydataLockv img{
+		max-width: 100%!important;
+	}
+	
+	#why-mydata .btn2{
+		height: 20px!important;
+	}
+	
+	#why-mydata.demo a {
+    height: 6%!important;
+	padding-top: 3px;
+}
+}
